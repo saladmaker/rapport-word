@@ -1,13 +1,4 @@
-themes/*
-
-# But keep the subfolder "theme/" inside each theme
-!themes/*/theme/
-!themes/*/theme/**
-
-# Still ignore any *.docx (packaged themes)
-*.docx
-
+**/theme.docx
 poi-playground/*
-
 !poi-playground/src
 !poi-playground/pom.xml
