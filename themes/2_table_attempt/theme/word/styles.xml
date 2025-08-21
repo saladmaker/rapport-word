@@ -995,16 +995,9 @@
             <w14:ligatures w14:val="none"/>
         </w:rPr>
         <w:tblPr>
-            <!-- 95% width (9600 * 0.95) doesn't work !! -->
-            <w:tblW w:w="9120" w:type="pct"/>
-            <w:tblLayout w:type="fixed"/>
-
-
             <!-- Center table on page takes effect !! -->
             <w:jc w:val="center"/>
-
-            <!-- Fixed layout -->
-
+            
             <!-- takes effect !! -->
             <w:tblCellMar>
                 <w:top w:w="0" w:type="dxa"/>
@@ -1036,7 +1029,7 @@
                     <w:tl2br w:val="none" w:sz="0" w:space="0" w:color="auto"/>
                     <w:tr2bl w:val="none" w:sz="0" w:space="0" w:color="auto"/>
                 </w:tcBorders>
-                <w:shd w:val="clear" w:color="auto" w:fill="D0CECE" w:themeFill="background2" w:themeFillShade="E6"/>
+                <w:shd w:val="clear" w:color="auto" w:fill="7F7F7F" w:themeFill="background2" w:themeFillShade="E6"/>
             </w:tcPr>
         </w:tblStylePr>
         <w:tblStylePr w:type="firstCol">

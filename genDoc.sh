@@ -12,6 +12,11 @@ ARGS="$@"
 
 (
   cd poi-playground
+
+  # always rebuild first
+  mvn -q -e clean package
+
+  # then run exec plugin using the freshly built target
   mvn -q -e exec:java \
     -Dexec.mainClass=rpp.poi.playground.Launcher \
     -Dexec.args="$MAIN_CLASS $ARGS"
