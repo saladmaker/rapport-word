@@ -1,14 +1,16 @@
-package rpp.poi.playground;
+package rpp.poi.playground.generation;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Random;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
-public class DocGenA {
+import rpp.poi.playground.DocumentGenerator;
+
+public class ParagraphStyles_1 implements DocumentGenerator {
+
     private static final String[] HEADING_TEXTS = {
             "Introduction", "Methodology", "Results", "Discussion", "Conclusion"
     };
@@ -20,37 +22,16 @@ public class DocGenA {
             "These findings align with previous studies.",
             "The results demonstrate clear patterns."
     };
-    public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            System.err.println("Usage: DocGenA <themeName> [--clean]");
-            return;
-        }
 
-        String themeName = args[0];
-        boolean clean = args.length > 1 && args[1].equals("--clean");
-
-        Path baseDir = Paths.get("").toAbsolutePath().getParent(); // parent of poi-playground
-        Path themeDoc = baseDir.resolve("themes").resolve(themeName).resolve("theme.docx");
-
-        if (clean) {
-            OutputManager.cleanOutputs();
-        }
-
-        try (var fis = Files.newInputStream(themeDoc);
-             var doc = new XWPFDocument(fis)) {
-
+    @Override
+    public void generate(InputStream theme, OutputStream out, String... args) throws Exception {
+        try (XWPFDocument doc = new XWPFDocument(theme)) {
             addRandomContent(doc);
-
-            Path outFile = OutputManager.getOutputFile(themeName, "DocGenA");
-            try (var out = Files.newOutputStream(outFile)) {
-                doc.write(out);
-            }
-
-            OutputManager.openInWord(outFile);
+            doc.write(out);
         }
     }
 
-    private static void addRandomContent(XWPFDocument document) {
+    private void addRandomContent(XWPFDocument document) {
         Random random = new Random();
         int sections = 3 + random.nextInt(3); // 3-5 sections
 
@@ -89,7 +70,7 @@ public class DocGenA {
         }
     }
 
-    private static void addNormalText(XWPFDocument document, int paragraphs) {
+    private void addNormalText(XWPFDocument document, int paragraphs) {
         Random random = new Random();
         for (int i = 0; i < paragraphs; i++) {
             XWPFParagraph paragraph = document.createParagraph();
