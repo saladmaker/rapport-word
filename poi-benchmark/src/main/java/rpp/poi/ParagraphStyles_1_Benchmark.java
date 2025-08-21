@@ -1,4 +1,5 @@
 package rpp.poi;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -18,7 +19,8 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 import rpp.poi.playground.generation.ParagraphStyles_1;
-@BenchmarkMode({Mode.Throughput, Mode.AverageTime})
+
+@BenchmarkMode({ Mode.Throughput, Mode.AverageTime })
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 2)
 @Measurement(iterations = 5)
@@ -30,6 +32,8 @@ public class ParagraphStyles_1_Benchmark {
         ParagraphStyles_1 generator;
         byte[] fatTemplate;
         byte[] slimTemplate;
+        byte[] extraSlimTemplate;
+
         ByteArrayOutputStream out;
 
         @Setup(Level.Trial)
@@ -37,6 +41,7 @@ public class ParagraphStyles_1_Benchmark {
             generator = new ParagraphStyles_1();
             fatTemplate = loadResource("fat.docx");
             slimTemplate = loadResource("slim.docx");
+            extraSlimTemplate = loadResource("extrac-slim.docx");
         }
 
         private byte[] loadResource(String name) throws Exception {
@@ -70,6 +75,12 @@ public class ParagraphStyles_1_Benchmark {
     public void testGenerateSlim(BenchmarkState state) throws Exception {
         state.generator.generate(
                 new ByteArrayInputStream(state.slimTemplate),
+                state.out);
+    }
+    @Benchmark
+    public void testGenerateExtraSlim(BenchmarkState state) throws Exception {
+        state.generator.generate(
+                new ByteArrayInputStream(state.extraSlimTemplate),
                 state.out);
     }
 }
