@@ -2,3 +2,8 @@
 poi-playground/*
 !poi-playground/src
 !poi-playground/pom.xml
+poi-benchmark/*
+!poi-benchmark/src
+!poi-benchmark/pom.xml
+!benchmarks/pom.xml
+
