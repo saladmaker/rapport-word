@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import rpp.poi.playground.DocumentGenerator;
 
@@ -16,11 +17,40 @@ public class ParagraphStyles_1 implements DocumentGenerator {
     };
 
     private static final String[] NORMAL_TEXTS = {
-            "This section contains important information.",
-            "The data shows significant trends.",
-            "Further research is needed in this area.",
-            "These findings align with previous studies.",
-            "The results demonstrate clear patterns."
+            """
+                    This section contains important information.
+                    It should be read carefully, as it provides
+                    essential background and context for the
+                    remainder of the document.
+                    """,
+            """
+                    The data shows significant trends across
+                    multiple years. In particular, note the
+                    steady increase in adoption rates.
+
+                    However, several anomalies appear in 2020
+                    that require further explanation.
+                    """,
+            """
+                    Further research is needed in this area.
+                    Preliminary studies suggest promising
+                    outcomes, but larger sample sizes
+                    are required to validate these results.
+                    """,
+            """
+                    These findings align with previous studies,
+                    reinforcing the reliability of the conclusions.
+                    Still, additional replication in different
+                    environments would strengthen the case.
+                    """,
+            """
+                    The results demonstrate clear patterns.
+                    Most notably, Group A consistently
+                    outperformed Group B.
+
+                    This consistency suggests that the
+                    intervention was effective.
+                    """
     };
 
     @Override
@@ -73,9 +103,33 @@ public class ParagraphStyles_1 implements DocumentGenerator {
     private void addNormalText(XWPFDocument document, int paragraphs) {
         Random random = new Random();
         for (int i = 0; i < paragraphs; i++) {
+            // Create the paragraph once here
             XWPFParagraph paragraph = document.createParagraph();
             paragraph.setStyle("Normal");
-            paragraph.createRun().setText(NORMAL_TEXTS[random.nextInt(NORMAL_TEXTS.length)]);
+
+            // Pick random text
+            String text = NORMAL_TEXTS[random.nextInt(NORMAL_TEXTS.length)];
+
+            // Fill the paragraph with text + manual line breaks
+            addParagraphWithManualBreaks(paragraph, text);
+        }
+    }
+
+    /**
+     * Adds text with manual line breaks (Shift+Enter) into the given paragraph.
+     *
+     * @param paragraph The paragraph to add the text to
+     * @param text      The text to insert, lines separated by '\n'
+     */
+    public static void addParagraphWithManualBreaks(XWPFParagraph paragraph, String text) {
+        XWPFRun run = paragraph.createRun();
+
+        String[] lines = text.split("\n", -1); // keep empty lines too
+        for (int i = 0; i < lines.length; i++) {
+            if (i > 0) {
+                run.addBreak(); // Shift+Enter equivalent
+            }
+            run.setText(lines[i]);
         }
     }
 }
