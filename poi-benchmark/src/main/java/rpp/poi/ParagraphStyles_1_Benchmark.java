@@ -1,7 +1,6 @@
 package rpp.poi;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
@@ -15,10 +14,12 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 import rpp.poi.playground.generation.ParagraphStyles_1;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
 
 @BenchmarkMode({ Mode.Throughput, Mode.AverageTime })
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -33,8 +34,6 @@ public class ParagraphStyles_1_Benchmark {
         byte[] fatTemplate;
         byte[] slimTemplate;
         byte[] extraSlimTemplate;
-
-        ByteArrayOutputStream out;
 
         @Setup(Level.Trial)
         public void setup() throws Exception {
@@ -52,35 +51,33 @@ public class ParagraphStyles_1_Benchmark {
                 return in.readAllBytes();
             }
         }
-
-        @Setup(Level.Invocation)
-        public void resetOutput() {
-            out = new ByteArrayOutputStream();
-        }
-
-        @TearDown(Level.Invocation)
-        public void cleanup() {
-            out.reset();
-        }
     }
 
     @Benchmark
     public void testGenerateFat(BenchmarkState state) throws Exception {
-        state.generator.generate(
-                new ByteArrayInputStream(state.fatTemplate),
-                state.out);
+        try (InputStream in = new ByteArrayInputStream(state.fatTemplate);
+             XWPFDocument document = new XWPFDocument(in)) {
+
+            state.generator.generate(document);
+        }
     }
 
     @Benchmark
     public void testGenerateSlim(BenchmarkState state) throws Exception {
-        state.generator.generate(
-                new ByteArrayInputStream(state.slimTemplate),
-                state.out);
+        try (InputStream in = new ByteArrayInputStream(state.slimTemplate);
+             XWPFDocument document = new XWPFDocument(in)) {
+
+            state.generator.generate(document);
+        }
     }
+
     @Benchmark
     public void testGenerateExtraSlim(BenchmarkState state) throws Exception {
-        state.generator.generate(
-                new ByteArrayInputStream(state.extraSlimTemplate),
-                state.out);
+        try (InputStream in = new ByteArrayInputStream(state.extraSlimTemplate);
+             XWPFDocument document = new XWPFDocument(in)) {
+
+            state.generator.generate(document);
+        }
     }
 }
+

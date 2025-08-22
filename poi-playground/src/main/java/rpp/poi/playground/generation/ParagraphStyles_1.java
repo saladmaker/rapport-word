@@ -1,7 +1,5 @@
 package rpp.poi.playground.generation;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Random;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -54,48 +52,38 @@ public class ParagraphStyles_1 implements DocumentGenerator {
     };
 
     @Override
-    public void generate(InputStream theme, OutputStream out, String... args) throws Exception {
-        try (XWPFDocument doc = new XWPFDocument(theme)) {
-            addRandomContent(doc);
-            doc.write(out);
-        }
+    public void generate(XWPFDocument doc) throws Exception {
+        addRandomContent(doc);
     }
 
     private void addRandomContent(XWPFDocument document) {
         Random random = new Random();
-        int sections = 3 + random.nextInt(3); // 3-5 sections
+        int sections = 3 + random.nextInt(3);
 
         for (int i = 0; i < sections; i++) {
-            // Add Heading1
+
             XWPFParagraph heading1 = document.createParagraph();
             heading1.setStyle("Heading1");
             heading1.createRun().setText(HEADING_TEXTS[random.nextInt(HEADING_TEXTS.length)]);
 
-            // Add some normal text
             addNormalText(document, 1 + random.nextInt(3));
 
-            // Add Heading2
             XWPFParagraph heading2 = document.createParagraph();
             heading2.setStyle("Heading2");
             heading2.createRun().setText(HEADING_TEXTS[random.nextInt(HEADING_TEXTS.length)]);
 
-            // Add some normal text
             addNormalText(document, 1 + random.nextInt(3));
 
-            // Add Heading3
             XWPFParagraph heading3 = document.createParagraph();
             heading3.setStyle("Heading3");
             heading3.createRun().setText(HEADING_TEXTS[random.nextInt(HEADING_TEXTS.length)]);
 
-            // Add some normal text
             addNormalText(document, 1 + random.nextInt(3));
 
-            // Add Heading4
             XWPFParagraph heading4 = document.createParagraph();
             heading4.setStyle("Heading4");
             heading4.createRun().setText(HEADING_TEXTS[random.nextInt(HEADING_TEXTS.length)]);
 
-            // Add some normal text
             addNormalText(document, 1 + random.nextInt(3));
         }
     }
@@ -103,14 +91,12 @@ public class ParagraphStyles_1 implements DocumentGenerator {
     private void addNormalText(XWPFDocument document, int paragraphs) {
         Random random = new Random();
         for (int i = 0; i < paragraphs; i++) {
-            // Create the paragraph once here
+
             XWPFParagraph paragraph = document.createParagraph();
             paragraph.setStyle("Normal");
 
-            // Pick random text
             String text = NORMAL_TEXTS[random.nextInt(NORMAL_TEXTS.length)];
 
-            // Fill the paragraph with text + manual line breaks
             addParagraphWithManualBreaks(paragraph, text);
         }
     }
