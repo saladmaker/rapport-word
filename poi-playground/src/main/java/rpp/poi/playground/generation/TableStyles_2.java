@@ -1,7 +1,5 @@
 package rpp.poi.playground.generation;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -27,11 +25,8 @@ public class TableStyles_2 implements DocumentGenerator{
     };
 
     @Override
-    public void generate(InputStream theme, OutputStream out, String... args) throws Exception {
-        try (XWPFDocument doc = new XWPFDocument(theme)) {
-            addRandomFichePortefeuilleTable(doc);
-            doc.write(out);
-        }
+    public void generate(XWPFDocument doc) throws Exception {
+        addRandomFichePortefeuilleTable(doc);
     }
   
     public static void addRandomFichePortefeuilleTable(XWPFDocument doc) {

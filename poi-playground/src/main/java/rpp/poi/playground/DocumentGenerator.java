@@ -1,8 +1,7 @@
 package rpp.poi.playground;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 public interface DocumentGenerator {
-    void generate(InputStream theme, OutputStream out, String... args) throws Exception;
+    void generate(XWPFDocument document) throws Exception;
 }
