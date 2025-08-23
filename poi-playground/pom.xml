@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>rpp.poi.playground</groupId>
@@ -12,7 +13,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>24</maven.compiler.release>
-    <helidon.version>4.2.6</helidon.version>
+    <helidon.version>4.2.5</helidon.version>
 
   </properties>
 
@@ -35,12 +36,18 @@
       <version>5.4.1</version>
     </dependency>
 
-   
+    <dependency>
+      <groupId>io.helidon.builder</groupId>
+      <artifactId>helidon-builder-api</artifactId>
+      <version>${helidon.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
@@ -49,6 +56,70 @@
   </dependencies>
 
   <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>io.helidon.builder</groupId>
+              <artifactId>helidon-builder-codegen</artifactId>
+              <version>${helidon.version}</version>
+            </path>
+            <path>
+              <groupId>io.helidon.codegen</groupId>
+              <artifactId>helidon-codegen-apt</artifactId>
+              <version>${helidon.version}</version>
+            </path>
+            <path>
+              <groupId>io.helidon.codegen</groupId>
+              <artifactId>helidon-codegen-helidon-copyright</artifactId>
+              <version>${helidon.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>io.helidon.builder</groupId>
+            <artifactId>helidon-builder-codegen</artifactId>
+            <version>${helidon.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.helidon.codegen</groupId>
+            <artifactId>helidon-codegen-apt</artifactId>
+            <version>${helidon.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.helidon.codegen</groupId>
+            <artifactId>helidon-codegen-helidon-copyright</artifactId>
+            <version>${helidon.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>rpp.poi.playground.Launcher</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -67,11 +138,6 @@
             <includeProjectDependencies>true</includeProjectDependencies>
             <includePluginDependencies>true</includePluginDependencies>
           </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
-          
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
