@@ -3,12 +3,17 @@ package rpp.poi.model;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 public interface Writable {
 
@@ -27,41 +32,67 @@ public interface Writable {
             run.setText(lines[i]);
         }
     }
+    default void ensureOrientation(XWPFDocument doc, STPageOrientation.Enum desired) {
+        Objects.requireNonNull(doc, "doc");
 
-    /**
-     * Ensures the page layout matches the desired orientation (A4 + 2cm margins).
-     * If current orientation differs, adds a new section break with the desired settings.
-     */
-    default void ensureOrientation(XWPFDocument document, STPageOrientation.Enum desired) {
-        CTSectPr lastSectPr = document.getDocument().getBody().getSectPr();
-        STPageOrientation.Enum current = STPageOrientation.PORTRAIT; // default
-        if (lastSectPr != null && lastSectPr.isSetPgSz()) {
-            current = lastSectPr.getPgSz().getOrient();
-        }
+        CTBody body = doc.getDocument().getBody();
+        CTSectPr finalSectPr = body.isSetSectPr() ? body.getSectPr() : body.addNewSectPr();
 
-        if (current != desired) {
-            XWPFParagraph sectionBreak = document.createParagraph();
-            CTSectPr sectPr = sectionBreak.getCTP().addNewPPr().addNewSectPr();
+        STPageOrientation.Enum current = readOrientation(finalSectPr);
 
-            // Set A4 size
-            CTPageSz pageSize = sectPr.addNewPgSz();
-            if (desired == STPageOrientation.LANDSCAPE) {
-                pageSize.setW(BigInteger.valueOf(16840)); // width in twips
-                pageSize.setH(BigInteger.valueOf(11900)); // height in twips
-            } else {
-                pageSize.setW(BigInteger.valueOf(11900));
-                pageSize.setH(BigInteger.valueOf(16840));
+        if (current == null || !current.equals(desired)) {
+            // copy old sectPr to a paragraph sectPr = closes current section
+            XWPFParagraph breaker = doc.createParagraph();
+            CTPPr ppr = breaker.getCTP().isSetPPr() ? breaker.getCTP().getPPr() : breaker.getCTP().addNewPPr();
+            CTSectPr prevSectPr = ppr.isSetSectPr() ? ppr.getSectPr() : ppr.addNewSectPr();
+            if (body.isSetSectPr()) {
+                prevSectPr.set(finalSectPr.copy());
             }
-            pageSize.setOrient(desired);
 
-            // Margins: 2cm ≈ 1134 twips
-            CTPageMar pageMar = sectPr.addNewPgMar();
-            BigInteger margin = BigInteger.valueOf(1134);
-            pageMar.setTop(margin);
-            pageMar.setBottom(margin);
-            pageMar.setLeft(margin);
-            pageMar.setRight(margin);
+            // apply new orientation to the final section
+            applyA4WithMargins(finalSectPr, desired);
+
+            // section break type
+            CTSectType type = finalSectPr.isSetType() ? finalSectPr.getType() : finalSectPr.addNewType();
+            type.setVal(STSectionMark.NEXT_PAGE);
         }
     }
-}
 
+    private static STPageOrientation.Enum readOrientation(CTSectPr sectPr) {
+        if (sectPr != null && sectPr.isSetPgSz()) {
+            CTPageSz sz = sectPr.getPgSz();
+            STPageOrientation.Enum o = sz.getOrient();
+            if (o != null) return o;
+            if (sz.isSetW() && sz.isSetH()) {
+                return ((Comparable)sz.getW()).compareTo((Comparable)sz.getH()) > 0
+                        ? STPageOrientation.LANDSCAPE
+                        : STPageOrientation.PORTRAIT;
+            }
+        }
+        return STPageOrientation.PORTRAIT;
+    }
+
+    private static void applyA4WithMargins(CTSectPr sectPr, STPageOrientation.Enum desired) {
+        final BigInteger A4_W = BigInteger.valueOf(11906); // portrait width
+        final BigInteger A4_H = BigInteger.valueOf(16838); // portrait height
+        final BigInteger MARGIN_2CM = BigInteger.valueOf(1134);
+
+        CTPageSz sz = sectPr.isSetPgSz() ? sectPr.getPgSz() : sectPr.addNewPgSz();
+        if (desired == STPageOrientation.LANDSCAPE) {
+            sz.setW(A4_H); // swap w/h
+            sz.setH(A4_W);
+            sz.setOrient(STPageOrientation.LANDSCAPE);
+        } else {
+            sz.setW(A4_W);
+            sz.setH(A4_H);
+            sz.setOrient(STPageOrientation.PORTRAIT);
+        }
+
+        CTPageMar mar = sectPr.isSetPgMar() ? sectPr.getPgMar() : sectPr.addNewPgMar();
+        mar.setTop(MARGIN_2CM);
+        mar.setBottom(MARGIN_2CM);
+        mar.setLeft(MARGIN_2CM);
+        mar.setRight(MARGIN_2CM);
+    }
+
+}

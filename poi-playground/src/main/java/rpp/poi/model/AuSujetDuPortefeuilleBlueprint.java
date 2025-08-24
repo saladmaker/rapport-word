@@ -6,9 +6,6 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import io.helidon.builder.api.Prototype;
-import rpp.poi.model.LaMission;
-import rpp.poi.model.LeMinistere;
-import rpp.poi.model.CartographieProgrammesPortefeuille;
 
 
 @Prototype.Blueprint
