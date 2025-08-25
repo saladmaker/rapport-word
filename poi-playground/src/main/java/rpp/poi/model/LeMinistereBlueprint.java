@@ -15,7 +15,7 @@ import io.helidon.builder.api.Prototype;
 @Prototype.Blueprint
 interface LeMinistereBlueprint extends Writable {
 
-    String TITLE = "Le ministere";
+    String $_1_LE_MINIST = "Le ministere";
 
     byte[] image();
 
@@ -27,7 +27,7 @@ interface LeMinistereBlueprint extends Writable {
         XWPFParagraph heading = document.createParagraph();
         heading.setStyle("Heading2");
         XWPFRun headingRun = heading.createRun();
-        headingRun.setText(TITLE);
+        headingRun.setText($_1_LE_MINIST);
 
         // Normal text
         XWPFParagraph textPara = document.createParagraph();

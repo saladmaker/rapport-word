@@ -1,4 +1,4 @@
-package rpp.poi.model.ficheportefeuille;
+package rpp.poi.model;
 
 import java.util.List;
 

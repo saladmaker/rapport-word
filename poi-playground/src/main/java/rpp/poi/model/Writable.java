@@ -3,14 +3,21 @@ package rpp.poi.model;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -58,6 +65,32 @@ public interface Writable {
         }
     }
 
+    default void applyTableStylePortrait(XWPFTable table, String styleId) {
+        // Apply the existing style from the template
+        table.getCTTbl().getTblPr().addNewTblStyle().setVal(styleId);
+
+        CTTblPr tblPr = table.getCTTbl().getTblPr();
+        CTTblLook look = tblPr.isSetTblLook() ? tblPr.getTblLook() : tblPr.addNewTblLook();
+        look.setFirstRow(true);
+        look.setFirstRow(true); // keep if you want header styling from the style
+        look.setLastRow(true); // <-- this is the key for your shaded total row
+        look.setFirstColumn(true); // optional
+        look.setLastColumn(true); // optional
+        look.setNoHBand(false); // optional (enable banding from style if present)
+        look.setNoVBand(false);
+
+        // Force fixed layout so width is honored
+        CTTblLayoutType layoutType = tblPr.isSetTblLayout() ? tblPr.getTblLayout() :
+        tblPr.addNewTblLayout();
+        layoutType.setType(STTblLayoutType.FIXED);
+
+        // Set full-page width (assuming 1" margins on A4/Letter)
+        CTTblWidth tblWidth = tblPr.isSetTblW() ? tblPr.getTblW() :
+        tblPr.addNewTblW();
+        tblWidth.setW(BigInteger.valueOf(9360)); // ~6.5 inches
+        tblWidth.setType(STTblWidth.DXA);
+
+    }
     private static STPageOrientation.Enum readOrientation(CTSectPr sectPr) {
         if (sectPr != null && sectPr.isSetPgSz()) {
             CTPageSz sz = sectPr.getPgSz();

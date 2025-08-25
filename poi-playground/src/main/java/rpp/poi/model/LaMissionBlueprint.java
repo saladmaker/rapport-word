@@ -33,24 +33,20 @@ interface LaMissionBlueprint extends Writable {
 
         XWPFNumbering numbering = document.createNumbering();
 
-        // Define or retrieve abstract numbering (from template or programmatically)
-        // Here assume abstractNumId = 2 (your "Mission" style)
+        //retrieve numbering id
         BigInteger abstractNumId = BigInteger.valueOf(2);
-
-        // Create a new concrete num instance bound to that abstract
         BigInteger numId = numbering.addNum(abstractNumId);
-
-        // Now when writing paragraphs:
         for (var m : mission()) {
             XWPFParagraph mParagraph = document.createParagraph();
-            mParagraph.setNumID(numId); // bind to numbering
-            mParagraph.setNumILvl(BigInteger.ZERO); // level 0
+            //set numbering
+            mParagraph.setNumID(numId); 
+            mParagraph.setNumILvl(BigInteger.ZERO); //mission point 
             mParagraph.createRun().setText(m.mission());
 
             for (var subm : m.sub()) {
                 XWPFParagraph smParagraph = document.createParagraph();
                 smParagraph.setNumID(numId);
-                smParagraph.setNumILvl(BigInteger.ONE); // level 1
+                smParagraph.setNumILvl(BigInteger.ONE); //submission point
                 smParagraph.createRun().setText(subm);
             }
         }

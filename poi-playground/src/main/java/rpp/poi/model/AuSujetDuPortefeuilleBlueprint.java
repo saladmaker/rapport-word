@@ -17,7 +17,9 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
     LeMinistere leMinistere();
 
-    Optional<CartographieProgrammesPortefeuille> cartographie();
+    CartographieProgrammesPortefeuille cartographie();
+
+    FichePortefeuille fichePortefeuille();
 
     @Override
     default void write(XWPFDocument document) {
@@ -27,5 +29,7 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
         laMission().write(document);
         leMinistere().write(document);
+        cartographie().write(document);
+        fichePortefeuille().write(document);
     }
 }
