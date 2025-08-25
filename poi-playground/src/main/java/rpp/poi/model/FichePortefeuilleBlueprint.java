@@ -110,16 +110,26 @@ interface FichePortefeuilleBlueprint extends Writable {
                 }
 
                 // total row
-                var totalRow = table_1.getRow(programmeCount + 1); // last row
-                totalRow.getCell(0).setText(TEXT_4_TABLE_1_TOTAL);
+                // var totalRow = table_1.getRow(programmeCount + 1); // last row
+                // totalRow.getCell(0).setText(TEXT_4_TABLE_1_TOTAL);
 
-                // cp sum
-                String cpFormula = String.format("=SUM(B2:B%d)", programmeCount + 1);
-                insertFormula(totalRow.getCell(1), cpFormula);
+                // insertFormula(totalRow.getCell(1), "=SUM(ABOVE)", );
+                // insertFormula(totalRow.getCell(2), "=SUM(ABOVE)");
+                var configs = List.of(
+                        new ColumnConfig(
+                        true,
+                        ()->table_1().stream()
+                        .mapToLong(Programme_AE_CP::cp)
+                        .sum()
+                        ),
+                        new ColumnConfig(
+                        true,
+                        ()->table_1().stream()
+                        .mapToLong(Programme_AE_CP::ae)
+                        .sum()
+                        ));
 
-                // ae sum
-                String aeFormula = String.format("=SUM(C2:C%d)", programmeCount + 1);
-                insertFormula(totalRow.getCell(2), aeFormula);
+                addTotals(table_1, true, false, configs, ()->"wrong");
 
                 XWPFParagraph demarchTitle = document.createParagraph();
                 demarchTitle.setStyle(Style_1_NORMAL_BOLD);
@@ -127,17 +137,16 @@ interface FichePortefeuilleBlueprint extends Writable {
 
         }
 
-        private static void insertFormula(XWPFTableCell cell, String formula) {
-                cell.removeParagraph(0); // remove empty paragraph
-                XWPFParagraph p = cell.addParagraph();
+        // private static void insertFormula(XWPFTableCell cell, String formula, final
+        // String placeHolder) {
+        // cell.removeParagraph(0); // remove empty paragraph
+        // XWPFParagraph p = cell.addParagraph();
 
-                // Add formula field
-                CTSimpleField field = p.getCTP().addNewFldSimple();
-                field.setInstr(formula);
+        // CTSimpleField field = p.getCTP().addNewFldSimple();
+        // field.setInstr(formula); // Word field code like "=SUM(ABOVE)"
 
-                // Add visible placeholder text (Word replaces when updating fields)
-                CTR ctr = field.addNewR();
-                ctr.addNewT().setStringValue(formula);
-        }
+        // CTR ctr = field.addNewR();
+        // ctr.addNewT().setStringValue(placeHolder); // Visible placeholder
+        // }
 
 }
