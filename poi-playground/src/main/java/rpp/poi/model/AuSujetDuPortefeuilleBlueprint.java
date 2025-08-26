@@ -1,18 +1,18 @@
 package rpp.poi.model;
 
+import java.util.Map;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import io.helidon.builder.api.Prototype;
 
-import java.util.Map;
-
 
 @Prototype.Blueprint
 interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
-    String $_1_TITLE_KEY = "section1.ausujetprotefeuille.title.text";
-    String $_1_TITLE_STYLE_KEY = "section1.ausujetprotefeuille.title.style";
+    String AUSJT_1_TITLE_KEY = "section1.ausujetprotefeuille.title.text";
+    String AUSJT_1_TITLE_STYLE_KEY = "section1.ausujetprotefeuille.title.style";
 
     LaMission laMission();
 
@@ -26,8 +26,8 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     default void write(XWPFDocument document, Map<String, String> config) {
         //title style and text
         XWPFParagraph auSujectTitle = document.createParagraph();
-        auSujectTitle.setStyle(config.get($_1_TITLE_STYLE_KEY));
-        auSujectTitle.createRun().setText(config.get($_1_TITLE_KEY));
+        auSujectTitle.setStyle(config.get(AUSJT_1_TITLE_STYLE_KEY));
+        auSujectTitle.createRun().setText(config.get(AUSJT_1_TITLE_KEY));
 
         laMission().write(document,config);
         leMinistere().write(document,config);

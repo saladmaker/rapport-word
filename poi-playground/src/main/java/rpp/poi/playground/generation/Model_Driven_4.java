@@ -2,13 +2,16 @@ package rpp.poi.playground.generation;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.StringReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Year;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-
-import rpp.poi.playground.DocumentGenerator;
 
 import rpp.poi.model.AuSujetDuPortefeuille;
 import rpp.poi.model.CartographieProgrammesPortefeuille;
@@ -18,6 +21,7 @@ import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
 import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.Programme_AE_CP;
+import rpp.poi.playground.DocumentGenerator;
 
 public class Model_Driven_4 implements DocumentGenerator {
 
@@ -77,22 +81,23 @@ public class Model_Driven_4 implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document,loadPropertiesAsMap("french.properties"));
+        auSujetDuPortefeuille.write(document, loadPropertiesAsMap("french.properties"));
     }
-    public static Map<String, String> loadPropertiesAsMap(String resourceName){
+
+    public static Map<String, String> loadPropertiesAsMap(String resourceName) {
         Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName); InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             if (is == null) {
                 throw new FileNotFoundException("Resource not found: " + resourceName);
             }
-            props.load(is);
+            props.load(r);
             Map<String, String> map = new HashMap<>();
             for (String name : props.stringPropertyNames()) {
                 map.put(name, props.getProperty(name));
             }
 
             return map;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalStateException("can't load resource");
         }
     }

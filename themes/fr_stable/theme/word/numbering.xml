@@ -33,162 +33,166 @@
     xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
     xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
     xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
-    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
+    xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+    mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
     <w:abstractNum w:abstractNumId="0" w15:restartNumberingAfterBreak="0">
-        <w:nsid w:val="252955BF"/>
-        <w:multiLevelType w:val="multilevel"/>
-        <w:tmpl w:val="B10833B0"/>
+        <w:nsid w:val="252955BF" />
+        <w:multiLevelType w:val="multilevel" />
+        <w:tmpl w:val="B10833B0" />
         <w:lvl w:ilvl="0">
-            <w:start w:val="1"/>
-            <w:numFmt w:val="decimal"/>
-            <w:pStyle w:val="Heading1"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:start w:val="1" />
+            <w:numFmt w:val="decimal" />
+            <w:pStyle w:val="Heading1" />
+            <!-- fix numbering heading1 -->
+            <w:lvlText w:val="Section %1." />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
             <w:pPr>
-                <w:ind w:left="240" w:hanging="200"/>
+                <w:ind w:left="240" w:hanging="200" />
             </w:pPr>
             <w:rPr>
-                <w:rFonts w:hint="default"/>
+                <w:rFonts w:hint="default" />
             </w:rPr>
         </w:lvl>
         <w:lvl w:ilvl="1">
-            <w:start w:val="1"/>
-            <w:numFmt w:val="decimal"/>
-            <w:pStyle w:val="Heading2"/>
-            <w:lvlText w:val="%1.%2"/>
-            <w:lvlJc w:val="left"/>
+            <w:start w:val="1" />
+            <w:numFmt w:val="decimal" />
+            <w:pStyle w:val="Heading2" />
+            <w:lvlText w:val="%1.%2" />
+            <w:lvlJc w:val="left" />
             <w:pPr>
-                <w:ind w:left="360" w:hanging="200"/>
+                <w:ind w:left="360" w:hanging="200" />
             </w:pPr>
             <w:rPr>
-                <w:rFonts w:hint="default"/>
+                <w:rFonts w:hint="default" />
             </w:rPr>
         </w:lvl>
         <w:lvl w:ilvl="2">
-            <w:start w:val="1"/>
-            <w:numFmt w:val="decimal"/>
-            <w:pStyle w:val="Heading3"/>
-            <w:lvlText w:val="%1.%2.%3"/>
-            <w:lvlJc w:val="left"/>
+            <w:start w:val="1" />
+            <w:numFmt w:val="decimal" />
+            <w:pStyle w:val="Heading3" />
+            <w:lvlText w:val="%1.%2.%3" />
+            <w:lvlJc w:val="left" />
             <w:pPr>
-                <w:ind w:left="480" w:hanging="200"/>
+                <w:ind w:left="480" w:hanging="200" />
             </w:pPr>
             <w:rPr>
-                <w:rFonts w:hint="default"/>
+                <w:rFonts w:hint="default" />
             </w:rPr>
         </w:lvl>
         <w:lvl w:ilvl="3">
-            <w:numFmt w:val="decimal"/>
-            <w:pStyle w:val="Heading4"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:pStyle w:val="Heading4" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="4">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="5">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="6">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="7">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="8">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
     </w:abstractNum>
     <w:abstractNum w:abstractNumId="1" w15:restartNumberingAfterBreak="0">
-        <w:nsid w:val="314437F8"/>
-        <w:multiLevelType w:val="multilevel"/>
-        <w:tmpl w:val="BFD8521A"/>
-        <w:numStyleLink w:val="Mission"/>
+        <w:nsid w:val="314437F8" />
+        <w:multiLevelType w:val="multilevel" />
+        <w:tmpl w:val="BFD8521A" />
+        <w:numStyleLink w:val="Mission" />
     </w:abstractNum>
     <w:abstractNum w:abstractNumId="2" w15:restartNumberingAfterBreak="0">
-        <w:nsid w:val="5F4C3C01"/>
-        <w:multiLevelType w:val="multilevel"/>
-        <w:tmpl w:val="BFD8521A"/>
-        <w:styleLink w:val="Mission"/>
+        <w:nsid w:val="5F4C3C01" />
+        <w:multiLevelType w:val="multilevel" />
+        <w:tmpl w:val="BFD8521A" />
+        <w:styleLink w:val="Mission" />
         <w:lvl w:ilvl="0">
-            <w:start w:val="1"/>
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val="%1-"/>
-            <w:lvlJc w:val="left"/>
+            <w:start w:val="1" />
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="%1-" />
+            <w:lvlJc w:val="left" />
             <w:pPr>
-                <w:ind w:left="360" w:hanging="360"/>
+                <w:ind w:left="360" w:hanging="360" />
             </w:pPr>
             <w:rPr>
-                <w:rFonts w:asciiTheme="majorBidi" w:eastAsiaTheme="majorEastAsia" w:hAnsiTheme="majorBidi" w:cstheme="majorBidi" w:hint="default"/>
-                <w:sz w:val="24"/>
-                <w:szCs w:val="24"/>
+                <w:rFonts w:asciiTheme="majorBidi" w:eastAsiaTheme="majorEastAsia"
+                    w:hAnsiTheme="majorBidi" w:cstheme="majorBidi" w:hint="default" />
+                <w:sz w:val="24" />
+                <w:szCs w:val="24" />
             </w:rPr>
         </w:lvl>
         <w:lvl w:ilvl="1">
-            <w:start w:val="1"/>
-            <w:numFmt w:val="none"/>
-            <w:lvlText w:val="-"/>
-            <w:lvlJc w:val="left"/>
+            <w:start w:val="1" />
+            <w:numFmt w:val="none" />
+            <w:lvlText w:val="-" />
+            <w:lvlJc w:val="left" />
             <w:pPr>
-                <w:ind w:left="720" w:hanging="360"/>
+                <w:ind w:left="720" w:hanging="360" />
             </w:pPr>
             <w:rPr>
-                <w:rFonts w:hint="default"/>
+                <w:rFonts w:hint="default" />
             </w:rPr>
         </w:lvl>
         <w:lvl w:ilvl="2">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="3">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="4">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="5">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="6">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="7">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
         <w:lvl w:ilvl="8">
-            <w:numFmt w:val="decimal"/>
-            <w:lvlText w:val=""/>
-            <w:lvlJc w:val="left"/>
+            <w:numFmt w:val="decimal" />
+            <w:lvlText w:val="" />
+            <w:lvlJc w:val="left" />
         </w:lvl>
     </w:abstractNum>
     <w:num w:numId="1" w16cid:durableId="731655334">
-        <w:abstractNumId w:val="0"/>
+        <w:abstractNumId w:val="0" />
     </w:num>
     <w:num w:numId="2" w16cid:durableId="1698314252">
-        <w:abstractNumId w:val="2"/>
+        <w:abstractNumId w:val="2" />
     </w:num>
     <w:num w:numId="3" w16cid:durableId="1718164976">
-        <w:abstractNumId w:val="1"/>
+        <w:abstractNumId w:val="1" />
     </w:num>
 </w:numbering>

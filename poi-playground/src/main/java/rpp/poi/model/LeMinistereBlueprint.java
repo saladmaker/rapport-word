@@ -1,8 +1,9 @@
 package rpp.poi.model;
 
-import java.io.ByteArrayInputStream;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 
 import org.apache.poi.xwpf.usermodel.Document;
@@ -16,11 +17,11 @@ import io.helidon.builder.api.Prototype;
 @Prototype.Blueprint
 interface LeMinistereBlueprint extends Writable {
 
-    String $_1_TITLE_KEY = "section1.leministere.title.text";
-    String $_1_TITLE_STYLE_KEY = "section1.leministere.title.style";
-    String $_2_ORG_TITLE_KEY ="section1.leministere.organigramme.title.text";
-    String $_2_ORG_TITLE_STYLE_KEY ="section1.leministere.organigramme.title.style";
-    String $_3_ORG_IMG_STYLE_KEY = "section1.leministere.organigramme.image.style";
+    String MNSTR_1_TITLE_KEY = "section1.leministere.title.text";
+    String MNSTR_1_TITLE_STYLE_KEY = "section1.leministere.title.style";
+    String MNSTR_2_ORG_TITLE_KEY ="section1.leministere.organigramme.title.text";
+    String MNSTR_2_ORG_TITLE_STYLE_KEY ="section1.leministere.organigramme.title.style";
+    String MNSTR_3_ORG_IMG_STYLE_KEY = "section1.leministere.organigramme.image.style";
 
     byte[] image();
 
@@ -30,13 +31,13 @@ interface LeMinistereBlueprint extends Writable {
 
         // le ministere title
         XWPFParagraph heading = document.createParagraph();
-        heading.setStyle(config.get($_1_TITLE_STYLE_KEY));
-        heading.createRun().setText(config.get($_1_TITLE_KEY));
+        heading.setStyle(config.get(MNSTR_1_TITLE_STYLE_KEY));
+        heading.createRun().setText(config.get(MNSTR_1_TITLE_KEY));
 
         //orgranigramme title
         XWPFParagraph organigrammeTitle = document.createParagraph();
-        organigrammeTitle.setStyle(config.get($_2_ORG_TITLE_STYLE_KEY));
-        organigrammeTitle.createRun().setText(config.get($_2_ORG_TITLE_KEY));
+        organigrammeTitle.setStyle(config.get(MNSTR_2_ORG_TITLE_STYLE_KEY));
+        organigrammeTitle.createRun().setText(config.get(MNSTR_2_ORG_TITLE_KEY));
 
 
         byte[] img = image();
@@ -91,7 +92,7 @@ interface LeMinistereBlueprint extends Writable {
 
                 // ---- 8. Insert image ----
                 XWPFParagraph imgPara = document.createParagraph();
-                imgPara.setStyle(config.get($_3_ORG_IMG_STYLE_KEY));
+                imgPara.setStyle(config.get(MNSTR_3_ORG_IMG_STYLE_KEY));
                 XWPFRun imgRun = imgPara.createRun();
                 try (ByteArrayInputStream imgStream = new ByteArrayInputStream(img)) {
                     imgRun.addPicture(imgStream, Document.PICTURE_TYPE_PNG, "image.png", finalWidthEmu, finalHeightEmu);

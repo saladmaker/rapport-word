@@ -18,12 +18,12 @@ import io.helidon.builder.api.Prototype;
 
 @Prototype.Blueprint
 interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
-    String $_1_TITLE_KEY = "section1.cartographie.title.text";
-    String $_1_TITLE_STYLE_KEY = "section1.cartographie.title.style";
+    String CARTO_1_TITLE_KEY = "section1.cartographie.title.text";
+    String CARTO_1_TITLE_STYLE_KEY = "section1.cartographie.title.style";
 
-    String $_2_TABLE_STYLE_KEY = "section1.cartographie.table.style";
-    String $_2_TABLE_HEADER_1_KEY = "section1.cartographie.table.headers.1";
-    String $_2_TABLE_HEADER_2_KEY = "section1.cartographie.table.headers.2";
+    String CARTO_2_TABLE_STYLE_KEY = "section1.cartographie.table.style";
+    String CARTO_2_TABLE_HEADER_1_KEY = "section1.cartographie.table.headers.1";
+    String CARTO_2_TABLE_HEADER_2_KEY = "section1.cartographie.table.headers.2";
 
     @Option.Singular
     List<ProgrammeStructure> programmeStructures();
@@ -34,20 +34,20 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
 
         // Title
         XWPFParagraph title = document.createParagraph();
-        title.setStyle(config.get($_1_TITLE_STYLE_KEY));
-        title.createRun().setText(config.get($_1_TITLE_KEY));
+        title.setStyle(config.get(CARTO_1_TITLE_STYLE_KEY));
+        title.createRun().setText(config.get(CARTO_1_TITLE_KEY));
 
         // Table
         XWPFTable progStrtable = document.createTable();
-        applyTableStylePortrait(progStrtable, config.get($_2_TABLE_STYLE_KEY));
+        applyTableStylePortrait(progStrtable, config.get(CARTO_2_TABLE_STYLE_KEY));
 
         // Header row (make sure it has exactly 2 cells)
         XWPFTableRow headerRow = progStrtable.getRow(0);
-        headerRow.getCell(0).setText(config.get($_2_TABLE_HEADER_1_KEY));
+        headerRow.getCell(0).setText(config.get(CARTO_2_TABLE_HEADER_1_KEY));
         if (headerRow.getTableCells().size() < 2) {
             headerRow.addNewTableCell();
         }
-        headerRow.getCell(1).setText(config.get($_2_TABLE_HEADER_2_KEY));
+        headerRow.getCell(1).setText(config.get(CARTO_2_TABLE_HEADER_2_KEY));
 
         for (var programmeStructure : programmeStructures()) {
 

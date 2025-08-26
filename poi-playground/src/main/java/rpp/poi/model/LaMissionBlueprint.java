@@ -14,10 +14,10 @@ import io.helidon.builder.api.Option;
 @Prototype.Blueprint
 interface LaMissionBlueprint extends Writable {
 
-    String $_1_TITLE_KEY = "section1.lamission.title.text";
-    String $_1_TITLE_STYLE_KEY = "section1.lamission.title.style";
-    String $_2_INTRO_STYLE_KEY = "section1.lamission.intro.style";
-    String $_3_NUMBERING_ID = "section1.lamission.numbering.id";
+    String MISSION_1_TITLE_KEY = "section1.lamission.title.text";
+    String MISSION_1_TITLE_STYLE_KEY = "section1.lamission.title.style";
+    String MISSION_2_INTRO_STYLE_KEY = "section1.lamission.intro.style";
+    String MISSION_3_NUMBERING_ID = "section1.lamission.numbering.id";
 
 
     @Option.Required
@@ -30,12 +30,12 @@ interface LaMissionBlueprint extends Writable {
     default void write(XWPFDocument document, Map<String, String> config) {
         //write title
         XWPFParagraph title = document.createParagraph();
-        title.setStyle(config.get($_1_TITLE_STYLE_KEY));
-        title.createRun().setText(config.get($_1_TITLE_KEY));
+        title.setStyle(config.get(MISSION_1_TITLE_STYLE_KEY));
+        title.createRun().setText(config.get(MISSION_1_TITLE_KEY));
 
         //write intro
         XWPFParagraph intro = document.createParagraph();
-        intro.setStyle(config.get($_2_INTRO_STYLE_KEY));
+        intro.setStyle(config.get(MISSION_2_INTRO_STYLE_KEY));
         addParagraphWithManualBreaks(intro, intro());
         writeMissions(document, config);
 
@@ -44,7 +44,7 @@ interface LaMissionBlueprint extends Writable {
     default void writeMissions(XWPFDocument document, Map<String, String> config) {
         //create numbering and associate it with the predefined simple multi level list
         XWPFNumbering numbering = document.createNumbering();
-        BigInteger abstractNumId = new BigInteger(config.get($_3_NUMBERING_ID));//predefined numbering id
+        BigInteger abstractNumId = new BigInteger(config.get(MISSION_3_NUMBERING_ID));//predefined numbering id
         BigInteger numId = numbering.addNum(abstractNumId);
         for (var m : missions()) {
             XWPFParagraph mParagraph = document.createParagraph();
