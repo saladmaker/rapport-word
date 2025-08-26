@@ -99,8 +99,7 @@ public interface Writable {
         tblWidth.setType(STTblWidth.DXA);
     }
 
-    default void addTotals(XWPFTable table, boolean sumRows, boolean sumColumns, List<ColumnConfig> columnConfigs,
-            Supplier<String> lastColumnPlaceholder) {
+    default void addTotals(XWPFTable table, boolean sumRows, boolean sumColumns, List<ColumnConfig> columnConfigs, Supplier<String> lastColumnPlaceholder) {
         int rowCount = table.getNumberOfRows();
         XWPFTableRow totalRow = table.getRow(rowCount - 1); // last row
         totalRow.getCell(0).setText("Total"); // handle first column manually
@@ -142,12 +141,9 @@ public interface Writable {
         if (sectPr != null && sectPr.isSetPgSz()) {
             CTPageSz sz = sectPr.getPgSz();
             STPageOrientation.Enum o = sz.getOrient();
-            if (o != null)
-                return o;
+            if (o != null) return o;
             if (sz.isSetW() && sz.isSetH()) {
-                return ((Comparable) sz.getW()).compareTo((Comparable) sz.getH()) > 0
-                        ? STPageOrientation.LANDSCAPE
-                        : STPageOrientation.PORTRAIT;
+                return ((Comparable) sz.getW()).compareTo((Comparable) sz.getH()) > 0 ? STPageOrientation.LANDSCAPE : STPageOrientation.PORTRAIT;
             }
         }
         return STPageOrientation.PORTRAIT;

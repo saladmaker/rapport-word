@@ -39,7 +39,7 @@ interface LaMissionBlueprint extends Writable {
         for (var m : mission()) {
             XWPFParagraph mParagraph = document.createParagraph();
             //set numbering
-            mParagraph.setNumID(numId); 
+            mParagraph.setNumID(numId);
             mParagraph.setNumILvl(BigInteger.ZERO); //mission point 
             mParagraph.createRun().setText(m.mission());
 

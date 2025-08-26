@@ -92,7 +92,7 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
      * Helper: remove the default empty paragraph before setting text
      */
     private static void clearCell(XWPFTableCell cell) {
-        if (cell.getParagraphs().size() > 0) {
+        if (!cell.getParagraphs().isEmpty()) {
             cell.removeParagraph(0);
         }
     }
