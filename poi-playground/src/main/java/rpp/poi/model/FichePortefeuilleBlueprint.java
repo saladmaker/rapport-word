@@ -7,10 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
@@ -108,45 +105,24 @@ interface FichePortefeuilleBlueprint extends Writable {
                         pRow.getCell(2).setText(p.ae().toString());
                         rowIndex++;
                 }
-
-                // total row
-                // var totalRow = table_1.getRow(programmeCount + 1); // last row
-                // totalRow.getCell(0).setText(TEXT_4_TABLE_1_TOTAL);
-
-                // insertFormula(totalRow.getCell(1), "=SUM(ABOVE)", );
-                // insertFormula(totalRow.getCell(2), "=SUM(ABOVE)");
                 var configs = List.of(
-                        new ColumnConfig(
-                        true,
-                        ()->table_1().stream()
-                        .mapToLong(Programme_AE_CP::cp)
-                        .sum()
-                        ),
-                        new ColumnConfig(
-                        true,
-                        ()->table_1().stream()
-                        .mapToLong(Programme_AE_CP::ae)
-                        .sum()
-                        ));
+                                new ColumnConfig(
+                                                true,
+                                                () -> table_1().stream()
+                                                                .mapToLong(Programme_AE_CP::cp)
+                                                                .sum()),
+                                new ColumnConfig(
+                                                true,
+                                                () -> table_1().stream()
+                                                                .mapToLong(Programme_AE_CP::ae)
+                                                                .sum()));
 
-                addTotals(table_1, true, false, configs, ()->"wrong");
+                addTotals(table_1, true, false, configs, () -> "wrong");
 
                 XWPFParagraph demarchTitle = document.createParagraph();
                 demarchTitle.setStyle(Style_1_NORMAL_BOLD);
                 demarchTitle.createRun().setText($TEXT_5_DEMARCHE);
 
         }
-
-        // private static void insertFormula(XWPFTableCell cell, String formula, final
-        // String placeHolder) {
-        // cell.removeParagraph(0); // remove empty paragraph
-        // XWPFParagraph p = cell.addParagraph();
-
-        // CTSimpleField field = p.getCTP().addNewFldSimple();
-        // field.setInstr(formula); // Word field code like "=SUM(ABOVE)"
-
-        // CTR ctr = field.addNewR();
-        // ctr.addNewT().setStringValue(placeHolder); // Visible placeholder
-        // }
 
 }
