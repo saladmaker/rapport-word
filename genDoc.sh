@@ -10,14 +10,15 @@ MAIN_CLASS=$1
 shift
 ARGS="$@"
 
-(
-  cd poi-playground
+PROJECT_DIR="poi-playground"
+JAR_PATH="target/poi-playground-1.0-SNAPSHOT.jar"
 
-  # always rebuild first
+(
+  cd "$PROJECT_DIR"
+
+  # Rebuild jar
   mvn -q -e clean package
 
-  # then run exec plugin using the freshly built target
-  mvn -q -e exec:java \
-    -Dexec.mainClass=rpp.poi.playground.Launcher \
-    -Dexec.args="$MAIN_CLASS $ARGS"
+  # Execute jar with arguments
+  java -jar "$JAR_PATH" "$MAIN_CLASS" $ARGS
 )

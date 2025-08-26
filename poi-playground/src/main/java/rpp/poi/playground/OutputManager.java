@@ -27,26 +27,45 @@ public class OutputManager {
         }
     }
 
-     public static void openInWord(Path file) {
+    public static void openInWord(Path file) {
         try {
+            String os = System.getProperty("os.name").toLowerCase();
             String path = file.toAbsolutePath().toString();
 
-            if (path.startsWith("/mnt/")) {
-                // Convert WSL path to Windows path (e.g. /mnt/c/... → C:\...)
-                String winPath = path.replaceFirst("^/mnt/([a-zA-Z])", "$1:")
-                                     .replace("/", "\\");
-                // Launch Word or use explorer (default app)
+            if (isWSL()) {
+                // Convert WSL path to Windows path: /home/... -> \\wsl$\<distro>\home\...
+                String distro = System.getenv("WSL_DISTRO_NAME");
+                if (distro == null)
+                    distro = "Ubuntu";
+                String winPath = "\\\\wsl$\\" + distro + path.replace("/", "\\");
                 new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", winPath)
                         .inheritIO()
                         .start();
+            } else if (os.contains("win")) {
+                // Windows: Use cmd.exe
+                new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", path)
+                        .inheritIO()
+                        .start();
+            } else if (os.contains("mac")) {
+                // macOS: Use open
+                new ProcessBuilder("open", path)
+                        .inheritIO()
+                        .start();
             } else {
-                // Native Linux/macOS/Windows Desktop API
-                java.awt.Desktop.getDesktop().open(file.toFile());
+                // Linux with GUI: Use xdg-open
+                new ProcessBuilder("xdg-open", path)
+                        .inheritIO()
+                        .start();
             }
+
         } catch (IOException e) {
             throw new RuntimeException("Failed to open file in Word: " + file, e);
         }
     }
 
-  
+    private static boolean isWSL() {
+        String version = System.getenv("WSL_INTEROP");
+        return version != null || System.getenv("WSL_DISTRO_NAME") != null;
+    }
+
 }
