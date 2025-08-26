@@ -1,6 +1,7 @@
 package rpp.poi.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -17,35 +18,36 @@ import io.helidon.builder.api.Prototype;
 
 @Prototype.Blueprint
 interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
-    String $_1_TABLE_STYLE = "cartographie";
+    String $_1_TITLE_KEY = "section1.cartographie.title.text";
+    String $_1_TITLE_STYLE_KEY = "section1.cartographie.title.style";
 
-    String $_1_LA_CARTOG = "La cartographie des programmes du portefeuille :";
-    String $_2_STRUCT_PROG = "Structure de programme";
-    String $_3_STRUCT_ORG = "Structure organisationnelle";
+    String $_2_TABLE_STYLE_KEY = "section1.cartographie.table.style";
+    String $_2_TABLE_HEADER_1_KEY = "section1.cartographie.table.headers.1";
+    String $_2_TABLE_HEADER_2_KEY = "section1.cartographie.table.headers.2";
 
     @Option.Singular
     List<ProgrammeStructure> programmeStructures();
 
     @Override
-    default void write(XWPFDocument document) {
+    default void write(XWPFDocument document, Map<String, String> config) {
         ensureOrientation(document, STPageOrientation.PORTRAIT);
 
         // Title
         XWPFParagraph title = document.createParagraph();
-        title.setStyle("Heading2");
-        title.createRun().setText($_1_LA_CARTOG);
+        title.setStyle(config.get($_1_TITLE_STYLE_KEY));
+        title.createRun().setText(config.get($_1_TITLE_KEY));
 
         // Table
         XWPFTable progStrtable = document.createTable();
-        applyTableStylePortrait(progStrtable, $_1_TABLE_STYLE);
+        applyTableStylePortrait(progStrtable, config.get($_2_TABLE_STYLE_KEY));
 
         // Header row (make sure it has exactly 2 cells)
         XWPFTableRow headerRow = progStrtable.getRow(0);
-        headerRow.getCell(0).setText($_2_STRUCT_PROG);
+        headerRow.getCell(0).setText(config.get($_2_TABLE_HEADER_1_KEY));
         if (headerRow.getTableCells().size() < 2) {
             headerRow.addNewTableCell();
         }
-        headerRow.getCell(1).setText($_3_STRUCT_ORG);
+        headerRow.getCell(1).setText(config.get($_2_TABLE_HEADER_2_KEY));
 
         for (var programmeStructure : programmeStructures()) {
 

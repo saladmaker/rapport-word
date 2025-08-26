@@ -1,8 +1,10 @@
 package rpp.poi.playground.generation;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.time.Year;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -75,7 +77,24 @@ public class Model_Driven_4 implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document);
+        auSujetDuPortefeuille.write(document,loadPropertiesAsMap("french.properties"));
+    }
+    public static Map<String, String> loadPropertiesAsMap(String resourceName){
+        Properties props = new Properties();
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName)) {
+            if (is == null) {
+                throw new FileNotFoundException("Resource not found: " + resourceName);
+            }
+            props.load(is);
+            Map<String, String> map = new HashMap<>();
+            for (String name : props.stringPropertyNames()) {
+                map.put(name, props.getProperty(name));
+            }
+
+            return map;
+        }catch (Exception e){
+            throw new IllegalStateException("can't load resource");
+        }
     }
 
 }

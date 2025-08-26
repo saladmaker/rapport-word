@@ -2,6 +2,7 @@ package rpp.poi.model;
 
 import java.io.ByteArrayInputStream;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.apache.poi.xwpf.usermodel.Document;
@@ -15,23 +16,28 @@ import io.helidon.builder.api.Prototype;
 @Prototype.Blueprint
 interface LeMinistereBlueprint extends Writable {
 
-    String $_1_LE_MINIST = "Le ministere";
+    String $_1_TITLE_KEY = "section1.leministere.title.text";
+    String $_1_TITLE_STYLE_KEY = "section1.leministere.title.style";
+    String $_2_ORG_TITLE_KEY ="section1.leministere.organigramme.title.text";
+    String $_2_ORG_TITLE_STYLE_KEY ="section1.leministere.organigramme.title.style";
+    String $_3_ORG_IMG_STYLE_KEY = "section1.leministere.organigramme.image.style";
 
     byte[] image();
 
     @Override
-    default void write(XWPFDocument document) {
+    default void write(XWPFDocument document, Map<String, String> config) {
         ensureOrientation(document, STPageOrientation.LANDSCAPE);
 
-        // Heading 2
+        // le ministere title
         XWPFParagraph heading = document.createParagraph();
-        heading.setStyle("Heading2");
+        heading.setStyle($_1_TITLE_STYLE_KEY);
         XWPFRun headingRun = heading.createRun();
-        headingRun.setText($_1_LE_MINIST);
+        headingRun.setText(config.get($_1_TITLE_KEY));
 
-        // Normal text
-        XWPFParagraph textPara = document.createParagraph();
-        textPara.createRun().setText("Organigramme du ministère");
+        //orgranigramme title
+        XWPFParagraph organigrammeTitle = document.createParagraph();
+        organigrammeTitle.setStyle($_2_ORG_TITLE_STYLE_KEY);
+        organigrammeTitle.createRun().setText(config.get($_2_ORG_TITLE_KEY));
 
 
         byte[] img = image();
@@ -86,7 +92,7 @@ interface LeMinistereBlueprint extends Writable {
 
                 // ---- 8. Insert image ----
                 XWPFParagraph imgPara = document.createParagraph();
-                imgPara.setStyle("organigramme");
+                imgPara.setStyle($_3_ORG_IMG_STYLE_KEY);
                 XWPFRun imgRun = imgPara.createRun();
                 try (ByteArrayInputStream imgStream = new ByteArrayInputStream(img)) {
                     imgRun.addPicture(imgStream, Document.PICTURE_TYPE_PNG, "image.png", finalWidthEmu, finalHeightEmu);

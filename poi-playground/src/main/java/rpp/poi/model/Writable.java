@@ -25,6 +25,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -33,7 +34,7 @@ public interface Writable {
     public record ColumnConfig(boolean shouldSum, java.util.function.Supplier<Object> placeholderSupplier) {
     }
 
-    void write(XWPFDocument document);
+    void write(XWPFDocument document, Map<String, String> config);
 
     default void ensureOrientation(XWPFDocument doc, STPageOrientation.Enum desired) {
         Objects.requireNonNull(doc, "doc");

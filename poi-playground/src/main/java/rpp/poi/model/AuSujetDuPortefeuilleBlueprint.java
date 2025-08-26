@@ -5,11 +5,14 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import io.helidon.builder.api.Prototype;
 
+import java.util.Map;
+
 
 @Prototype.Blueprint
 interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
-    String $_1_AU_SUJECT = "Au sujet du portefeuille";
+    String $_1_TITLE_KEY = "section1.ausujetprotefeuille.title.text";
+    String $_1_TITLE_STYLE_KEY = "section1.ausujetprotefeuille.title.style";
 
     LaMission laMission();
 
@@ -20,14 +23,15 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     FichePortefeuille fichePortefeuille();
 
     @Override
-    default void write(XWPFDocument document) {
+    default void write(XWPFDocument document, Map<String, String> config) {
+        //title style and text
         XWPFParagraph auSujectTitle = document.createParagraph();
-        auSujectTitle.setStyle("Heading1");
-        auSujectTitle.createRun().setText($_1_AU_SUJECT);
+        auSujectTitle.setStyle(config.get($_1_TITLE_STYLE_KEY));
+        auSujectTitle.createRun().setText(config.get($_1_TITLE_KEY));
 
-        laMission().write(document);
-        leMinistere().write(document);
-        cartographie().write(document);
-        fichePortefeuille().write(document);
+        laMission().write(document,config);
+        leMinistere().write(document,config);
+        cartographie().write(document,config);
+        fichePortefeuille().write(document,config);
     }
 }
