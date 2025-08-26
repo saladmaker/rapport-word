@@ -110,7 +110,7 @@ interface FichePortefeuilleBlueprint extends Writable {
 
         XWPFParagraph demarchTitle = document.createParagraph();
         demarchTitle.setStyle(config.get($_4_DEMARCHE_STYLE_KEY));
-        demarchTitle.createRun().setText($_4_DEMARCHE_KEY);
+        demarchTitle.createRun().setText(config.get($_4_DEMARCHE_KEY));
 
     }
 
