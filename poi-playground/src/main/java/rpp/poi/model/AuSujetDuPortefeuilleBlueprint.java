@@ -23,7 +23,8 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     FichePortefeuille fichePortefeuille();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config) {
+    default void write(GenerationContext context) {
+        var document = context.document;
         //title style and text
         XWPFParagraph auSujectTitle = document.createParagraph();
         auSujectTitle.setStyle(config.get(AUSJT_1_TITLE_STYLE_KEY));
