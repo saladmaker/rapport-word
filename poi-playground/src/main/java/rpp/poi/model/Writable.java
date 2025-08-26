@@ -25,7 +25,7 @@ public interface Writable{
     public record ColumnConfig(boolean shouldSum, java.util.function.Supplier<Object> placeholderSupplier) {
     }
 
-    void write(GenerationContext context);
+    void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm);
 
     
     /**

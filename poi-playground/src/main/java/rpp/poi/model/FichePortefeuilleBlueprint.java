@@ -44,7 +44,8 @@ interface FichePortefeuilleBlueprint extends Writable {
     List<Programme_CTRES> table_3();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config) {
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {  
+        plm.apply(PageLayout.PORTRAIT);
         XWPFParagraph heading = document.createParagraph();
         heading.setStyle(config.get(FCHPORT_1_TITLE_STYLE_KEY));
         XWPFRun headingRun = heading.createRun();

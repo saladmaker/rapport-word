@@ -26,9 +26,8 @@ interface LeMinistereBlueprint extends Writable {
     byte[] image();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config) {
-        ensureOrientation(document, STPageOrientation.LANDSCAPE);
-
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
+        plm.apply(PageLayout.LANDSCAPE);
         // le ministere title
         XWPFParagraph heading = document.createParagraph();
         heading.setStyle(config.get(MNSTR_1_TITLE_STYLE_KEY));

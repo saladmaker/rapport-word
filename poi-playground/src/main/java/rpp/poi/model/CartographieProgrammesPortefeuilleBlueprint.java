@@ -29,9 +29,8 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
     List<ProgrammeStructure> programmeStructures();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config) {
-        ensureOrientation(document, STPageOrientation.PORTRAIT);
-
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
+        plm.apply(PageLayout.PORTRAIT);
         // Title
         XWPFParagraph title = document.createParagraph();
         title.setStyle(config.get(CARTO_1_TITLE_STYLE_KEY));

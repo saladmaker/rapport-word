@@ -27,7 +27,8 @@ interface LaMissionBlueprint extends Writable {
     List<Mission> missions();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config) {
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) { 
+        plm.apply(PageLayout.PORTRAIT);
         //write title
         XWPFParagraph title = document.createParagraph();
         title.setStyle(config.get(MISSION_1_TITLE_STYLE_KEY));

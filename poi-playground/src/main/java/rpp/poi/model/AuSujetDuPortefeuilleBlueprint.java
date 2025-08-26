@@ -23,16 +23,16 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     FichePortefeuille fichePortefeuille();
 
     @Override
-    default void write(GenerationContext context) {
-        var document = context.document;
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
+        plm.apply(PageLayout.PORTRAIT);
         //title style and text
         XWPFParagraph auSujectTitle = document.createParagraph();
         auSujectTitle.setStyle(config.get(AUSJT_1_TITLE_STYLE_KEY));
         auSujectTitle.createRun().setText(config.get(AUSJT_1_TITLE_KEY));
 
-        laMission().write(document,config);
-        leMinistere().write(document,config);
-        cartographie().write(document,config);
-        fichePortefeuille().write(document,config);
+        laMission().write(document,config,plm);
+        leMinistere().write(document,config,plm);
+        cartographie().write(document,config,plm);
+        fichePortefeuille().write(document,config,plm);
     }
 }
