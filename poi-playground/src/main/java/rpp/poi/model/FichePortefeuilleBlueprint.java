@@ -32,34 +32,7 @@ interface FichePortefeuilleBlueprint extends Writable {
     String $_4_DEMARCHE_KEY = "section1.ficheportefeuille.demarche.text";
     String $_4_DEMARCHE_STYLE_KEY = "section1.ficheportefeuille.demarche.style";
     
-    String $_6_REPARTITION_VERSION_A = """
-            Répartition des crédits de paiements
-            et des autorisations d'engagement par programme
-            (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_7_PROGRAMME_CTRES = """
-            Répartition des crédits des programmes par
-            type de centre de responsabilitées (en dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_8_PROGRAMME_TTR = """
-            Répartition des crédits des programmes et
-            titre-année %1 (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_9_CTRES_TTR = """
-            Répartition du portefeuille par titre et type
-            de centre de responsabilité année %1 (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_10_EVL_DEPS_PROGR = """
-            Évolutions des dépense par programme (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_11_EVL_PST_CTES = """
-            Évolutions des postes ouverts par type de service
-            """.replaceAll("\\R", " ");
+    
 
     @Option.Required
     Year targetYear();
