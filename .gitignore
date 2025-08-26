@@ -1,4 +1,4 @@
-**/theme.docx
+**/*theme.docx
 poi-playground/*
 !poi-playground/src
 !poi-playground/pom.xml

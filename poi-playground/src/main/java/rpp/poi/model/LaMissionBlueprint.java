@@ -31,7 +31,7 @@ interface LaMissionBlueprint extends Writable {
         //write title
         XWPFParagraph title = document.createParagraph();
         title.setStyle(config.get($_1_TITLE_STYLE_KEY));
-        title.createRun().setText($_1_TITLE_KEY);
+        title.createRun().setText(config.get($_1_TITLE_KEY));
 
         //write intro
         XWPFParagraph intro = document.createParagraph();

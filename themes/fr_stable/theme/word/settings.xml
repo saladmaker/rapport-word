@@ -16,7 +16,7 @@
     xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock"
     xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
     xmlns:sl="http://schemas.openxmlformats.org/schemaLibrary/2006/main" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du">
-    <w:zoom w:percent="160"/>
+    <w:zoom w:percent="100"/>
     <w:proofState w:spelling="clean" w:grammar="clean"/>
     <w:stylePaneFormatFilter w:val="1024" w:allStyles="0" w:customStyles="0" w:latentStyles="1" w:stylesInUse="0" w:headingStyles="1" w:numberingStyles="0" w:tableStyles="0" w:directFormattingOnRuns="0" w:directFormattingOnParagraphs="0" w:directFormattingOnNumbering="0" w:directFormattingOnTables="0" w:clearFormatting="1" w:top3HeadingStyles="0" w:visibleStyles="0" w:alternateStyleNames="0"/>
     <w:defaultTabStop w:val="708"/>
@@ -36,19 +36,33 @@
         <w:rsid w:val="0009682C"/>
         <w:rsid w:val="001052DC"/>
         <w:rsid w:val="001330A1"/>
+        <w:rsid w:val="00184F41"/>
+        <w:rsid w:val="001D4B25"/>
+        <w:rsid w:val="00217CE1"/>
+        <w:rsid w:val="0023213D"/>
         <w:rsid w:val="002626A7"/>
+        <w:rsid w:val="002834E9"/>
         <w:rsid w:val="003A33A0"/>
         <w:rsid w:val="003A51C9"/>
         <w:rsid w:val="003A7E89"/>
+        <w:rsid w:val="00423292"/>
+        <w:rsid w:val="004A63F1"/>
+        <w:rsid w:val="004C4168"/>
+        <w:rsid w:val="0059074B"/>
         <w:rsid w:val="008B6A27"/>
         <w:rsid w:val="008C28F7"/>
         <w:rsid w:val="009207DF"/>
         <w:rsid w:val="009848CB"/>
+        <w:rsid w:val="00A05436"/>
         <w:rsid w:val="00A526B0"/>
         <w:rsid w:val="00A77C23"/>
+        <w:rsid w:val="00BD7D73"/>
         <w:rsid w:val="00C1041D"/>
+        <w:rsid w:val="00CC27D5"/>
         <w:rsid w:val="00D10B1B"/>
+        <w:rsid w:val="00D31385"/>
         <w:rsid w:val="00E245CD"/>
+        <w:rsid w:val="00ED049B"/>
     </w:rsids>
     <m:mathPr>
         <m:mathFont m:val="Cambria Math"/>

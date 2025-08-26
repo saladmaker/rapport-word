@@ -30,13 +30,12 @@ interface LeMinistereBlueprint extends Writable {
 
         // le ministere title
         XWPFParagraph heading = document.createParagraph();
-        heading.setStyle($_1_TITLE_STYLE_KEY);
-        XWPFRun headingRun = heading.createRun();
-        headingRun.setText(config.get($_1_TITLE_KEY));
+        heading.setStyle(config.get($_1_TITLE_STYLE_KEY));
+        heading.createRun().setText(config.get($_1_TITLE_KEY));
 
         //orgranigramme title
         XWPFParagraph organigrammeTitle = document.createParagraph();
-        organigrammeTitle.setStyle($_2_ORG_TITLE_STYLE_KEY);
+        organigrammeTitle.setStyle(config.get($_2_ORG_TITLE_STYLE_KEY));
         organigrammeTitle.createRun().setText(config.get($_2_ORG_TITLE_KEY));
 
 
@@ -92,7 +91,7 @@ interface LeMinistereBlueprint extends Writable {
 
                 // ---- 8. Insert image ----
                 XWPFParagraph imgPara = document.createParagraph();
-                imgPara.setStyle($_3_ORG_IMG_STYLE_KEY);
+                imgPara.setStyle(config.get($_3_ORG_IMG_STYLE_KEY));
                 XWPFRun imgRun = imgPara.createRun();
                 try (ByteArrayInputStream imgStream = new ByteArrayInputStream(img)) {
                     imgRun.addPicture(imgStream, Document.PICTURE_TYPE_PNG, "image.png", finalWidthEmu, finalHeightEmu);
