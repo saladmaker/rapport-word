@@ -14,10 +14,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 
 public class PageLayoutManager {
     private final XWPFDocument doc;
+    private final LanguageDirection direction; // immutable
     private PageLayout currentLayout = PageLayout.PORTRAIT;
 
-    public PageLayoutManager(XWPFDocument doc) {
+    public PageLayoutManager(XWPFDocument doc, LanguageDirection direction) {
         this.doc = doc;
+        this.direction = direction;
     }
 
     public void apply(PageLayout layout) {
@@ -53,5 +55,9 @@ public class PageLayoutManager {
 
     public BigInteger getScaledUsableWidth(double factor) {
         return currentLayout.scaledWidth(factor);
+    }
+
+    public LanguageDirection getDirection() {
+        return direction;
     }
 }

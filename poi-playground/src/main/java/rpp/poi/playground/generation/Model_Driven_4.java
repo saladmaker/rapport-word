@@ -17,6 +17,7 @@ import rpp.poi.model.AuSujetDuPortefeuille;
 import rpp.poi.model.CartographieProgrammesPortefeuille;
 import rpp.poi.model.FichePortefeuille;
 import rpp.poi.model.LaMission;
+import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
 import rpp.poi.model.PageLayoutManager;
@@ -82,7 +83,7 @@ public class Model_Driven_4 implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document, loadPropertiesAsMap("french.properties"), new PageLayoutManager(document));
+        auSujetDuPortefeuille.write(document, loadPropertiesAsMap("french.properties"), new PageLayoutManager(document, LanguageDirection.LTR));
     }
 
     public static Map<String, String> loadPropertiesAsMap(String resourceName) {

@@ -57,25 +57,25 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
             setVMerge(nameCell, STMerge.RESTART);
 
             clearCell(row0.getCell(1));
-            row0.getCell(1).setText("SC: " + String.join(", ", programmeStructure.sc()));
+            row0.getCell(1).setText(String.join(", ", programmeStructure.sc()));
 
             // --- Row 2 (SDC) ---
             XWPFTableRow row1 = progStrtable.createRow();
             setVMerge(row1.getCell(0), STMerge.CONTINUE);
             clearCell(row1.getCell(1));
-            row1.getCell(1).setText("SDC: " + String.join(", ", programmeStructure.sdc()));
+            row1.getCell(1).setText(String.join(", ", programmeStructure.sdc()));
 
             // --- Row 3 (OST) ---
             XWPFTableRow row2 = progStrtable.createRow();
             setVMerge(row2.getCell(0), STMerge.CONTINUE);
             clearCell(row2.getCell(1));
-            row2.getCell(1).setText("OST: " + String.join(", ", programmeStructure.ost()));
+            row2.getCell(1).setText(String.join(", ", programmeStructure.ost()));
 
             // --- Row 4 (OT) ---
             XWPFTableRow row3 = progStrtable.createRow();
             setVMerge(row3.getCell(0), STMerge.CONTINUE);
             clearCell(row3.getCell(1));
-            row3.getCell(1).setText("OT: " + String.join(", ", programmeStructure.ot()));
+            row3.getCell(1).setText(String.join(", ", programmeStructure.ot()));
         }
     }
 
