@@ -1,5 +1,7 @@
 package rpp.poi.model;
 
+import java.math.BigInteger;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
@@ -19,7 +21,8 @@ public class PageLayoutManager {
     }
 
     public void apply(PageLayout layout) {
-        if (layout == currentLayout) return;
+        if (layout == currentLayout)
+            return;
 
         CTBody body = doc.getDocument().getBody();
         CTSectPr sectPr = body.isSetSectPr() ? body.getSectPr() : body.addNewSectPr();
@@ -46,5 +49,9 @@ public class PageLayoutManager {
         type.setVal(STSectionMark.NEXT_PAGE);
 
         currentLayout = layout;
+    }
+
+    public BigInteger getScaledUsableWidth(double factor) {
+        return currentLayout.scaledWidth(factor);
     }
 }

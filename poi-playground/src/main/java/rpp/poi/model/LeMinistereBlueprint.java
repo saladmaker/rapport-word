@@ -10,8 +10,6 @@ import org.apache.poi.xwpf.usermodel.Document;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
-
 import io.helidon.builder.api.Prototype;
 
 @Prototype.Blueprint
@@ -102,5 +100,6 @@ interface LeMinistereBlueprint extends Writable {
         }
 
     }
+    
 
 }

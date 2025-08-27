@@ -5,18 +5,30 @@ import java.math.BigInteger;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 
 public enum PageLayout {
-    PORTRAIT(11906, 16838, 1134, STPageOrientation.PORTRAIT),
-    LANDSCAPE(16838, 11906, 1134, STPageOrientation.LANDSCAPE);
+    PORTRAIT(BigInteger.valueOf(11906), BigInteger.valueOf(16838), STPageOrientation.PORTRAIT,
+            BigInteger.valueOf(1440)), // A4 portrait, 1" margin
+    LANDSCAPE(BigInteger.valueOf(16838), BigInteger.valueOf(11906), STPageOrientation.LANDSCAPE,
+            BigInteger.valueOf(1440));
 
-    final BigInteger width;
-    final BigInteger height;
-    final BigInteger margin;
-    final STPageOrientation.Enum orientation;
+    public final BigInteger width;
+    public final BigInteger height;
+    public final STPageOrientation.Enum orientation;
+    public final BigInteger margin;
 
-    PageLayout(int width, int height, int margin, STPageOrientation.Enum orientation) {
-        this.width = BigInteger.valueOf(width);
-        this.height = BigInteger.valueOf(height);
-        this.margin = BigInteger.valueOf(margin);
+    PageLayout(BigInteger width, BigInteger height, STPageOrientation.Enum orientation, BigInteger margin) {
+        this.width = width;
+        this.height = height;
         this.orientation = orientation;
+        this.margin = margin;
     }
+
+    public BigInteger usableWidth() {
+        return width.subtract(margin.multiply(BigInteger.valueOf(2)));
+    }
+
+    public BigInteger scaledWidth(double factor) {
+        return BigInteger.valueOf(
+                (long) (usableWidth().doubleValue() * factor));
+    }
+
 }

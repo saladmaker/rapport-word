@@ -56,20 +56,20 @@ interface FichePortefeuilleBlueprint extends Writable {
         gest.createRun().setText(config.get(FCHPORT_2_GEST_KEY));
 
         //table 1 version B
-        writeTable1(document, config);
+        writeTable1(document, config, plm);
         writeDemarche(document, config);
         
 
     }
 
-    default void writeTable1(XWPFDocument document, Map<String, String> config) {
+    default void writeTable1(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
         XWPFParagraph table_1_title = document.createParagraph();
         table_1_title.setStyle(config.get(FCHPORT_3_TABLE_1_TITLE_STYLE_KEY));
         table_1_title.createRun().setText(config.get(FCHPORT_3_TABLE_1_TITLE_KEY));
 
         var programmeCount = table_1().size();
         XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
-        applyTableStylePortrait(table_1, config.get(FCHPORT_3_TABLE_1_STYLE_KEY));
+        applyTableStyle(table_1, config.get(FCHPORT_3_TABLE_1_STYLE_KEY), plm);
         XWPFTableRow headerRow = table_1.getRow(0);
         headerRow.getCell(0).setText(config.get(FCHPORT_3_TABLE_1_HEADER_1_KEY));
         headerRow.getCell(1).setText(config.get(FCHPORT_3_TABLE_1_HEADER_2_KEY));

@@ -11,7 +11,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation;
 
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
@@ -38,7 +37,7 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
 
         // Table
         XWPFTable progStrtable = document.createTable();
-        applyTableStylePortrait(progStrtable, config.get(CARTO_2_TABLE_STYLE_KEY));
+        applyTableStyle(progStrtable, config.get(CARTO_2_TABLE_STYLE_KEY), plm);
 
         // Header row (make sure it has exactly 2 cells)
         XWPFTableRow headerRow = progStrtable.getRow(0);

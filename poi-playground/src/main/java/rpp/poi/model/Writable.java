@@ -20,14 +20,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
-public interface Writable{
+public interface Writable {
 
     public record ColumnConfig(boolean shouldSum, java.util.function.Supplier<Object> placeholderSupplier) {
     }
 
     void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm);
 
-    
     /**
      * Adds text to the paragraph, preserving manual line breaks.
      */
@@ -42,31 +41,36 @@ public interface Writable{
         }
     }
 
-    default void applyTableStylePortrait(XWPFTable table, String styleId) {
-        // Apply the existing style from the template
-        table.getCTTbl().getTblPr().addNewTblStyle().setVal(styleId);
-
+    default void applyTableStyle(XWPFTable table, String styleId, PageLayoutManager plm) {
         CTTblPr tblPr = table.getCTTbl().getTblPr();
+        if (tblPr == null) {
+            tblPr = table.getCTTbl().addNewTblPr();
+        }
+
+        // Apply style
+        tblPr.addNewTblStyle().setVal(styleId);
+
+        // Table look
         CTTblLook look = tblPr.isSetTblLook() ? tblPr.getTblLook() : tblPr.addNewTblLook();
         look.setFirstRow(true);
-        look.setFirstRow(true); // keep if you want header styling from the style
-        look.setLastRow(true); // <-- this is the key for your shaded total row
-        look.setFirstColumn(true); // optional
-        look.setLastColumn(true); // optional
-        look.setNoHBand(false); // optional (enable banding from style if present)
+        look.setLastRow(true);
+        look.setFirstColumn(true);
+        look.setLastColumn(true);
+        look.setNoHBand(false);
         look.setNoVBand(false);
 
-        // Force fixed layout so width is honored
+        // Fixed layout
         CTTblLayoutType layoutType = tblPr.isSetTblLayout() ? tblPr.getTblLayout() : tblPr.addNewTblLayout();
         layoutType.setType(STTblLayoutType.FIXED);
 
-        // Set full-page width (assuming 1" margins on A4/Letter)
+        // Dynamic width: 96% of usable width
         CTTblWidth tblWidth = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
-        tblWidth.setW(BigInteger.valueOf(9360)); // ~6.5 inches
+        tblWidth.setW(plm.getScaledUsableWidth(0.96));
         tblWidth.setType(STTblWidth.DXA);
     }
 
-    default void addTotals(XWPFTable table, boolean sumRows, boolean sumColumns, List<ColumnConfig> columnConfigs, Supplier<String> lastColumnPlaceholder) {
+    default void addTotals(XWPFTable table, boolean sumRows, boolean sumColumns, List<ColumnConfig> columnConfigs,
+            Supplier<String> lastColumnPlaceholder) {
         int rowCount = table.getNumberOfRows();
         XWPFTableRow totalRow = table.getRow(rowCount - 1); // last row
         totalRow.getCell(0).setText("Total"); // handle first column manually
@@ -77,7 +81,8 @@ public interface Writable{
                 ColumnConfig config = columnConfigs.get(i);
 
                 if (config.shouldSum()) {
-                    insertFormula(totalRow.getCell(colIndex), "=SUM(ABOVE)", config.placeholderSupplier().get().toString());
+                    insertFormula(totalRow.getCell(colIndex), "=SUM(ABOVE)",
+                            config.placeholderSupplier().get().toString());
                 } else {
                     totalRow.getCell(colIndex).setText("--");
                 }
@@ -104,5 +109,4 @@ public interface Writable{
         ctr.addNewT().setStringValue(placeholder);
     }
 
-    
 }
