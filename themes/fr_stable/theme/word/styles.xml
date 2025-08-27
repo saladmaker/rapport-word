@@ -456,7 +456,8 @@
                 <w:ilvl w:val="1"/>
                 <w:numId w:val="1"/>
             </w:numPr>
-            <w:spacing w:before="160" w:after="80"/>
+            <!-- fix spacing to match rpp dox -->
+            <w:spacing w:before="480" w:after="240" w:line="240" w:lineRule="auto"/>
             <w:outlineLvl w:val="1"/>
         </w:pPr>
         <w:rPr>
@@ -484,7 +485,8 @@
                 <w:ilvl w:val="2"/>
                 <w:numId w:val="1"/>
             </w:numPr>
-            <w:spacing w:before="160" w:after="80"/>
+            <!-- fix spacing to match rpp doc -->
+            <w:spacing w:before="360" w:after="240" w:line="240" w:lineRule="auto"/>
             <w:outlineLvl w:val="2"/>
         </w:pPr>
         <w:rPr>
