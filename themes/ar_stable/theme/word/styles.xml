@@ -983,85 +983,42 @@
     </w:style>
     <!-- fix table style and direction -->
     <w:style w:type="table" w:customStyle="1" w:styleId="cartographie">
-        <w:name w:val="cartographie"/>
-        <w:basedOn w:val="TableGrid1"/>
-        <w:uiPriority w:val="99"/>
-        <w:rsid w:val="00323022"/>
+        <w:name w:val="cartographie" />
+        <!-- fix based on correct parent -->
+        <w:basedOn w:val="TableNormal" />
+        <w:uiPriority w:val="99" />
+        <w:rsid w:val="005E155B" />
         <w:pPr>
-            <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+            <w:spacing w:after="0" w:line="240" w:lineRule="auto" />
         </w:pPr>
         <w:rPr>
-            <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman" w:eastAsia="Times New Roman"/>
-            <w:sz w:val="26"/>
-            <w:szCs w:val="26"/>
+            <w:rFonts w:ascii="Times New Roman" w:eastAsia="Times New Roman"
+                w:hAnsi="Times New Roman" w:cs="Times New Roman" />
+            <w:kern w:val="0" />
+            <w:sz w:val="26" />
+            <w:szCs w:val="26" />
         </w:rPr>
         <w:tblPr>
-            <w:tblDir w:val="rtl"/>
+            <w:tblBorders>
+                <w:top w:val="single" w:sz="4" w:space="0" w:color="auto" />
+                <w:left w:val="single" w:sz="4" w:space="0" w:color="auto" />
+                <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto" />
+                <w:right w:val="single" w:sz="4" w:space="0" w:color="auto" />
+                <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto" />
+                <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto" />
+            </w:tblBorders>
         </w:tblPr>
         <w:tblStylePr w:type="firstRow">
             <w:pPr>
-                <w:jc w:val="center"/>
+                <w:jc w:val="center" />
             </w:pPr>
             <w:rPr>
-                <w:b/>
-                <w:bCs/>
+                <w:b />
+                <w:bCs />
             </w:rPr>
-            <w:tblPr/>
+            <w:tblPr />
             <w:tcPr>
-                <w:vAlign w:val="center"/>
-            </w:tcPr>
-        </w:tblStylePr>
-    </w:style>
-
-    <w:style w:type="table" w:styleId="TableGrid1">
-        <w:name w:val="Table Grid 1"/>
-        <w:basedOn w:val="TableNormal"/>
-        <w:uiPriority w:val="99"/>
-        <w:semiHidden/>
-        <w:unhideWhenUsed/>
-        <w:rsid w:val="00323022"/>
-        <w:pPr>
-            <w:keepLines/>
-            <w:bidi/>
-            <w:spacing w:before="240" w:after="240" w:line="276" w:lineRule="auto"/>
-        </w:pPr>
-        <w:tblPr>
-            <w:tblBorders>
-                <w:top w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-                <w:left w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-                <w:bottom w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-                <w:right w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-                <w:insideH w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-                <w:insideV w:val="single" w:sz="6" w:space="0" w:color="000000"/>
-            </w:tblBorders>
-        </w:tblPr>
-        <w:tcPr>
-            <w:shd w:val="clear" w:color="auto" w:fill="auto"/>
-        </w:tcPr>
-        <w:tblStylePr w:type="lastRow">
-            <w:rPr>
-                <w:i/>
-                <w:iCs/>
-            </w:rPr>
-            <w:tblPr/>
-            <w:tcPr>
-                <w:tcBorders>
-                    <w:tl2br w:val="none" w:sz="0" w:space="0" w:color="auto"/>
-                    <w:tr2bl w:val="none" w:sz="0" w:space="0" w:color="auto"/>
-                </w:tcBorders>
-            </w:tcPr>
-        </w:tblStylePr>
-        <w:tblStylePr w:type="lastCol">
-            <w:rPr>
-                <w:i/>
-                <w:iCs/>
-            </w:rPr>
-            <w:tblPr/>
-            <w:tcPr>
-                <w:tcBorders>
-                    <w:tl2br w:val="none" w:sz="0" w:space="0" w:color="auto"/>
-                    <w:tr2bl w:val="none" w:sz="0" w:space="0" w:color="auto"/>
-                </w:tcBorders>
+                <w:vAlign w:val="center" />
             </w:tcPr>
         </w:tblStylePr>
     </w:style>
