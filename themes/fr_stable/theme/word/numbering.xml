@@ -45,7 +45,6 @@
             <w:pStyle w:val="Heading1" />
             <!-- fix numbering heading1 -->
             <w:lvlText w:val="Section %1." />
-            <w:lvlText w:val="" />
             <w:lvlJc w:val="left" />
             <w:pPr>
                 <w:ind w:left="240" w:hanging="200" />
