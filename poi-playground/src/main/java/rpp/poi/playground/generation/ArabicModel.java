@@ -25,7 +25,7 @@ import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.Programme_AE_CP;
 import rpp.poi.playground.DocumentGenerator;
 
-public class Local_Driven_AR implements DocumentGenerator {
+public class ArabicModel implements DocumentGenerator {
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
@@ -40,8 +40,7 @@ public class Local_Driven_AR implements DocumentGenerator {
                 .addMission(new Mission(
                         "التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.",
                         List.of("إنشاء شباك موحد عبر الإنترنت",
-                                "أتمتة الإجراءات الداخلية",
-                                "dfsd sdfs sdfsdf")))
+                                "أتمتة الإجراءات الداخلية")))
                 .addMission(new Mission(
                         "زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.",
                         List.of("نشر الأكشاك التفاعلية",
@@ -52,7 +51,7 @@ public class Local_Driven_AR implements DocumentGenerator {
                                 "إنشاء منصة للتبليغ المجهول")))
                 .build();
 
-        var imageBytes = Model_Driven_4.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
         var leMinistere = LeMinistere.builder().image(imageBytes).build();
 
         CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()

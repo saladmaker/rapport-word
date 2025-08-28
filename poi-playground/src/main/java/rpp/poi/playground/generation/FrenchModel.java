@@ -25,7 +25,7 @@ import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.Programme_AE_CP;
 import rpp.poi.playground.DocumentGenerator;
 
-public class Model_Driven_4 implements DocumentGenerator {
+public class FrenchModel implements DocumentGenerator {
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
@@ -52,7 +52,7 @@ public class Model_Driven_4 implements DocumentGenerator {
                                 "Création d’une plateforme de signalement anonyme")))
                 .build();
 
-        var imageBytes = Model_Driven_4.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
         var leMinistere = LeMinistere.builder().image(imageBytes).build();
 
         CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
