@@ -2,6 +2,7 @@ package rpp.poi.model;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -14,51 +15,22 @@ import io.helidon.builder.api.Prototype;
 
 @Prototype.Blueprint
 interface FichePortefeuilleBlueprint extends Writable {
-    String Style_1_NORMAL_BOLD = "NormalBold";
-    String Style_1_protefeuille = "ficheportefeuille";
-    String TEXT_1_TITLE = "Fiche Portefeuille";
-    String TEXT_2_GESTIONNAIRE = "Gestionnaire responsable :";
 
-    String TEXT_3_TABLE_1_TITLE = """
-            Répartition des crédits de paiements
-            et les autorisations d'engagement par programme
-            (en milliers de dinars) (version B)
-            """.replaceAll("\\R", " ");
-    String TEXT_4_TABLE_1_HEADER_1 = "Programmes";
-    String TEXT_4_TABLE_1_HEADER_2 = "Crédits de paiement";
-    String TEXT_4_TABLE_1_HEADER_3 = "Autorisations d’engagement";
-    String TEXT_4_TABLE_1_TOTAL = "Total des dépenses";
+    String FCHPORT_1_TITLE_KEY = "section1.ficheportefeuille.title.text";
+    String FCHPORT_1_TITLE_STYLE_KEY = "section1.ficheportefeuille.title.style";
+    String FCHPORT_2_GEST_KEY = "section1.ficheportefeuille.gestionnaire.text";
+    String FCHPORT_2_GEST_STYLE_KEY = "section1.ficheportefeuille.gestionnaire.style";
 
-    String $TEXT_5_DEMARCHE = "Demarche adoptée pour le budget programme 2026";
+    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table1.style";
+    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table1.title.text";
+    String FCHPORT_3_TABLE_1_TITLE_STYLE_KEY = "section1.ficheportefeuille.table1.title.style";
 
-    String $_6_REPARTITION_VERSION_A = """
-            Répartition des crédits de paiements
-            et des autorisations d'engagement par programme
-            (en milliers de dinars)
-            """.replaceAll("\\R", " ");
+    String FCHPORT_3_TABLE_1_HEADER_1_KEY = "section1.ficheportefeuille.table1.headers.1";
+    String FCHPORT_3_TABLE_1_HEADER_2_KEY = "section1.ficheportefeuille.table1.headers.2";
+    String FCHPORT_3_TABLE_1_HEADER_3_KEY = "section1.ficheportefeuille.table1.headers.3";
 
-    String $_7_PROGRAMME_CTRES = """
-            Répartition des crédits des programmes par
-            type de centre de responsabilitées (en dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_8_PROGRAMME_TTR = """
-            Répartition des crédits des programmes et
-            titre-année %1 (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_9_CTRES_TTR = """
-            Répartition du portefeuille par titre et type
-            de centre de responsabilité année %1 (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_10_EVL_DEPS_PROGR = """
-            Évolutions des dépense par programme (en milliers de dinars)
-            """.replaceAll("\\R", " ");
-
-    String $_11_EVL_PST_CTES = """
-            Évolutions des postes ouverts par type de service
-            """.replaceAll("\\R", " ");
+    String FCHPORT_4_DEMARCHE_KEY = "section1.ficheportefeuille.demarche.text";
+    String FCHPORT_4_DEMARCHE_STYLE_KEY = "section1.ficheportefeuille.demarche.style";
 
     @Option.Required
     Year targetYear();
@@ -72,29 +44,36 @@ interface FichePortefeuilleBlueprint extends Writable {
     List<Programme_CTRES> table_3();
 
     @Override
-    default void write(XWPFDocument document) {
+    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {  
+        plm.apply(PageLayout.PORTRAIT);
         XWPFParagraph heading = document.createParagraph();
-        heading.setStyle("Heading2");
+        heading.setStyle(config.get(FCHPORT_1_TITLE_STYLE_KEY));
         XWPFRun headingRun = heading.createRun();
-        headingRun.setText(TEXT_1_TITLE);
+        headingRun.setText(config.get(FCHPORT_1_TITLE_KEY));
 
         XWPFParagraph gest = document.createParagraph();
-        gest.setStyle(Style_1_NORMAL_BOLD);
-        XWPFRun gestRun = gest.createRun();
-        gestRun.setText(TEXT_1_TITLE);
+        gest.setStyle(config.get(FCHPORT_2_GEST_STYLE_KEY));
+        gest.createRun().setText(config.get(FCHPORT_2_GEST_KEY));
 
+        //table 1 version B
+        writeTable1(document, config, plm);
+        writeDemarche(document, config);
+        
+
+    }
+
+    default void writeTable1(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
         XWPFParagraph table_1_title = document.createParagraph();
-        table_1_title.setStyle(Style_1_NORMAL_BOLD);
-        XWPFRun table_1_title_run = table_1_title.createRun();
-        table_1_title_run.setText(TEXT_3_TABLE_1_TITLE);
+        table_1_title.setStyle(config.get(FCHPORT_3_TABLE_1_TITLE_STYLE_KEY));
+        table_1_title.createRun().setText(config.get(FCHPORT_3_TABLE_1_TITLE_KEY));
 
         var programmeCount = table_1().size();
         XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
-        applyTableStylePortrait(table_1, Style_1_protefeuille);
+        applyTableStyle(table_1, config.get(FCHPORT_3_TABLE_1_STYLE_KEY), plm);
         XWPFTableRow headerRow = table_1.getRow(0);
-        headerRow.getCell(0).setText(TEXT_4_TABLE_1_HEADER_1);
-        headerRow.getCell(1).setText(TEXT_4_TABLE_1_HEADER_2);
-        headerRow.getCell(2).setText(TEXT_4_TABLE_1_HEADER_3);
+        headerRow.getCell(0).setText(config.get(FCHPORT_3_TABLE_1_HEADER_1_KEY));
+        headerRow.getCell(1).setText(config.get(FCHPORT_3_TABLE_1_HEADER_2_KEY));
+        headerRow.getCell(2).setText(config.get(FCHPORT_3_TABLE_1_HEADER_3_KEY));
 
         int rowIndex = 1;
         for (var p : table_1()) {
@@ -105,13 +84,24 @@ interface FichePortefeuilleBlueprint extends Writable {
             pRow.getCell(2).setText(p.ae().toString());
             rowIndex++;
         }
-        var configs = List.of(new ColumnConfig(true, () -> table_1().stream().mapToLong(Programme_AE_CP::cp).sum()), new ColumnConfig(true, () -> table_1().stream().mapToLong(Programme_AE_CP::ae).sum()));
+        var configs = List.of(
+                new ColumnConfig(true, () -> table_1().stream().mapToLong(Programme_AE_CP::cp).sum()),
+                new ColumnConfig(true, () -> table_1().stream().mapToLong(Programme_AE_CP::ae).sum())
+        );
 
         addTotals(table_1, true, false, configs, () -> "wrong");
 
+    }
+
+    default void writeDemarche(XWPFDocument document, Map<String, String> config) {
         XWPFParagraph demarchTitle = document.createParagraph();
-        demarchTitle.setStyle(Style_1_NORMAL_BOLD);
-        demarchTitle.createRun().setText($TEXT_5_DEMARCHE);
+        demarchTitle.setStyle(config.get(FCHPORT_4_DEMARCHE_STYLE_KEY));
+        demarchTitle.createRun().setText(config.get(FCHPORT_4_DEMARCHE_KEY));
+        for (var demarcheTxt : demarches()) {
+            XWPFParagraph demarcheParagraph = document.createParagraph();
+            demarcheParagraph.setStyle("Normal");
+            addParagraphWithManualBreaks(demarcheParagraph, demarcheTxt);
+        }
 
     }
 
