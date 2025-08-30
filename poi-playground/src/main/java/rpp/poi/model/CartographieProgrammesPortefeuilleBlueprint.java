@@ -1,7 +1,6 @@
 package rpp.poi.model;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -18,7 +17,6 @@ import io.helidon.builder.api.Prototype;
 @Prototype.Blueprint
 interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
     String CARTO_1_TITLE_KEY = "section1.cartographie.title.text";
-    String CARTO_1_TITLE_STYLE_KEY = "section1.cartographie.title.style";
 
     String CARTO_2_TABLE_STYLE_KEY = "section1.cartographie.table.style";
     String CARTO_2_TABLE_HEADER_1_KEY = "section1.cartographie.table.headers.1";
@@ -28,24 +26,25 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
     List<ProgrammeStructure> programmeStructures();
 
     @Override
-    default void write(XWPFDocument document, Map<String, String> config, PageLayoutManager plm) {
-        plm.apply(PageLayout.PORTRAIT);
+    default void write(XWPFDocument document, GenerationContext context) {
+        context.apply(PageLayout.PORTRAIT);
         // Title
+        String heading2Style = context.plainContent(HEADING_2_STYLE_KEY);
         XWPFParagraph title = document.createParagraph();
-        title.setStyle(config.get(CARTO_1_TITLE_STYLE_KEY));
-        title.createRun().setText(config.get(CARTO_1_TITLE_KEY));
+        title.setStyle(heading2Style);
+        title.createRun().setText(context.contextualizedContent(CARTO_1_TITLE_KEY));
 
         // Table
         XWPFTable progStrtable = document.createTable();
-        applyTableStyle(progStrtable, config.get(CARTO_2_TABLE_STYLE_KEY), plm);
+        context.applyTableStyle(progStrtable, CARTO_2_TABLE_STYLE_KEY);
 
         // Header row (make sure it has exactly 2 cells)
         XWPFTableRow headerRow = progStrtable.getRow(0);
-        headerRow.getCell(0).setText(config.get(CARTO_2_TABLE_HEADER_1_KEY));
+        headerRow.getCell(0).setText(context.contextualizedContent(CARTO_2_TABLE_HEADER_1_KEY));
         if (headerRow.getTableCells().size() < 2) {
             headerRow.addNewTableCell();
         }
-        headerRow.getCell(1).setText(config.get(CARTO_2_TABLE_HEADER_2_KEY));
+        headerRow.getCell(1).setText(context.contextualizedContent(CARTO_2_TABLE_HEADER_2_KEY));
 
         for (var programmeStructure : programmeStructures()) {
 
@@ -57,25 +56,25 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
             setVMerge(nameCell, STMerge.RESTART);
 
             clearCell(row0.getCell(1));
-            row0.getCell(1).setText(String.join(", ", programmeStructure.sc()));
+            row0.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sc())));
 
             // --- Row 2 (SDC) ---
             XWPFTableRow row1 = progStrtable.createRow();
             setVMerge(row1.getCell(0), STMerge.CONTINUE);
             clearCell(row1.getCell(1));
-            row1.getCell(1).setText(String.join(", ", programmeStructure.sdc()));
+            row1.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sdc())));
 
             // --- Row 3 (OST) ---
             XWPFTableRow row2 = progStrtable.createRow();
             setVMerge(row2.getCell(0), STMerge.CONTINUE);
             clearCell(row2.getCell(1));
-            row2.getCell(1).setText(String.join(", ", programmeStructure.ost()));
+            row2.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ost())));
 
             // --- Row 4 (OT) ---
             XWPFTableRow row3 = progStrtable.createRow();
             setVMerge(row3.getCell(0), STMerge.CONTINUE);
             clearCell(row3.getCell(1));
-            row3.getCell(1).setText(String.join(", ", programmeStructure.ot()));
+            row3.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ot())));
         }
     }
 
