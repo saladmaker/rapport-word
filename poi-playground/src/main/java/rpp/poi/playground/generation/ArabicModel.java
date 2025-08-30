@@ -16,13 +16,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import rpp.poi.model.AuSujetDuPortefeuille;
 import rpp.poi.model.CartographieProgrammesPortefeuille;
 import rpp.poi.model.FichePortefeuille;
+import rpp.poi.model.GenerationContext;
 import rpp.poi.model.LaMission;
 import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
-import rpp.poi.model.PageLayoutManager;
+import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
-import rpp.poi.model.Programme_AE_CP;
 import rpp.poi.playground.DocumentGenerator;
 
 public class ArabicModel implements DocumentGenerator {
@@ -71,11 +71,9 @@ public class ArabicModel implements DocumentGenerator {
 
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
                 .targetYear(Year.of(2026))
-                .addTable_1(
-                        List.of(
-                                new Programme_AE_CP("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
-                                new Programme_AE_CP("التعليم المهني", 622_000_000L, 540_000_000L),
-                                new Programme_AE_CP("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
+                .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
+                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
+                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -84,7 +82,7 @@ public class ArabicModel implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-                auSujetDuPortefeuille.write(document, loadPropertiesAsMap("arab.properties"), new PageLayoutManager(document, LanguageDirection.RTL));
+                auSujetDuPortefeuille.write(document, new GenerationContext(document, loadPropertiesAsMap("arab.properties"), LanguageDirection.RTL));
 
 
     }

@@ -16,13 +16,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import rpp.poi.model.AuSujetDuPortefeuille;
 import rpp.poi.model.CartographieProgrammesPortefeuille;
 import rpp.poi.model.FichePortefeuille;
+import rpp.poi.model.GenerationContext;
 import rpp.poi.model.LaMission;
 import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
-import rpp.poi.model.PageLayoutManager;
+import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
-import rpp.poi.model.Programme_AE_CP;
 import rpp.poi.playground.DocumentGenerator;
 
 public class FrenchModel implements DocumentGenerator {
@@ -71,11 +71,9 @@ public class FrenchModel implements DocumentGenerator {
                 .build();
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
                 .targetYear(Year.of(2026))
-                .addTable_1(
-                        List.of(
-                                new Programme_AE_CP("Formation professionnelle", 20_143_691_000L, 19_506_191_000L),
-                                new Programme_AE_CP("Enseignement professionnel", 622_000_000L, 540_000_000L),
-                                new Programme_AE_CP("Administration générale", 97_250_926_000L, 98_536_426_000L)))
+                .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("Formation professionnelle", 20_143_691_000L, 19_506_191_000L),
+                                new ProgrammeRepartition("Enseignement professionnel", 622_000_000L, 540_000_000L),
+                                new ProgrammeRepartition("Administration générale", 97_250_926_000L, 98_536_426_000L)))
                 .build();
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
@@ -83,7 +81,7 @@ public class FrenchModel implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document, loadPropertiesAsMap("french.properties"), new PageLayoutManager(document, LanguageDirection.LTR));
+        auSujetDuPortefeuille.write(document, new GenerationContext(document,  loadPropertiesAsMap("french.properties"), LanguageDirection.LTR));
     }
 
     public static Map<String, String> loadPropertiesAsMap(String resourceName) {

@@ -64,7 +64,7 @@ public class TableStyles_2 implements DocumentGenerator{
 
     private static void applyStyle(XWPFTable table) {
         // Apply the existing style from the template
-        table.getCTTbl().getTblPr().addNewTblStyle().setVal("ficheportefeuille");
+        table.getCTTbl().getTblPr().addNewTblStyle().setVal("myStyle");
 
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         CTTblLook look = tblPr.isSetTblLook() ? tblPr.getTblLook() : tblPr.addNewTblLook();
