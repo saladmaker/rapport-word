@@ -115,7 +115,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         while (demarchParaText.isPresent()) {
             XWPFParagraph demarcheParagraph = document.createParagraph();
             demarcheParagraph.setStyle(paragraphStyle);
-            addParagraphWithManualBreaks(demarcheParagraph, demarchParaText.get());
+            context.addParagraphWithManualBreaks(demarcheParagraph, demarchParaText.get());
             i++;
             demarchParaText = context.optionalText(FCHPORT_4_DEMARCHE_TEXT_KEYS + String.valueOf(i));
         }

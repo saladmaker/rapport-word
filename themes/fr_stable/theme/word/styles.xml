@@ -440,6 +440,23 @@
             <w:szCs w:val="24"/>
         </w:rPr>
     </w:style>
+    <!-- add footer -->
+    <w:style w:type="paragraph" w:styleId="Footer">
+        <w:name w:val="Footer"/>
+        <w:qFormat/>
+        <w:pPr>
+            <w:jc w:val="center"/>
+            <!-- center alignment -->
+        </w:pPr>
+        <w:rPr>
+            <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+            <w:lang w:val="fr-FR" w:eastAsia="fr-FR" w:bidi="fr-FR"/>
+            <w:sz w:val="20"/>
+            <w:szCs w:val="20"/>
+            <w:b/>
+            <!-- bold -->
+        </w:rPr>
+    </w:style>
     <!-- add justified to all text in doc except for table cell -->
     <w:style w:type="paragraph" w:styleId="Text">
         <w:name w:val="Text"/>

@@ -4,8 +4,12 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
@@ -18,38 +22,49 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 public class GenerationContext {
 
+    static final String FOOTER_TEXT_KEY = "footer.text";
+    static final String FOOTER_TEXT_STYLE_KEY = "bold.text.style";
+
     private final XWPFDocument doc;
     private final LanguageDirection direction; // immutable
     private PageLayout currentLayout = PageLayout.PORTRAIT;
-    private final Map <String,String> config;
+    private final Map<String, String> config;
 
-    public GenerationContext(XWPFDocument doc, Map<String,String> config, LanguageDirection direction) {
+    public GenerationContext(XWPFDocument doc, Map<String, String> config, LanguageDirection direction) {
         this.doc = doc;
-        this.config = Map.copyOf(config);
+        this.config = Map.copyOf(config); 
         this.direction = direction;
+        var s = contextualizedContent(FOOTER_TEXT_KEY);
+        addFooterWithTextAndPageNumber(doc, s);
     }
 
-    public Optional<String> optionalText(String key){
+    public Optional<String> optionalText(String key) {
         var value = config.get(key);
-        if(null == value){
+        if (null == value) {
             return Optional.empty();
         }
         return Optional.of(contextualize(value));
     }
-    public String contextualizedContent(String key){
+
+    public String contextualizedContent(String key) {
         return contextualize(plainContent(key));
     }
-    public String plainContent(String key){
-         var value = config.get(key);
-        if(null == value) throw new IllegalStateException("value doesn't exist \"" + key + "\"");
-        return value; 
+
+    public String plainContent(String key) {
+        var value = config.get(key);
+        if (null == value)
+            throw new IllegalStateException("value doesn't exist \"" + key + "\"");
+        return value;
     }
+
     public void apply(PageLayout layout) {
         if (layout == currentLayout) {
             return;
@@ -83,7 +98,7 @@ public class GenerationContext {
     }
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
-        var styleId =  plainContent(styleKey);
+        var styleId = plainContent(styleKey);
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         if (tblPr == null) {
             tblPr = table.getCTTbl().addNewTblPr();
@@ -117,6 +132,7 @@ public class GenerationContext {
             tblPr.addNewBidiVisual().setVal(STOnOff1.OFF);
         }
     }
+
     public BigInteger getScaledUsableWidth(double factor) {
         return currentLayout.scaledWidth(factor);
     }
@@ -125,12 +141,27 @@ public class GenerationContext {
         return direction;
     }
 
-    public String contextualize(String text){
-        if(requireRTL(text)){
+    /**
+     * Adds text to the paragraph, preserving manual line breaks.
+     */
+    public void addParagraphWithManualBreaks(XWPFParagraph paragraph, String text) {
+        XWPFRun run = paragraph.createRun();
+        String[] lines = text.split("\n", -1); // keep empty lines
+        for (int i = 0; i < lines.length; i++) {
+            if (i > 0) {
+                run.addBreak(); // manual line break
+            }
+            run.setText(lines[i]);
+        }
+    }
+
+    public String contextualize(String text) {
+        if (requireRTL(text)) {
             return text + "\u061C";
         }
         return text;
     }
+
     private boolean requireRTL(String text) {
         if (text == null || text.isEmpty() || (direction == LanguageDirection.LTR)) {
             return false;
@@ -143,14 +174,49 @@ public class GenerationContext {
         // Check if it's neutral according to Unicode bidi
         return switch (dir) {
             case // , . / :
-            Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + - 
-            Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . , 
-            Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
-            Character.DIRECTIONALITY_OTHER_NEUTRALS ->
+                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
+                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
+                    Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
+                    Character.DIRECTIONALITY_OTHER_NEUTRALS ->
                 true;
             default ->
                 false;
         };
+    }
+
+    public void addFooterWithTextAndPageNumber(XWPFDocument doc, String footerText) {
+        // Get or create section properties
+        CTSectPr sectPr = doc.getDocument().getBody().isSetSectPr()
+                ? doc.getDocument().getBody().getSectPr()
+                : doc.getDocument().getBody().addNewSectPr();
+
+        // Create footer policy
+        XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(doc, sectPr);
+
+        // Create footer
+        XWPFFooter footer = policy.createFooter(STHdrFtr.DEFAULT);
+
+        // --- First paragraph: custom text ---
+        String footerTextStyle = "Footer";
+        XWPFParagraph footerPara = footer.createParagraph();
+        footerPara.setStyle(footerTextStyle);
+        addParagraphWithManualBreaks(footerPara, footerText);
+
+        // --- Second paragraph: PAGE field ---
+        XWPFParagraph p2 = footer.createParagraph();
+        p2.setAlignment(ParagraphAlignment.CENTER);
+
+        // Begin field
+        XWPFRun run = p2.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.BEGIN);
+
+        // Field instruction
+        run = p2.createRun();
+        run.getCTR().addNewInstrText().setStringValue("PAGE");
+
+        // End field
+        run = p2.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
     }
 
 }

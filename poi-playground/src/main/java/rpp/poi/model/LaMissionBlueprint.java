@@ -35,7 +35,7 @@ interface LaMissionBlueprint extends Writable {
         XWPFParagraph intro = document.createParagraph();
         String introStyle = context.plainContent(LONG_PARAGRAPH_STYLE_KEY);
         intro.setStyle(introStyle);
-        addParagraphWithManualBreaks(intro, context.contextualize(intro()));
+        context.addParagraphWithManualBreaks(intro, context.contextualize(intro()));
         writeMissions(document, context);
 
     }
