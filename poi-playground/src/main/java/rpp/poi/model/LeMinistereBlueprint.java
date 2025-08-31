@@ -41,7 +41,7 @@ interface LeMinistereBlueprint extends Writable {
         String imageStyle = context.plainContent(IMG_STYLE_KEY);
         byte[] img = image();
         if (img != null && img.length > 0) {
-            insertScaledImage(document, img, imageStyle, 0.85d, 0.2);
+            insertScaledImage(document, img, imageStyle, 0.80d, 0.2);
         }
 
     }

@@ -441,6 +441,23 @@
             <w:szCs w:val="26"/>
         </w:rPr>
     </w:style>
+    <!-- Footer -->
+    <w:style w:type="paragraph" w:styleId="Footer">
+        <w:name w:val="Footer"/>
+        <w:qFormat/>
+        <w:pPr>
+            <w:jc w:val="center"/>
+            <!-- center alignment -->
+        </w:pPr>
+        <w:rPr>
+            <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:eastAsia="Times New Roman" w:cs="Times New Roman"/>
+            <w:lang w:val="ar-DZ" w:bidi="ar-DZ"/>
+            <w:sz w:val="22"/>
+            <w:szCs w:val="22"/>
+            <w:b/>
+            <!-- bold -->
+        </w:rPr>
+    </w:style>
     <!-- Text -->
     <w:style w:type="paragraph" w:styleId="Text">
         <w:name w:val="Text"/>
@@ -492,6 +509,8 @@
             </w:numPr>
             <w:spacing w:before="360" w:after="80"/>
             <!-- remove indentation -->
+            <!-- add page break before -->
+            <w:pageBreakBefore/>
             <w:outlineLvl w:val="0"/>
         </w:pPr>
         <w:rPr>

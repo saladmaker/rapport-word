@@ -34,7 +34,7 @@ public interface Writable {
     /**
      * Adds text to the paragraph, preserving manual line breaks.
      */
-    default void addParagraphWithManualBreaks(XWPFParagraph paragraph, String text) {
+    static void addParagraphWithManualBreaks(XWPFParagraph paragraph, String text) {
         XWPFRun run = paragraph.createRun();
         String[] lines = text.split("\n", -1); // keep empty lines
         for (int i = 0; i < lines.length; i++) {
