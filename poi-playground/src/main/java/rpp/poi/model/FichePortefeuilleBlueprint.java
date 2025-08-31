@@ -1,8 +1,11 @@
 package rpp.poi.model;
 
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -21,15 +24,16 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table1.style";
     String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table1.title.text";
 
-    String FCHPORT_3_TABLE_1_HEADER_1_KEY = "section1.ficheportefeuille.table1.headers.1";
-    String FCHPORT_3_TABLE_1_HEADER_2_KEY = "section1.ficheportefeuille.table1.headers.2";
-    String FCHPORT_3_TABLE_1_HEADER_3_KEY = "section1.ficheportefeuille.table1.headers.3";
+    String FCHPORT_3_TABLE_1_HEADER_KEYS = "section1.ficheportefeuille.table1.headers.";
+    String FCHPORT_3_TABLE_1_HEADER_1_KEY = "section1.ficheportefeuille.table1.headers.0";
+    String FCHPORT_3_TABLE_1_HEADER_2_KEY = "section1.ficheportefeuille.table1.headers.1";
+    String FCHPORT_3_TABLE_1_HEADER_3_KEY = "section1.ficheportefeuille.table1.headers.2";
 
     String FCHPORT_4_DEMARCHE_TITLE_KEY = "section1.ficheportefeuille.demarche.title.text";
-
     String FCHPORT_4_DEMARCHE_TEXT_KEYS = "section1.ficheportefeuille.demarche.text.";
 
-
+    String FCHPORT_3_TABLE_2_STYLE_KEY = "section1.ficheportefeuille.table1.style";
+    String FCHPORT_3_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table2.title.text";
 
     @Option.Required
     Year targetYear();
@@ -45,36 +49,49 @@ interface FichePortefeuilleBlueprint extends Writable {
 
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
-        //enforce portrait mode
+        // enforce portrait mode
         context.apply(PageLayout.PORTRAIT);
 
-        //title
+        // title
         String heading2Style = context.plainContent(HEADING_2_STYLE_KEY);
         XWPFParagraph heading = document.createParagraph();
         heading.setStyle(heading2Style);
         heading.createRun().setText(context.contextualizedContent(FCHPORT_1_TITLE_KEY));
 
-        //gestionnaire
+        // gestionnaire
         String boldStyle = context.plainContent(BOLD_TEXT_STYLE_KEY);
         XWPFParagraph gest = document.createParagraph();
         gest.setStyle(boldStyle);
         gest.createRun().setText(context.contextualizedContent(FCHPORT_2_GEST_KEY));
 
-        //table 1 version B
+        // table 1 version B
         writeTable1(document, context);
         writeDemarche(document, context);
+        writeTable2(document, context);
+
+        // test table generic method
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_1_title_para = document.createParagraph();
+        table_1_title_para.setStyle(tableTitleStyle);
+        table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
+        List<Function<? super ProgrammeRepartition, String>> extracs = List.of(
+                e -> e.name(),
+                e -> e.ae().toString(),
+                e -> e.cp().toString());
+        List<ProgrammeRepartition> rows= repartitionProgrammeVersionBs();
+        context.writeTable(document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_HEADER_KEYS, rows, extracs, true, false);
 
     }
 
     default void writeTable1(XWPFDocument document, GenerationContext context) {
 
-        //table title
+        // table title
         String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
         XWPFParagraph table_1_title_para = document.createParagraph();
         table_1_title_para.setStyle(tableTitleStyle);
         table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
 
-        //determine data row count
+        // determine data row count
         var programmeCount = repartitionProgrammeVersionBs().size();
         XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
         context.applyTableStyle(table_1, FCHPORT_3_TABLE_1_STYLE_KEY);
@@ -93,9 +110,10 @@ interface FichePortefeuilleBlueprint extends Writable {
             rowIndex++;
         }
         var configs = List.of(
-                new ColumnConfig(true, () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::cp).sum()),
-                new ColumnConfig(true, () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::ae).sum())
-        );
+                new ColumnConfig(true,
+                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::cp).sum()),
+                new ColumnConfig(true,
+                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::ae).sum()));
 
         addTotals(table_1, true, false, configs, () -> "wrong");
 
@@ -108,7 +126,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         demarchTitle.setStyle(titleStyle);
         demarchTitle.createRun().setText(context.contextualizedContent(FCHPORT_4_DEMARCHE_TITLE_KEY));
 
-        //varying paragraphs
+        // varying paragraphs
         final String paragraphStyle = context.plainContent(LONG_PARAGRAPH_STYLE_KEY);
         int i = 0;
         Optional<String> demarchParaText = context.optionalText(FCHPORT_4_DEMARCHE_TEXT_KEYS + String.valueOf(i));
@@ -119,6 +137,42 @@ interface FichePortefeuilleBlueprint extends Writable {
             i++;
             demarchParaText = context.optionalText(FCHPORT_4_DEMARCHE_TEXT_KEYS + String.valueOf(i));
         }
+    }
+
+    default void writeTable2(XWPFDocument document, GenerationContext context) {
+
+        // table title
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_1_title_para = document.createParagraph();
+        table_1_title_para.setStyle(tableTitleStyle);
+        table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_2_TITLE_KEY));
+
+        // determine data row count
+        var programmeCount = repartitionProgrammes().size();
+        XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
+        context.applyTableStyle(table_1, FCHPORT_3_TABLE_1_STYLE_KEY);
+        XWPFTableRow headerRow = table_1.getRow(0);
+
+        headerRow.getCell(0).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_1_KEY));
+        headerRow.getCell(1).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_2_KEY));
+        headerRow.getCell(2).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_3_KEY));
+
+        int rowIndex = 1;
+        for (var p : repartitionProgrammes()) {
+            var pRow = table_1.getRow(rowIndex);
+            pRow.getCell(0).setText(context.contextualize(p.name()));
+            pRow.getCell(1).setText(context.contextualize(p.cp().toString()));
+            pRow.getCell(2).setText(context.contextualize(p.ae().toString()));
+            rowIndex++;
+        }
+        var configs = List.of(
+                new ColumnConfig(true,
+                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::cp).sum()),
+                new ColumnConfig(true,
+                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::ae).sum()));
+
+        addTotals(table_1, true, false, configs, () -> "wrong");
+
     }
 
 }

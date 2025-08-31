@@ -1,9 +1,13 @@
 package rpp.poi.model;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -11,6 +15,7 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -40,7 +45,7 @@ public class GenerationContext {
 
     public GenerationContext(XWPFDocument doc, Map<String, String> config, LanguageDirection direction) {
         this.doc = doc;
-        this.config = Map.copyOf(config); 
+        this.config = Map.copyOf(config);
         this.direction = direction;
         var s = contextualizedContent(FOOTER_TEXT_KEY);
         addFooterWithTextAndPageNumber(doc, s);
@@ -95,6 +100,70 @@ public class GenerationContext {
         type.setVal(STSectionMark.NEXT_PAGE);
 
         currentLayout = layout;
+    }
+
+    public <T> XWPFTable writeTable(
+            XWPFDocument document,
+            String tableStyleKey,
+            String headerPrefix,
+            List<T> rows,
+            List<Function<? super T, String>> extractors,
+            boolean addTotalRow,
+            boolean addTotalColumn) {
+        // ---- 1. Collect headers dynamically ----
+        List<String> headers = new ArrayList<>();
+        int idx = 0;
+        while (true) {
+            Optional<String> opt = optionalText(headerPrefix + idx);
+            if (opt.isEmpty()) {
+                break;
+            }
+            headers.add(opt.get());
+            idx++;
+        }
+
+        // ---- 2. Validation ----
+        if (headers.size() != extractors.size()) {
+            throw new IllegalArgumentException(
+                    "Headers count (" + headers.size() +
+                            ") does not match extractors count (" + extractors.size() + ")");
+        }
+
+        // ---- 3. Compute table dimensions ----
+        int rowCount = rows.size() + 1; // +1 for header
+        if (addTotalRow) {
+            rowCount++;
+        }
+
+        int colCount = headers.size();
+        if (addTotalColumn) {
+            colCount++;
+        }
+
+        // ---- 4. Create table with exact size ----
+        XWPFTable table = document.createTable(rowCount, colCount);
+        applyTableStyle(table, tableStyleKey);
+
+        // ---- 5. Fill Header Row ----
+        XWPFTableRow headerRow = table.getRow(0);
+        for (int i = 0; i < headers.size(); i++) {
+            headerRow.getCell(i).setText(headers.get(i));
+        }
+        // leave extra total column cell empty if addTotalColumn == true
+
+        // ---- 6. Fill Data Rows ----
+        int rowIndex = 1;
+        for (T row : rows) {
+            XWPFTableRow tableRow = table.getRow(rowIndex);
+            for (int col = 0; col < extractors.size(); col++) {
+                String text = extractors.get(col).apply(row);
+                tableRow.getCell(col).setText(contextualize(text));
+            }
+            // leave extra total column cell empty if addTotalColumn == true
+            rowIndex++;
+        }
+
+        return table;
     }
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
