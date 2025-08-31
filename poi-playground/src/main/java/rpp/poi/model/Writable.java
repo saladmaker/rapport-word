@@ -30,22 +30,6 @@ public interface Writable {
     }
 
     void write(XWPFDocument document, GenerationContext context);
-
-    /**
-     * Adds text to the paragraph, preserving manual line breaks.
-     */
-    static void addParagraphWithManualBreaks(XWPFParagraph paragraph, String text) {
-        XWPFRun run = paragraph.createRun();
-        String[] lines = text.split("\n", -1); // keep empty lines
-        for (int i = 0; i < lines.length; i++) {
-            if (i > 0) {
-                run.addBreak(); // manual line break
-            }
-            run.setText(lines[i]);
-        }
-    }
-    
-
     
 
     default void addTotals(XWPFTable table, boolean sumRows, boolean sumColumns, List<ColumnConfig> columnConfigs,

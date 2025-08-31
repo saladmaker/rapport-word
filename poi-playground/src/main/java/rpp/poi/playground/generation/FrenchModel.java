@@ -74,7 +74,10 @@ public class FrenchModel implements DocumentGenerator {
                 .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("Formation professionnelle", 20_143_691_000L, 19_506_191_000L),
                                 new ProgrammeRepartition("Enseignement professionnel", 622_000_000L, 540_000_000L),
                                 new ProgrammeRepartition("Administration générale", 97_250_926_000L, 98_536_426_000L)))
-                .build();
+                .addRepartitionProgrammes(List.of(new ProgrammeRepartition("Formation professionnelle", 20_143_691_000L, 19_506_191_000L),
+                                new ProgrammeRepartition("Enseignement professionnel", 622_000_000L, 540_000_000L),
+                                new ProgrammeRepartition("Administration générale", 97_250_926_000L, 98_536_426_000L)))
+                                .build();
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
                 .leMinistere(leMinistere)

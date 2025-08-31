@@ -74,6 +74,9 @@ public class ArabicModel implements DocumentGenerator {
                 .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
                                 new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
                                 new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
+                .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
+                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
+                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
