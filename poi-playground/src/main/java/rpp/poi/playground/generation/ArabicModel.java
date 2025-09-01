@@ -23,6 +23,7 @@ import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
 import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
+import rpp.poi.model.RepartitionProgrammeCentreResp;
 import rpp.poi.playground.DocumentGenerator;
 
 public class ArabicModel implements DocumentGenerator {
@@ -77,6 +78,9 @@ public class ArabicModel implements DocumentGenerator {
                 .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
                                 new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
                                 new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
+                .addRepartitionProgrammeCentreResps(List.of(new RepartitionProgrammeCentreResp("التكوين المهني", List.of(10033423L, 12334233L, 2343424L, 342342L)),
+                                new RepartitionProgrammeCentreResp("التعليم المهني", List.of(10033343L, 72334233L, 3343424L, 642342L)),
+                                new RepartitionProgrammeCentreResp("الإدارة العامة", List.of(133343L, 34233L, 43424L, 642342L))))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -89,22 +93,24 @@ public class ArabicModel implements DocumentGenerator {
 
 
     }
-    public static Map<String, String> loadPropertiesAsMap(String resourceName) {
-        Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName); InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            if (is == null) {
-                throw new FileNotFoundException("Resource not found: " + resourceName);
-            }
-            props.load(r);
-            Map<String, String> map = new HashMap<>();
-            for (String name : props.stringPropertyNames()) {
-                map.put(name, props.getProperty(name));
-            }
 
-            return map;
-        } catch (Exception e) {
-            throw new IllegalStateException("can't load resource");
+        public static Map<String, String> loadPropertiesAsMap(String resourceName) {
+                Properties props = new Properties();
+                try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+                                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                        if (is == null) {
+                                throw new FileNotFoundException("Resource not found: " + resourceName);
+                        }
+                        props.load(r);
+                        Map<String, String> map = new HashMap<>();
+                        for (String name : props.stringPropertyNames()) {
+                                map.put(name, props.getProperty(name));
+                        }
+
+                        return map;
+                } catch (Exception e) {
+                        throw new IllegalStateException("can't load resource");
+                }
         }
-    }
 
 }

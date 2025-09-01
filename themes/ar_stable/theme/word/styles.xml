@@ -1155,4 +1155,79 @@
             </w:tcPr>
         </w:tblStylePr>
     </w:style>
+    <w:style w:type="table" w:customStyle="1" w:styleId="NumberBasedTableBase2">
+        <w:name w:val="NumberBasedTableBase2"/>
+        <w:basedOn w:val="TableNormal"/>
+        <w:uiPriority w:val="99"/>
+        <w:rsid w:val="00FE6763"/>
+
+        <w:pPr>
+            <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+            <w:jc w:val="center"/>
+        </w:pPr>
+
+        <w:tblPr>
+            <w:tblBorders>
+                <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+            </w:tblBorders>
+        </w:tblPr>
+
+        <w:tcPr>
+            <w:vAlign w:val="center"/>
+        </w:tcPr>
+
+        <!-- First Row -->
+        <w:tblStylePr w:type="firstRow">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- Last Row -->
+        <w:tblStylePr w:type="lastRow">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- First Column -->
+        <w:tblStylePr w:type="firstCol">
+            <w:pPr>
+                <w:jc w:val="left"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="top"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- Last Column -->
+        <w:tblStylePr w:type="lastCol">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+    </w:style>
 </w:styles>

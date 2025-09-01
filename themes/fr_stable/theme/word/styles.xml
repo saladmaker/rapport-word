@@ -10,14 +10,12 @@
     xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du"
     xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash"
     xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock"
-    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex"
-    mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du">
+    xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du">
     <w:docDefaults>
         <w:rPrDefault>
             <w:rPr>
                 <!-- explicit default fonts -->
-                <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
-                    w:eastAsia="Times New Roman" w:cs="Times New Roman"/>
+                <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:eastAsia="Times New Roman" w:cs="Times New Roman"/>
                 <w:kern w:val="2"/>
                 <w:sz w:val="24"/>
                 <w:szCs w:val="24"/>
@@ -32,26 +30,17 @@
             </w:pPr>
         </w:pPrDefault>
     </w:docDefaults>
-    <w:latentStyles w:defLockedState="0" w:defUIPriority="99" w:defSemiHidden="0"
-        w:defUnhideWhenUsed="0" w:defQFormat="0" w:count="376">
+    <w:latentStyles w:defLockedState="0" w:defUIPriority="99" w:defSemiHidden="0" w:defUnhideWhenUsed="0" w:defQFormat="0" w:count="376">
         <w:lsdException w:name="Normal" w:uiPriority="0" w:qFormat="1"/>
         <w:lsdException w:name="heading 1" w:uiPriority="9" w:qFormat="1"/>
-        <w:lsdException w:name="heading 2" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 3" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 4" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 5" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 6" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 7" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 8" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
-        <w:lsdException w:name="heading 9" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
+        <w:lsdException w:name="heading 2" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 3" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 4" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 5" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 6" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 7" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 8" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
+        <w:lsdException w:name="heading 9" w:semiHidden="1" w:uiPriority="9" w:unhideWhenUsed="1" w:qFormat="1"/>
         <w:lsdException w:name="index 1" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="index 2" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="index 3" w:semiHidden="1" w:unhideWhenUsed="1"/>
@@ -76,8 +65,7 @@
         <w:lsdException w:name="header" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="footer" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="index heading" w:semiHidden="1" w:unhideWhenUsed="1"/>
-        <w:lsdException w:name="caption" w:semiHidden="1" w:uiPriority="35" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
+        <w:lsdException w:name="caption" w:semiHidden="1" w:uiPriority="35" w:unhideWhenUsed="1" w:qFormat="1"/>
         <w:lsdException w:name="table of figures" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="envelope address" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="envelope return" w:semiHidden="1" w:unhideWhenUsed="1"/>
@@ -108,8 +96,7 @@
         <w:lsdException w:name="Title" w:uiPriority="10" w:qFormat="1"/>
         <w:lsdException w:name="Closing" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="Signature" w:semiHidden="1" w:unhideWhenUsed="1"/>
-        <w:lsdException w:name="Default Paragraph Font" w:semiHidden="1" w:uiPriority="1"
-            w:unhideWhenUsed="1"/>
+        <w:lsdException w:name="Default Paragraph Font" w:semiHidden="1" w:uiPriority="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="Body Text" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="Body Text Indent" w:semiHidden="1" w:unhideWhenUsed="1"/>
         <w:lsdException w:name="List Continue" w:semiHidden="1" w:unhideWhenUsed="1"/>
@@ -309,10 +296,8 @@
         <w:lsdException w:name="Subtle Reference" w:uiPriority="31" w:qFormat="1"/>
         <w:lsdException w:name="Intense Reference" w:uiPriority="32" w:qFormat="1"/>
         <w:lsdException w:name="Book Title" w:uiPriority="33" w:qFormat="1"/>
-        <w:lsdException w:name="Bibliography" w:semiHidden="1" w:uiPriority="37"
-            w:unhideWhenUsed="1"/>
-        <w:lsdException w:name="TOC Heading" w:semiHidden="1" w:uiPriority="39" w:unhideWhenUsed="1"
-            w:qFormat="1"/>
+        <w:lsdException w:name="Bibliography" w:semiHidden="1" w:uiPriority="37" w:unhideWhenUsed="1"/>
+        <w:lsdException w:name="TOC Heading" w:semiHidden="1" w:uiPriority="39" w:unhideWhenUsed="1" w:qFormat="1"/>
         <w:lsdException w:name="Plain Table 1" w:uiPriority="41"/>
         <w:lsdException w:name="Plain Table 2" w:uiPriority="42"/>
         <w:lsdException w:name="Plain Table 3" w:uiPriority="43"/>
@@ -788,17 +773,21 @@
         </w:tblPr>
         <!-- Default font and alignment for all cells: Times New Roman, size 12, left-aligned -->
         <w:pPr>
-            <w:jc w:val="left"/> <!-- Left alignment for all cells -->
+            <w:jc w:val="left"/>
+            <!-- Left alignment for all cells -->
         </w:pPr>
         <w:rPr>
             <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-            <w:sz w:val="22"/> <!-- Font size 12pt (24 half-points) -->
-            <w:szCs w:val="22"/> <!-- Font size for complex scripts -->
+            <w:sz w:val="22"/>
+            <!-- Font size 12pt (24 half-points) -->
+            <w:szCs w:val="22"/>
+            <!-- Font size for complex scripts -->
         </w:rPr>
         <!-- First Row: Bold font (left alignment inherited from default) -->
         <w:tblStylePr w:type="firstRow">
             <w:rPr>
-                <w:b/> <!-- Bold font for first row -->
+                <w:b/>
+                <!-- Bold font for first row -->
             </w:rPr>
         </w:tblStylePr>
     </w:style>
@@ -864,4 +853,80 @@
             </w:tcPr>
         </w:tblStylePr>
     </w:style>
+    <w:style w:type="table" w:customStyle="1" w:styleId="NumberBasedTableBase2">
+        <w:name w:val="NumberBasedTableBase"/>
+        <w:basedOn w:val="TableNormal"/>
+        <w:uiPriority w:val="99"/>
+        <w:rsid w:val="00FE6763"/>
+
+        <w:pPr>
+            <w:spacing w:after="0" w:line="240" w:lineRule="auto"/>
+            <w:jc w:val="center"/>
+        </w:pPr>
+
+        <w:tblPr>
+            <w:tblBorders>
+                <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+                <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+            </w:tblBorders>
+        </w:tblPr>
+
+        <w:tcPr>
+            <w:vAlign w:val="center"/>
+        </w:tcPr>
+
+        <!-- First Row -->
+        <w:tblStylePr w:type="firstRow">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- Last Row -->
+        <w:tblStylePr w:type="lastRow">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- First Column -->
+        <w:tblStylePr w:type="firstCol">
+            <w:pPr>
+                <w:jc w:val="left"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="top"/>
+            </w:tcPr>
+        </w:tblStylePr>
+
+        <!-- Last Column -->
+        <w:tblStylePr w:type="lastCol">
+            <w:rPr>
+                <w:b/>
+            </w:rPr>
+            <w:pPr>
+                <w:jc w:val="center"/>
+            </w:pPr>
+            <w:tcPr>
+                <w:vAlign w:val="center"/>
+            </w:tcPr>
+        </w:tblStylePr>
+    </w:style>
+
 </w:styles>

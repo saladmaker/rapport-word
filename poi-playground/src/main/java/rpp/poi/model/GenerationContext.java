@@ -15,18 +15,25 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
 import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFldChar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
@@ -102,68 +109,83 @@ public class GenerationContext {
         currentLayout = layout;
     }
 
-    public <T> XWPFTable writeTable(
+    @SuppressWarnings("unchecked")
+    public <T> void writeTable(
             XWPFDocument document,
             String tableStyleKey,
             String headerPrefix,
             List<T> rows,
-            List<Function<? super T, String>> extractors,
-            boolean addTotalRow,
-            boolean addTotalColumn) {
-        // ---- 1. Collect headers dynamically ----
-        List<String> headers = new ArrayList<>();
-        int idx = 0;
-        while (true) {
-            Optional<String> opt = optionalText(headerPrefix + idx);
-            if (opt.isEmpty()) {
-                break;
-            }
-            headers.add(opt.get());
-            idx++;
+            List<ColumnExtractor<? super T, ?>> extractors,
+            String totalRowLabel,
+            boolean addTotalColumn,
+            String totalColumnLabel) {
+        String totalFormula = "=SUM(LEFT)";
+        if (LanguageDirection.RTL == getDirection()) {
+            totalFormula = "=SUM(RIGHT)";
         }
-
-        // ---- 2. Validation ----
-        if (headers.size() != extractors.size()) {
-            throw new IllegalArgumentException(
-                    "Headers count (" + headers.size() +
-                            ") does not match extractors count (" + extractors.size() + ")");
-        }
-
-        // ---- 3. Compute table dimensions ----
-        int rowCount = rows.size() + 1; // +1 for header
-        if (addTotalRow) {
-            rowCount++;
-        }
-
-        int colCount = headers.size();
-        if (addTotalColumn) {
-            colCount++;
-        }
-
-        // ---- 4. Create table with exact size ----
-        XWPFTable table = document.createTable(rowCount, colCount);
+        int nCols = extractors.size() + (addTotalColumn ? 1 : 0);
+        XWPFTable table = document.createTable(rows.size() + 1 + (totalRowLabel != null ? 1 : 0), nCols);
         applyTableStyle(table, tableStyleKey);
 
-        // ---- 5. Fill Header Row ----
+        // ---- Header ----
         XWPFTableRow headerRow = table.getRow(0);
-        for (int i = 0; i < headers.size(); i++) {
-            headerRow.getCell(i).setText(headers.get(i));
+        for (int i = 0; i < extractors.size(); i++) {
+            headerRow.getCell(i).setText(
+                    optionalText(headerPrefix + i).orElse("Col" + (i + 1)));
         }
-        // leave extra total column cell empty if addTotalColumn == true
+        if (addTotalColumn) {
+            headerRow.getCell(extractors.size()).setText(totalColumnLabel);
+        }
 
-        // ---- 6. Fill Data Rows ----
-        int rowIndex = 1;
-        for (T row : rows) {
-            XWPFTableRow tableRow = table.getRow(rowIndex);
-            for (int col = 0; col < extractors.size(); col++) {
-                String text = extractors.get(col).apply(row);
-                tableRow.getCell(col).setText(contextualize(text));
+        // ---- Data rows ----
+        for (int r = 0; r < rows.size(); r++) {
+            XWPFTableRow row = table.getRow(r + 1);
+            T rowData = rows.get(r);
+
+            for (int c = 0; c < extractors.size(); c++) {
+                String value = String.valueOf(extractors.get(c).apply(rowData));
+                row.getCell(c).setText(value);
             }
-            // leave extra total column cell empty if addTotalColumn == true
-            rowIndex++;
+
+            // Row total only if there are summable columns
+            if (addTotalColumn) {
+
+                boolean hasSummable = extractors.stream()
+                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
+                XWPFTableCell totalCell = row.getCell(extractors.size());
+                if (hasSummable) {
+                    insertFormula(totalCell, totalFormula, "0");
+                } else {
+                    totalCell.setText("-"); // or "-"
+                }
+            }
         }
 
-        return table;
+        // ---- Total row ----
+        if (totalRowLabel != null) {
+            XWPFTableRow totalRow = table.getRow(table.getNumberOfRows() - 1);
+            totalRow.getCell(0).setText(totalRowLabel);
+
+            for (int c = 1; c < extractors.size(); c++) {
+                XWPFTableCell totalCell = totalRow.getCell(c);
+                if (extractors.get(c) instanceof ColumnExtractor.SummableColumnExtractor) {
+                    insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                } else {
+                    totalCell.setText("-"); // unsummable column
+                }
+            }
+
+            if (addTotalColumn) {
+                boolean hasSummable = extractors.stream()
+                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
+                XWPFTableCell grandTotal = totalRow.getCell(extractors.size());
+                if (hasSummable) {
+                    insertFormula(grandTotal, totalFormula, "0");
+                } else {
+                    grandTotal.setText("");
+                }
+            }
+        }
     }
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
@@ -222,6 +244,37 @@ public class GenerationContext {
             }
             run.setText(lines[i]);
         }
+    }
+
+    private void insertFormula(XWPFTableCell cell, String formula, String fallback) {
+        cell.removeParagraph(0); // clear default paragraph
+        XWPFParagraph p = cell.addParagraph();
+        CTP ctp = p.getCTP();
+
+        // BEGIN field
+        CTR rBegin = ctp.addNewR();
+        CTFldChar fldBegin = rBegin.addNewFldChar();
+        fldBegin.setFldCharType(STFldCharType.BEGIN);
+
+        // INSTRUCTION text (the actual formula)
+        CTR rInstr = ctp.addNewR();
+        CTText instrText = rInstr.addNewInstrText();
+        instrText.setStringValue(formula);
+        instrText.setSpace(SpaceAttribute.Space.PRESERVE);
+
+        // SEPARATE (marks the switch between formula and display text)
+        CTR rSep = ctp.addNewR();
+        CTFldChar fldSep = rSep.addNewFldChar();
+        fldSep.setFldCharType(STFldCharType.SEPARATE);
+
+        // RESULT (fallback display text)
+        CTR rResult = ctp.addNewR();
+        rResult.addNewT().setStringValue(fallback);
+
+        // END field
+        CTR rEnd = ctp.addNewR();
+        CTFldChar fldEnd = rEnd.addNewFldChar();
+        fldEnd.setFldCharType(STFldCharType.END);
     }
 
     public String contextualize(String text) {
