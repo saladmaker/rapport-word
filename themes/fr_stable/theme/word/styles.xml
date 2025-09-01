@@ -442,6 +442,16 @@
             <!-- bold -->
         </w:rPr>
     </w:style>
+    <w:style w:type="paragraph" w:styleId="TableCell">
+        <w:name w:val="TableCell"/>
+        <w:qFormat/>
+        <w:rPr>
+            <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+            <w:lang w:val="fr-FR" w:eastAsia="fr-FR" w:bidi="fr-FR"/>
+            <w:sz w:val="22"/>
+            <w:szCs w:val="22"/>
+        </w:rPr>
+    </w:style>
     <!-- add justified to all text in doc except for table cell -->
     <w:style w:type="paragraph" w:styleId="Text">
         <w:name w:val="Text"/>

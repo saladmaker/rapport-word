@@ -16,19 +16,20 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_1_TITLE_KEY = "section1.ficheportefeuille.title.text";
     String FCHPORT_2_GEST_KEY = "section1.ficheportefeuille.gestionnaire.text";
 
-    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table1.style";
-    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table1.title.text";
-    String FCHPORT_3_TABLE_1_HEADER_KEYS = "section1.ficheportefeuille.table1.headers.";
+    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table.styles.1";
+    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table.1.title";
+    String FCHPORT_3_TABLE_1_HEADER_KEYS = "section1.ficheportefeuille.table.1.headers.";
 
     String FCHPORT_4_DEMARCHE_TITLE_KEY = "section1.ficheportefeuille.demarche.title.text";
     String FCHPORT_4_DEMARCHE_TEXT_KEYS = "section1.ficheportefeuille.demarche.text.";
 
-    String FCHPORT_5_TABLE_2_STYLE_KEY = "section1.ficheportefeuille.table1.style";
-    String FCHPORT_5_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table2.title.text";
+    String FCHPORT_5_TABLE_2_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY;//same style
+    String FCHPORT_5_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table.2.title";
+    String FCHPORT_5_TABLE_2_HEADER_KEY = FCHPORT_3_TABLE_1_HEADER_KEYS;//same headers
 
     String FCHPORT_6_TABLE_3_STYLE_KEY = "section1.ficheportefeuille.table.styles.2";
-    String FCHPORT_6_TABLE_3_TITLE_KEY = "section1.ficheportefeuille.table3.title.text";
-    String FCHPORT_6_TABLE_3_HEADER_KEYS = "section1.ficheportefeuille.table3.headers.";
+    String FCHPORT_6_TABLE_3_TITLE_KEY = "section1.ficheportefeuille.table.3.title";
+    String FCHPORT_6_TABLE_3_HEADER_KEYS = "section1.ficheportefeuille.table.3.headers.";
 
     @Option.Required
     Year targetYear();
