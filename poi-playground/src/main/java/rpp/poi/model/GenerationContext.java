@@ -3,6 +3,7 @@ package rpp.poi.model;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
@@ -36,6 +37,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 public final class GenerationContext {
 
     static final String FOOTER_TEXT_KEY = "footer.text";
+    static final String DEFAULT_TOTAL_LABEL = "default.total";
 
     private final XWPFDocument doc;
     private final LanguageDirection direction;
@@ -105,14 +107,16 @@ public final class GenerationContext {
     @SuppressWarnings("unchecked")
     public <T> void writeTable(
             XWPFDocument document,
-            String tableStyleKey,
-            String headerPrefix,
+            final String tableStyleKey,
+            final String contentPrefix,
             List<T> rows,
             List<ColumnExtractor<? super T, ?>> extractors,
-            String totalRowLabel,
-            boolean addTotalColumn,
-            String totalColumnLabel) {
-        
+            boolean addTotalRow) {
+
+        final String headersPrefix = contentPrefix + "headers.";
+        final String totalColumnLabelKey = contentPrefix + "total.column";
+        final String totalRowLabelKey = contentPrefix + "total.row";
+
         //sum that dependes on language direction
         String lastColumnFormula = "=SUM(LEFT)";
         if (LanguageDirection.RTL == getDirection()) {
@@ -120,20 +124,21 @@ public final class GenerationContext {
         }
 
         //calculate and create a proper size table
-        int nCols = extractors.size() + (addTotalColumn ? 1 : 0);
-        XWPFTable table = document.createTable(rows.size() + 1 + (totalRowLabel != null ? 1 : 0), nCols);
-        
+        int nCols = extractors.size() + (addTotalRow ? 1 : 0);
+        XWPFTable table = document.createTable(rows.size() + 1 + 1, nCols);
+
         //apply table level style
         applyTableStyle(table, tableStyleKey);
 
         //apply cell style when it's configured
         final String cellStyleKey = tableStyleKey + ".cell";
-        var cellStyle = optionalText(cellStyleKey);
-        if (cellStyle.isPresent()) {
+        var cellStyleOpt = optionalText(cellStyleKey);
+        if (cellStyleOpt.isPresent()) {
+            var cellStyle = cellStyleOpt.get();
             for (int i = 0; i < table.getRows().size(); i++) {
                 var row = table.getRow(i);
                 for (int j = 0; j < row.getTableICells().size(); j++) {
-                    row.getCell(j).getParagraphs().get(0).setStyle(cellStyle.get());
+                    row.getCell(j).getParagraphs().get(0).setStyle(cellStyle);
                 }
             }
         }
@@ -141,11 +146,11 @@ public final class GenerationContext {
         // ---- Header ----
         XWPFTableRow headerRow = table.getRow(0);
         for (int i = 0; i < extractors.size(); i++) {
-            headerRow.getCell(i).setText(
-                    optionalText(headerPrefix + i).orElse("Col" + (i + 1)));
+            headerRow.getCell(i).setText(contextualizedContent(headersPrefix + i));
         }
-        if (addTotalColumn) {
-            headerRow.getCell(extractors.size()).setText(totalColumnLabel);
+        if (addTotalRow) {
+            var totalRowLabel = totalLabel(totalRowLabelKey);
+            headerRow.getCell(extractors.size()).setText(totalRowLabel);
         }
 
         // ---- Data rows ----
@@ -158,44 +163,40 @@ public final class GenerationContext {
                 row.getCell(c).setText(value);
             }
 
-            // Row total only if there are summable columns
-            if (addTotalColumn) {
-
-                boolean hasSummable = extractors.stream()
-                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
+            // add total row if configured
+            if (addTotalRow) {
                 XWPFTableCell totalCell = row.getCell(extractors.size());
-                if (hasSummable) {
-                    insertFormula(totalCell, lastColumnFormula, "0");
-                } else {
-                    totalCell.setText("-");
-                }
+                insertFormula(totalCell, lastColumnFormula, "0");
             }
         }
 
-        // ---- Total row ----
-        if (totalRowLabel != null) {
-            XWPFTableRow totalRow = table.getRow(table.getNumberOfRows() - 1);
-            totalRow.getCell(0).setText(totalRowLabel);
+        XWPFTableRow totalRow = table.getRow(table.getNumberOfRows() - 1);
+        var totalColumnLabel = totalLabel(totalColumnLabelKey);
+        totalRow.getCell(0).setText(totalColumnLabel);
 
-            for (int c = 1; c < extractors.size(); c++) {
-                XWPFTableCell totalCell = totalRow.getCell(c);
-                if (extractors.get(c) instanceof ColumnExtractor.SummableColumnExtractor) {
-                    insertFormula(totalCell, "=SUM(ABOVE)", "0");
-                } else {
-                    totalCell.setText("-");
-                }
+        for (int c = 1; c < extractors.size(); c++) {
+            XWPFTableCell totalCell = totalRow.getCell(c);
+            if (extractors.get(c) instanceof ColumnExtractor.SummableColumnExtractor) {
+                insertFormula(totalCell, "=SUM(ABOVE)", "0");
+            } else {
+                totalCell.setText("-");
             }
+        }
 
-            if (addTotalColumn) {
-                boolean hasSummable = extractors.stream()
-                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
-                XWPFTableCell grandTotal = totalRow.getCell(extractors.size());
-                if (hasSummable) {
-                    insertFormula(grandTotal, lastColumnFormula, "0");
-                } else {
-                    grandTotal.setText("");
-                }
-            }
+        if (addTotalRow) {
+            XWPFTableCell grandTotal = totalRow.getCell(extractors.size());
+            insertFormula(grandTotal, lastColumnFormula, "0");
+        }
+
+    }
+
+    private String totalLabel(final String totalRowLabelKey) {
+        Objects.requireNonNull(totalRowLabelKey, "totalRowLabelKey can not be null");
+        var totalRowLabelOpt = optionalText(totalRowLabelKey);
+        if (totalRowLabelOpt.isPresent()) {
+            return contextualize(totalRowLabelOpt.get());
+        } else {
+            return contextualizedContent(DEFAULT_TOTAL_LABEL);
         }
     }
 
@@ -256,6 +257,7 @@ public final class GenerationContext {
             run.setText(lines[i]);
         }
     }
+
     private void insertFormula(XWPFTableCell cell, String formula, String placeholder) {
         cell.removeParagraph(0);
         XWPFParagraph p = cell.addParagraph();
