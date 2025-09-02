@@ -1,16 +1,11 @@
 package rpp.poi.model;
 
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
@@ -21,19 +16,20 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_1_TITLE_KEY = "section1.ficheportefeuille.title.text";
     String FCHPORT_2_GEST_KEY = "section1.ficheportefeuille.gestionnaire.text";
 
-    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table1.style";
-    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table1.title.text";
-
-    String FCHPORT_3_TABLE_1_HEADER_KEYS = "section1.ficheportefeuille.table1.headers.";
-    String FCHPORT_3_TABLE_1_HEADER_1_KEY = "section1.ficheportefeuille.table1.headers.0";
-    String FCHPORT_3_TABLE_1_HEADER_2_KEY = "section1.ficheportefeuille.table1.headers.1";
-    String FCHPORT_3_TABLE_1_HEADER_3_KEY = "section1.ficheportefeuille.table1.headers.2";
+    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table.styles.1";
+    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table.1.title";
+    String FCHPORT_3_TABLE_1_HEADER_KEYS = "section1.ficheportefeuille.table.1.headers.";
 
     String FCHPORT_4_DEMARCHE_TITLE_KEY = "section1.ficheportefeuille.demarche.title.text";
     String FCHPORT_4_DEMARCHE_TEXT_KEYS = "section1.ficheportefeuille.demarche.text.";
 
-    String FCHPORT_3_TABLE_2_STYLE_KEY = "section1.ficheportefeuille.table1.style";
-    String FCHPORT_3_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table2.title.text";
+    String FCHPORT_5_TABLE_2_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY;//same style
+    String FCHPORT_5_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table.2.title";
+    String FCHPORT_5_TABLE_2_HEADER_KEY = FCHPORT_3_TABLE_1_HEADER_KEYS;//same headers
+
+    String FCHPORT_6_TABLE_3_STYLE_KEY = "section1.ficheportefeuille.table.styles.2";
+    String FCHPORT_6_TABLE_3_TITLE_KEY = "section1.ficheportefeuille.table.3.title";
+    String FCHPORT_6_TABLE_3_HEADER_KEYS = "section1.ficheportefeuille.table.3.headers.";
 
     @Option.Required
     Year targetYear();
@@ -68,54 +64,22 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeTable1(document, context);
         writeDemarche(document, context);
         writeTable2(document, context);
-
-        // test table generic method
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_1_title_para = document.createParagraph();
-        table_1_title_para.setStyle(tableTitleStyle);
-        table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-        List<Function<? super ProgrammeRepartition, String>> extracs = List.of(
-                e -> e.name(),
-                e -> e.ae().toString(),
-                e -> e.cp().toString());
-        List<ProgrammeRepartition> rows= repartitionProgrammeVersionBs();
-        context.writeTable(document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_HEADER_KEYS, rows, extracs, true, false);
-
+        writeTable3(document, context);
     }
 
     default void writeTable1(XWPFDocument document, GenerationContext context) {
 
-        // table title
         String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
         XWPFParagraph table_1_title_para = document.createParagraph();
         table_1_title_para.setStyle(tableTitleStyle);
         table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-
-        // determine data row count
-        var programmeCount = repartitionProgrammeVersionBs().size();
-        XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
-        context.applyTableStyle(table_1, FCHPORT_3_TABLE_1_STYLE_KEY);
-        XWPFTableRow headerRow = table_1.getRow(0);
-
-        headerRow.getCell(0).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_1_KEY));
-        headerRow.getCell(1).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_2_KEY));
-        headerRow.getCell(2).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_3_KEY));
-
-        int rowIndex = 1;
-        for (var p : repartitionProgrammeVersionBs()) {
-            var pRow = table_1.getRow(rowIndex);
-            pRow.getCell(0).setText(context.contextualize(p.name()));
-            pRow.getCell(1).setText(context.contextualize(p.cp().toString()));
-            pRow.getCell(2).setText(context.contextualize(p.ae().toString()));
-            rowIndex++;
-        }
-        var configs = List.of(
-                new ColumnConfig(true,
-                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::cp).sum()),
-                new ColumnConfig(true,
-                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::ae).sum()));
-
-        addTotals(table_1, true, false, configs, () -> "wrong");
+        List<ColumnExtractor<? super ProgrammeRepartition, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        List<ProgrammeRepartition> rows = repartitionProgrammeVersionBs();
+        context.writeTable(document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_HEADER_KEYS, rows, extractors, "Total",
+                false, "");
 
     }
 
@@ -143,36 +107,39 @@ interface FichePortefeuilleBlueprint extends Writable {
 
         // table title
         String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_1_title_para = document.createParagraph();
-        table_1_title_para.setStyle(tableTitleStyle);
-        table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_2_TITLE_KEY));
+        XWPFParagraph table_title_para = document.createParagraph();
+        table_title_para.setStyle(tableTitleStyle);
+        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_5_TABLE_2_TITLE_KEY));
 
-        // determine data row count
-        var programmeCount = repartitionProgrammes().size();
-        XWPFTable table_1 = document.createTable(programmeCount + 1 + 1, 3);// programme count + header + total
-        context.applyTableStyle(table_1, FCHPORT_3_TABLE_1_STYLE_KEY);
-        XWPFTableRow headerRow = table_1.getRow(0);
-
-        headerRow.getCell(0).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_1_KEY));
-        headerRow.getCell(1).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_2_KEY));
-        headerRow.getCell(2).setText(context.contextualizedContent(FCHPORT_3_TABLE_1_HEADER_3_KEY));
-
-        int rowIndex = 1;
-        for (var p : repartitionProgrammes()) {
-            var pRow = table_1.getRow(rowIndex);
-            pRow.getCell(0).setText(context.contextualize(p.name()));
-            pRow.getCell(1).setText(context.contextualize(p.cp().toString()));
-            pRow.getCell(2).setText(context.contextualize(p.ae().toString()));
-            rowIndex++;
-        }
-        var configs = List.of(
-                new ColumnConfig(true,
-                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::cp).sum()),
-                new ColumnConfig(true,
-                        () -> repartitionProgrammeVersionBs().stream().mapToLong(ProgrammeRepartition::ae).sum()));
-
-        addTotals(table_1, true, false, configs, () -> "wrong");
+        List<ColumnExtractor<? super ProgrammeRepartition, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        List<ProgrammeRepartition> rows = repartitionProgrammes();
+        context.writeTable(document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_HEADER_KEYS, rows, extractors, "Total",
+                false, "");
 
     }
+    default void writeTable3(XWPFDocument document, GenerationContext context) {
+
+        // table title
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_title_para = document.createParagraph();
+        table_title_para.setStyle(tableTitleStyle);
+        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
+
+        List<ColumnExtractor<? super RepartitionProgrammeCentreResp, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(RepartitionProgrammeCentreResp::name),
+                ColumnExtractor.ofSummable(r -> r.ctres().get(0)),
+                ColumnExtractor.ofSummable(r -> r.ctres().get(1)),
+                ColumnExtractor.ofSummable(r -> r.ctres().get(2)),
+                ColumnExtractor.ofSummable(r -> r.ctres().get(3))
+                );
+        List<RepartitionProgrammeCentreResp> rows = repartitionProgrammeCentreResps();
+        context.writeTable(document, FCHPORT_6_TABLE_3_STYLE_KEY, FCHPORT_6_TABLE_3_HEADER_KEYS, rows, extractors, "Total",
+                true, "Total");
+
+    }
+
 
 }
