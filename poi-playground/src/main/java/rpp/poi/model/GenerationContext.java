@@ -1,13 +1,10 @@
 package rpp.poi.model;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -15,14 +12,17 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -33,13 +33,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
-public class GenerationContext {
+public final class GenerationContext {
 
     static final String FOOTER_TEXT_KEY = "footer.text";
-    static final String FOOTER_TEXT_STYLE_KEY = "bold.text.style";
 
     private final XWPFDocument doc;
-    private final LanguageDirection direction; // immutable
+    private final LanguageDirection direction;
     private PageLayout currentLayout = PageLayout.PORTRAIT;
     private final Map<String, String> config;
 
@@ -47,8 +46,8 @@ public class GenerationContext {
         this.doc = doc;
         this.config = Map.copyOf(config);
         this.direction = direction;
-        var s = contextualizedContent(FOOTER_TEXT_KEY);
-        addFooterWithTextAndPageNumber(doc, s);
+        var footerText = contextualizedContent(FOOTER_TEXT_KEY);
+        addFooterAndPageNumber(doc, footerText);
     }
 
     public Optional<String> optionalText(String key) {
@@ -65,8 +64,9 @@ public class GenerationContext {
 
     public String plainContent(String key) {
         var value = config.get(key);
-        if (null == value)
+        if (null == value) {
             throw new IllegalStateException("value doesn't exist \"" + key + "\"");
+        }
         return value;
     }
 
@@ -102,68 +102,101 @@ public class GenerationContext {
         currentLayout = layout;
     }
 
-    public <T> XWPFTable writeTable(
+    @SuppressWarnings("unchecked")
+    public <T> void writeTable(
             XWPFDocument document,
             String tableStyleKey,
             String headerPrefix,
             List<T> rows,
-            List<Function<? super T, String>> extractors,
-            boolean addTotalRow,
-            boolean addTotalColumn) {
-        // ---- 1. Collect headers dynamically ----
-        List<String> headers = new ArrayList<>();
-        int idx = 0;
-        while (true) {
-            Optional<String> opt = optionalText(headerPrefix + idx);
-            if (opt.isEmpty()) {
-                break;
-            }
-            headers.add(opt.get());
-            idx++;
+            List<ColumnExtractor<? super T, ?>> extractors,
+            String totalRowLabel,
+            boolean addTotalColumn,
+            String totalColumnLabel) {
+        
+        //sum that dependes on language direction
+        String lastColumnFormula = "=SUM(LEFT)";
+        if (LanguageDirection.RTL == getDirection()) {
+            lastColumnFormula = "=SUM(RIGHT)";
         }
 
-        // ---- 2. Validation ----
-        if (headers.size() != extractors.size()) {
-            throw new IllegalArgumentException(
-                    "Headers count (" + headers.size() +
-                            ") does not match extractors count (" + extractors.size() + ")");
-        }
-
-        // ---- 3. Compute table dimensions ----
-        int rowCount = rows.size() + 1; // +1 for header
-        if (addTotalRow) {
-            rowCount++;
-        }
-
-        int colCount = headers.size();
-        if (addTotalColumn) {
-            colCount++;
-        }
-
-        // ---- 4. Create table with exact size ----
-        XWPFTable table = document.createTable(rowCount, colCount);
+        //calculate and create a proper size table
+        int nCols = extractors.size() + (addTotalColumn ? 1 : 0);
+        XWPFTable table = document.createTable(rows.size() + 1 + (totalRowLabel != null ? 1 : 0), nCols);
+        
+        //apply table level style
         applyTableStyle(table, tableStyleKey);
 
-        // ---- 5. Fill Header Row ----
-        XWPFTableRow headerRow = table.getRow(0);
-        for (int i = 0; i < headers.size(); i++) {
-            headerRow.getCell(i).setText(headers.get(i));
-        }
-        // leave extra total column cell empty if addTotalColumn == true
-
-        // ---- 6. Fill Data Rows ----
-        int rowIndex = 1;
-        for (T row : rows) {
-            XWPFTableRow tableRow = table.getRow(rowIndex);
-            for (int col = 0; col < extractors.size(); col++) {
-                String text = extractors.get(col).apply(row);
-                tableRow.getCell(col).setText(contextualize(text));
+        //apply cell style when it's configured
+        final String cellStyleKey = tableStyleKey + ".cell";
+        var cellStyle = optionalText(cellStyleKey);
+        if (cellStyle.isPresent()) {
+            for (int i = 0; i < table.getRows().size(); i++) {
+                var row = table.getRow(i);
+                for (int j = 0; j < row.getTableICells().size(); j++) {
+                    row.getCell(j).getParagraphs().get(0).setStyle(cellStyle.get());
+                }
             }
-            // leave extra total column cell empty if addTotalColumn == true
-            rowIndex++;
         }
 
-        return table;
+        // ---- Header ----
+        XWPFTableRow headerRow = table.getRow(0);
+        for (int i = 0; i < extractors.size(); i++) {
+            headerRow.getCell(i).setText(
+                    optionalText(headerPrefix + i).orElse("Col" + (i + 1)));
+        }
+        if (addTotalColumn) {
+            headerRow.getCell(extractors.size()).setText(totalColumnLabel);
+        }
+
+        // ---- Data rows ----
+        for (int r = 0; r < rows.size(); r++) {
+            XWPFTableRow row = table.getRow(r + 1);
+            T rowData = rows.get(r);
+
+            for (int c = 0; c < extractors.size(); c++) {
+                String value = String.valueOf(extractors.get(c).apply(rowData));
+                row.getCell(c).setText(value);
+            }
+
+            // Row total only if there are summable columns
+            if (addTotalColumn) {
+
+                boolean hasSummable = extractors.stream()
+                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
+                XWPFTableCell totalCell = row.getCell(extractors.size());
+                if (hasSummable) {
+                    insertFormula(totalCell, lastColumnFormula, "0");
+                } else {
+                    totalCell.setText("-");
+                }
+            }
+        }
+
+        // ---- Total row ----
+        if (totalRowLabel != null) {
+            XWPFTableRow totalRow = table.getRow(table.getNumberOfRows() - 1);
+            totalRow.getCell(0).setText(totalRowLabel);
+
+            for (int c = 1; c < extractors.size(); c++) {
+                XWPFTableCell totalCell = totalRow.getCell(c);
+                if (extractors.get(c) instanceof ColumnExtractor.SummableColumnExtractor) {
+                    insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                } else {
+                    totalCell.setText("-");
+                }
+            }
+
+            if (addTotalColumn) {
+                boolean hasSummable = extractors.stream()
+                        .anyMatch(e -> e instanceof ColumnExtractor.SummableColumnExtractor);
+                XWPFTableCell grandTotal = totalRow.getCell(extractors.size());
+                if (hasSummable) {
+                    insertFormula(grandTotal, lastColumnFormula, "0");
+                } else {
+                    grandTotal.setText("");
+                }
+            }
+        }
     }
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
@@ -189,9 +222,9 @@ public class GenerationContext {
         CTTblLayoutType layoutType = tblPr.isSetTblLayout() ? tblPr.getTblLayout() : tblPr.addNewTblLayout();
         layoutType.setType(STTblLayoutType.FIXED);
 
-        // Dynamic width: 96% of usable width
+        // Dynamic width: 99% of usable width
         CTTblWidth tblWidth = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
-        tblWidth.setW(getScaledUsableWidth(0.96));
+        tblWidth.setW(getScaledUsableWidth(0.99));
         tblWidth.setType(STTblWidth.DXA);
 
         // --- Direction from PageLayoutManager
@@ -223,6 +256,14 @@ public class GenerationContext {
             run.setText(lines[i]);
         }
     }
+    private void insertFormula(XWPFTableCell cell, String formula, String placeholder) {
+        cell.removeParagraph(0);
+        XWPFParagraph p = cell.addParagraph();
+        CTSimpleField field = p.getCTP().addNewFldSimple();
+        field.setInstr(formula);
+        CTR ctr = field.addNewR();
+        ctr.addNewT().setStringValue(placeholder);
+    }
 
     public String contextualize(String text) {
         if (requireRTL(text)) {
@@ -243,17 +284,17 @@ public class GenerationContext {
         // Check if it's neutral according to Unicode bidi
         return switch (dir) {
             case // , . / :
-                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
-                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
-                    Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
-                    Character.DIRECTIONALITY_OTHER_NEUTRALS ->
+            Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
+            Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
+            Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
+            Character.DIRECTIONALITY_OTHER_NEUTRALS ->
                 true;
             default ->
                 false;
         };
     }
 
-    public void addFooterWithTextAndPageNumber(XWPFDocument doc, String footerText) {
+    public void addFooterAndPageNumber(XWPFDocument doc, String footerText) {
         // Get or create section properties
         CTSectPr sectPr = doc.getDocument().getBody().isSetSectPr()
                 ? doc.getDocument().getBody().getSectPr()
@@ -262,28 +303,21 @@ public class GenerationContext {
         // Create footer policy
         XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(doc, sectPr);
 
-        // Create footer
         XWPFFooter footer = policy.createFooter(STHdrFtr.DEFAULT);
 
-        // --- First paragraph: custom text ---
+        //footer paragraph
         String footerTextStyle = "Footer";
         XWPFParagraph footerPara = footer.createParagraph();
         footerPara.setStyle(footerTextStyle);
         addParagraphWithManualBreaks(footerPara, footerText);
 
-        // --- Second paragraph: PAGE field ---
+        //page number
         XWPFParagraph p2 = footer.createParagraph();
         p2.setAlignment(ParagraphAlignment.CENTER);
-
-        // Begin field
         XWPFRun run = p2.createRun();
         run.getCTR().addNewFldChar().setFldCharType(STFldCharType.BEGIN);
-
-        // Field instruction
         run = p2.createRun();
         run.getCTR().addNewInstrText().setStringValue("PAGE");
-
-        // End field
         run = p2.createRun();
         run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
     }

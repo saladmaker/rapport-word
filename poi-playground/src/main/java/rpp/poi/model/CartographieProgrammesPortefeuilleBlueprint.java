@@ -51,29 +51,24 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
             // --- Row 1 (with name + SC) ---
             XWPFTableRow row0 = progStrtable.createRow();
             XWPFTableCell nameCell = row0.getCell(0);
-            clearCell(nameCell);
             nameCell.setText(programmeStructure.name());
             setVMerge(nameCell, STMerge.RESTART);
 
-            clearCell(row0.getCell(1));
             row0.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sc())));
 
             // --- Row 2 (SDC) ---
             XWPFTableRow row1 = progStrtable.createRow();
             setVMerge(row1.getCell(0), STMerge.CONTINUE);
-            clearCell(row1.getCell(1));
             row1.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sdc())));
 
             // --- Row 3 (OST) ---
             XWPFTableRow row2 = progStrtable.createRow();
             setVMerge(row2.getCell(0), STMerge.CONTINUE);
-            clearCell(row2.getCell(1));
             row2.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ost())));
 
             // --- Row 4 (OT) ---
             XWPFTableRow row3 = progStrtable.createRow();
             setVMerge(row3.getCell(0), STMerge.CONTINUE);
-            clearCell(row3.getCell(1));
             row3.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ot())));
         }
     }
@@ -87,13 +82,5 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
         vMerge.setVal(mergeVal);
     }
 
-    /**
-     * Helper: remove the default empty paragraph before setting text
-     */
-    private static void clearCell(XWPFTableCell cell) {
-        if (!cell.getParagraphs().isEmpty()) {
-            cell.removeParagraph(0);
-        }
-    }
 
 }
