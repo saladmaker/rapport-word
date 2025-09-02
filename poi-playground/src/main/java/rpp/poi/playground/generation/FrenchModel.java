@@ -24,6 +24,8 @@ import rpp.poi.model.Mission;
 import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.RepartitionProgrammeCentreResp;
+import rpp.poi.model.RepartitionProgrammeTitre;
+import rpp.poi.model.RepartitionTitreCentreResp;
 import rpp.poi.playground.DocumentGenerator;
 
 public class FrenchModel implements DocumentGenerator {
@@ -83,7 +85,16 @@ public class FrenchModel implements DocumentGenerator {
                         new RepartitionProgrammeCentreResp("Enseignement professionnel", List.of(10033343L, 72334233L, 3343424L, 642342L)),
                         new RepartitionProgrammeCentreResp("Administration générale", List.of(133343L, 34233L, 43424L, 642342L)))
                 )
-                .build();
+                .addRepartitionProgrammeTitres(List.of(
+                        new RepartitionProgrammeTitre("Formation professionnelle", List.of(34242342L, 434243L, 32423424L, 342342L), false),
+                        new RepartitionProgrammeTitre("Enseignement professionnel", List.of(32242342L, 23423424L, 3243423423L, 23425234L), false),
+                        new RepartitionProgrammeTitre("Administration générale", List.of(32342342L, 234243523L, 3242353432L, 324234234L), false))
+                ).addRepartitionTitreCentreResps(List.of(
+                        new RepartitionTitreCentreResp("Services Centraux", List.of(34242342L, 434243L, 32423424L, 342342L)),
+                        new RepartitionTitreCentreResp("Services déconcentrés", List.of(32242342L, 23423424L, 3243423423L, 23425234L)),
+                        new RepartitionTitreCentreResp("Organismes sous tutelle", List.of(32342342L, 234243523L, 3242353432L, 324234234L)),
+                        new RepartitionTitreCentreResp("Organes territoriaux", List.of(32342342L, 234243523L, 3242353432L, 324234234L)))
+                ).build();
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
                 .leMinistere(leMinistere)
