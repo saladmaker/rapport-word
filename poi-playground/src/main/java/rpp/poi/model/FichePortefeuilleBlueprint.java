@@ -73,6 +73,12 @@ interface FichePortefeuilleBlueprint extends Writable {
     @Option.Singular
     List<ProgrammeAnnee> programmesAnnees();
 
+    @Option.Singular
+    List<RepartitionProgrammeTitre> repartitionProgrammeTitres();
+
+    @Option.Singular
+    List<RepartitionTitreCentreResp> repartitionTitreCentreResps();
+
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
         // enforce portrait mode
