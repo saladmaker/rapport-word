@@ -21,6 +21,7 @@ import rpp.poi.model.LaMission;
 import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
+import rpp.poi.model.ProgrammeAnnee;
 import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.RepartitionProgrammeCentreResp;
@@ -94,7 +95,13 @@ public class FrenchModel implements DocumentGenerator {
                         new RepartitionTitreCentreResp("Services déconcentrés", List.of(32242342L, 23423424L, 3243423423L, 23425234L)),
                         new RepartitionTitreCentreResp("Organismes sous tutelle", List.of(32342342L, 234243523L, 3242353432L, 324234234L)),
                         new RepartitionTitreCentreResp("Organes territoriaux", List.of(32342342L, 234243523L, 3242353432L, 324234234L)))
-                ).build();
+                )
+                .addProgrammesAnnees(List.of(
+                        new ProgrammeAnnee("Formation professionnelle", List.of(13232332323L,234234234L,324234234L,324234234L, 4234234234L)),
+                        new ProgrammeAnnee("Enseignement professionnel", List.of(34234234L,324234234L,3242342342L,23423423423L, 343443234243L)),
+                        new ProgrammeAnnee("Administration general", List.of(32313123123L, 3123123132L, 3423424243L, 234234243234L, 3423424234243L)))
+                )
+                .build();
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
                 .leMinistere(leMinistere)

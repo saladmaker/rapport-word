@@ -31,13 +31,17 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_6_TABLE_3_TITLE_KEY = "section1.ficheportefeuille.table.3.title";
     String FCHPORT_6_TABLE_3_CONTENT = "section1.ficheportefeuille.table.3.";
 
-    String FCHPORT_7_TABLE_4_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY;
+    String FCHPORT_7_TABLE_4_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY; //same style
     String FCHPORT_7_TABLE_4_TITLE_KEY = "section1.ficheportefeuille.table.4.title";
     String FCHPORT_7_TABLE_4_CONTENT = "section1.ficheportefeuille.table.4.";
 
-    String FCHPORT_8_TABLE_5_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY;
+    String FCHPORT_8_TABLE_5_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY; //same style
     String FCHPORT_8_TABLE_5_TITLE_KEY = "section1.ficheportefeuille.table.5.title";
-    String FCHPORT_8_TABLE_5_CONTENT = FCHPORT_7_TABLE_4_CONTENT;
+    String FCHPORT_8_TABLE_5_CONTENT = FCHPORT_7_TABLE_4_CONTENT; //same headers, total
+
+    String FCHPORT_9_TABLE_6_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY; //same style
+    String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
+    String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
     @Option.Required
     Year targetYear();
@@ -56,6 +60,9 @@ interface FichePortefeuilleBlueprint extends Writable {
 
     @Option.Singular
     List<RepartitionTitreCentreResp> repartitionTitreCentreResps();
+
+    @Option.Singular
+    List<ProgrammeAnnee> programmesAnnees();
 
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
@@ -81,6 +88,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeRepartitionProgrammeCTRRES(document, context);
         writeRepartitionProgrammeTTR(document, context);
         writeRepartitionTTRCTRRES(document, context);
+        writeProgrammeAnnee(document, context);
     }
 
     default void writeRepartitionProgrammeB(XWPFDocument document, GenerationContext context) {
@@ -203,5 +211,28 @@ interface FichePortefeuilleBlueprint extends Writable {
             document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
             rows, extractors, true);
     }
+    default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {
+
+        // table title
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_title_para = document.createParagraph();
+        table_title_para.setStyle(tableTitleStyle);
+        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
+
+        List<ColumnExtractor<? super ProgrammeAnnee, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeAnnee::name),
+                ColumnExtractor.ofSummable(r -> r.annees().get(0)),
+                ColumnExtractor.ofSummable(r -> r.annees().get(1)),
+                ColumnExtractor.ofSummable(r -> r.annees().get(2)),
+                ColumnExtractor.ofSummable(r -> r.annees().get(3)),
+                ColumnExtractor.ofSummable(r -> r.annees().get(4)));
+        List<ProgrammeAnnee> rows = programmesAnnees();
+        context.writeTable(
+            document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
+            rows, extractors,false
+        );
+
+    }
+    //style key, title key, 
 
 }
