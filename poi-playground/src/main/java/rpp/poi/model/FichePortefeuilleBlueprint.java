@@ -2,8 +2,10 @@ package rpp.poi.model;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -43,6 +45,24 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
     String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
+    public enum CentreDeReponsibilte{
+        SERVICE_CENTRAUX,
+        SERVICE_DECONCENTREE,
+        ORGANISME_SOUS_TUTELLE,
+        ORGANISME_TERRITORIAUX
+    }
+    public record ProgrammeRepartition(String name, Long ae, Long cp) {
+        public ProgrammeRepartition{
+            Objects.requireNonNull(name, "name can not be null!");
+            Objects.requireNonNull(ae, "ae can't be null!");
+            Objects.requireNonNull(cp, "cp can't be null!");
+            if(Strings.isBlank(name)) throw new IllegalArgumentException("name should not be blank name: " + name);
+            if(ae < 0 || cp < 0) throw new IllegalArgumentException("ae and cp should not be null! ae: "
+             + ae + " cp: " + cp);
+        }
+    }
+
+    
     @Option.Required
     Year targetYear();
 
@@ -53,10 +73,10 @@ interface FichePortefeuilleBlueprint extends Writable {
     List<ProgrammeRepartition> repartitionProgrammes();
 
     @Option.Singular
-    List<RepartitionProgrammeCentreResp> repartitionProgrammeCentreResps();
+    List<ProgrammeCentreResponsibilite> repartitionProgrammeCentreResps();
 
     @Option.Singular
-    List<RepartitionProgrammeTitre> repartitionProgrammeTitres();
+    List<ProgrammeTitre> repartitionProgrammeTitres();
 
     @Option.Singular
     List<RepartitionTitreCentreResp> repartitionTitreCentreResps();
@@ -156,14 +176,14 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
 
-        List<ColumnExtractor<? super RepartitionProgrammeCentreResp, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(RepartitionProgrammeCentreResp::name),
-                ColumnExtractor.ofSummable(r -> r.ctres().get(0)),
-                ColumnExtractor.ofSummable(r -> r.ctres().get(1)),
-                ColumnExtractor.ofSummable(r -> r.ctres().get(2)),
-                ColumnExtractor.ofSummable(r -> r.ctres().get(3))
+        List<ColumnExtractor<? super ProgrammeCentreResponsibilite, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
+                ColumnExtractor.ofSummable(r -> r.serviceCentraux()),
+                ColumnExtractor.ofSummable(r -> r.serviceDeconcentree()),
+                ColumnExtractor.ofSummable(r -> r.organismeSousTutelle()),
+                ColumnExtractor.ofSummable(r -> r.organismeTerritoriaux())
                 );
-        List<RepartitionProgrammeCentreResp> rows = repartitionProgrammeCentreResps();
+        List<ProgrammeCentreResponsibilite> rows = repartitionProgrammeCentreResps();
         context.writeTable(
             document, FCHPORT_6_TABLE_3_STYLE_KEY, FCHPORT_6_TABLE_3_CONTENT,
             rows, extractors, true);
@@ -179,14 +199,14 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_7_TABLE_4_TITLE_KEY));
 
-        List<ColumnExtractor<? super RepartitionProgrammeTitre, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(RepartitionProgrammeTitre::name),
+        List<ColumnExtractor<? super ProgrammeTitre, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeTitre::name),
                 ColumnExtractor.ofSummable(r -> r.ttr().get(0)),
                 ColumnExtractor.ofSummable(r -> r.ttr().get(1)),
                 ColumnExtractor.ofSummable(r -> r.ttr().get(2)),
                 ColumnExtractor.ofSummable(r -> r.ttr().get(3))
                 );
-        List<RepartitionProgrammeTitre> rows = repartitionProgrammeTitres();
+        List<ProgrammeTitre> rows = repartitionProgrammeTitres();
         context.writeTable(
             document, FCHPORT_7_TABLE_4_STYLE_KEY, FCHPORT_7_TABLE_4_CONTENT,
             rows, extractors, true);
@@ -233,6 +253,5 @@ interface FichePortefeuilleBlueprint extends Writable {
         );
 
     }
-    //style key, title key, 
 
 }
