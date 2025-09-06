@@ -21,9 +21,7 @@ import rpp.poi.model.LaMission;
 import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
-import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
-import rpp.poi.model.RepartitionProgrammeCentreResp;
 import rpp.poi.playground.DocumentGenerator;
 
 public class ArabicModel implements DocumentGenerator {
