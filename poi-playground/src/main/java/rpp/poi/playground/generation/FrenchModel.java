@@ -46,7 +46,7 @@ public class FrenchModel implements DocumentGenerator {
                 .addMission(
                         new Mission(
                                 "Modernisation numérique : Déploiement de plateformes digitales pour simplifier "
-                                        + "les démarches administratives.",
+                                + "les démarches administratives.",
                                 List.of(
                                         "Mise en place d’un guichet unique en ligne",
                                         "Automatisation des procédures internes",
@@ -54,12 +54,12 @@ public class FrenchModel implements DocumentGenerator {
                 .addMission(
                         new Mission(
                                 "Accessibilité accrue : Améliorer l’accès des citoyens aux services publics, y "
-                                        + "compris en zones rurales.",
+                                + "compris en zones rurales.",
                                 List.of("Déploiement de bornes interactives", "Renforcement des services mobiles")))
                 .addMission(
                         new Mission(
                                 "Transparence et gouvernance : Renforcement des mécanismes de contrôle et lutte "
-                                        + "active contre la corruption.",
+                                + "active contre la corruption.",
                                 List.of(
                                         "Publication annuelle des rapports financiers",
                                         "Création d’une plateforme de signalement anonyme")))
@@ -70,24 +70,27 @@ public class FrenchModel implements DocumentGenerator {
 
         CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
                 .addProgrammeStructure(
-                ProgrammeStructure.builder()
-                        .name("Programme 001 - Modernisation de l'administration")
-                        .serviceCentres(Set.of("Secrétariat Général", "Inspection Générale"))
-                        .serviceDeconcentrees(Set.of("Direction Régionale Alger", "Direction Régionale Oran"))
-                        .organismeSousTutelles(Set.of(
-                                "Agence Nationale du Numérique",
-                                "Institut Supérieur d’Administration Publique"))
-                        .orgamismeTerris(Set.of("Direction Wilaya Alger", "Direction Wilaya Oran"))
-                        .build())
-                .addProgrammeStructure(
+                        ProgrammeStructure.builder()
+                                .name("Programme 001 - Modernisation de l'administration")
+                                .addServiceCentre("Secrétariat Général")
+                                .addServiceCentre("Inspection Générale")
+                                .addServiceDeconcentree("Direction Régionale Alger")
+                                .addServiceDeconcentree("Direction Régionale Oran")
+                                .addOrganismeSousTutelle("Agence Nationale du Numérique")
+                                .addOrganismeSousTutelle("Institut Supérieur d’Administration Publique")
+                                .addOrgamismeTerri("Direction Wilaya Alger")
+                                .addOrgamismeTerri("Direction Wilaya Oran")
+                                .build()
+                ).addProgrammeStructure(
                         ProgrammeStructure.builder()
                                 .name("Programme 002 - Développement durable")
-                                .addServiceCentres(Set.of("Direction Générale de l’Environnement"))
-                                .addServiceDeconcentrees(Set.of("Direction Régionale Annaba", "Direction Régionale Tlemcen"))
-                                .addOrganismeSousTutelles(Set.of("Office National des Forêts"))
-                                .addOrgamismeTerris(Set.of("Conservatoire des Zones Humides"))
-                                .build())
-                .build();
+                                .addServiceCentre("Direction Générale de l’Environnement")
+                                .addServiceDeconcentree("Direction Régionale Annaba")
+                                .addServiceDeconcentree("Direction Régionale Tlemcen")
+                                .addOrganismeSousTutelle("Office National des Forêts")
+                                .addOrgamismeTerri("Conservatoire des Zones Humides")
+                                .build()
+                ).build();
 
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
                 .targetYear(Year.of(2026))
@@ -119,6 +122,7 @@ public class FrenchModel implements DocumentGenerator {
                 .addRepartitionProgrammeTitre(
                         ProgrammeTitre.builder()
                                 .name("Formation professionnel")
+                                .isMF(false)
                                 .t1(2434234L)
                                 .t2(43453453L)
                                 .t3(423424332L)
@@ -127,6 +131,7 @@ public class FrenchModel implements DocumentGenerator {
                 .addRepartitionProgrammeTitre(
                         ProgrammeTitre.builder()
                                 .name("Formation professionnel")
+                                .isMF(false)
                                 .t1(2434234L)
                                 .t2(43453453L)
                                 .t3(423424332L)
@@ -135,6 +140,7 @@ public class FrenchModel implements DocumentGenerator {
                 .addRepartitionProgrammeTitre(
                         ProgrammeTitre.builder()
                                 .name("Formation professionnel")
+                                .isMF(false)
                                 .t1(2434234L)
                                 .t2(43453453L)
                                 .t3(423424332L)
@@ -182,8 +188,7 @@ public class FrenchModel implements DocumentGenerator {
 
     public static Map<String, String> loadPropertiesAsMap(String resourceName) {
         Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName); InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             if (is == null) {
                 throw new FileNotFoundException("Resource not found: " + resourceName);
             }
