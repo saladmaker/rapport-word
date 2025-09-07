@@ -117,7 +117,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         XWPFParagraph table_1_title_para = document.createParagraph();
         table_1_title_para.setStyle(tableTitleStyle);
         table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-        List<ColumnExtractor<? super ProgrammeRepartition, ?>> extractors = List.of(
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
                 ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
                 ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
@@ -157,7 +157,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_5_TABLE_2_TITLE_KEY));
 
-        List<ColumnExtractor<? super ProgrammeRepartition, ?>> extractors = List.of(
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
                 ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
                 ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
@@ -176,7 +176,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
 
-        List<ColumnExtractor<? super ProgrammeCentreResponsibilite, ?>> extractors = List.of(
+        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
                 ColumnExtractor.ofSummable(r -> r.serviceCentraux()),
                 ColumnExtractor.ofSummable(r -> r.serviceDeconcentree()),
@@ -199,14 +199,11 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_7_TABLE_4_TITLE_KEY));
 
-        List<ColumnExtractor<? super ProgrammeTitre, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeTitre::name),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(0)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(1)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(2)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(3))
-                );
         List<ProgrammeTitre> rows = repartitionProgrammeTitres();
+        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = rows.stream()
+                .map(ProgrammeTitre::extractors)
+                .findAny()
+                .orElseThrow();
         context.writeTable(
             document, FCHPORT_7_TABLE_4_STYLE_KEY, FCHPORT_7_TABLE_4_CONTENT,
             rows, extractors, true);
@@ -219,7 +216,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
 
-        List<ColumnExtractor<? super RepartitionTitreCentreResp, ?>> extractors = List.of(
+        List<ColumnExtractor<RepartitionTitreCentreResp, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(RepartitionTitreCentreResp::name),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(0)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(1)),
@@ -239,7 +236,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
 
-        List<ColumnExtractor<? super ProgrammeAnnee, ?>> extractors = List.of(
+        List<ColumnExtractor<ProgrammeAnnee, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeAnnee::name),
                 ColumnExtractor.ofSummable(r -> r.annees().get(0)),
                 ColumnExtractor.ofSummable(r -> r.annees().get(1)),

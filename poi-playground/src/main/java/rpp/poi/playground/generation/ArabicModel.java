@@ -28,67 +28,67 @@ public class ArabicModel implements DocumentGenerator {
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
-        var laMission = LaMission.builder()
-                .intro("""
-                        تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
-                        كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
-                        سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
-                        وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الانتقال البيئي.
-                        وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
-                        """.replaceAll("\\R", " "))
-                .addMission(new Mission(
-                        "التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.",
-                        List.of("إنشاء شباك موحد عبر الإنترنت",
-                                "أتمتة الإجراءات الداخلية")))
-                .addMission(new Mission(
-                        "زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.",
-                        List.of("نشر الأكشاك التفاعلية",
-                                "تعزيز الخدمات المتنقلة")))
-                .addMission(new Mission(
-                        "الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.",
-                        List.of("النشر السنوي للتقارير المالية",
-                                "إنشاء منصة للتبليغ المجهول")))
-                .build();
-
-        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
-        var leMinistere = LeMinistere.builder().image(imageBytes).build();
-
-        CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
-                .addProgrammeStructure(new ProgrammeStructure(
-                        "البرنامج 001 - تحديث الإدارة",
-                        Set.of("الأمانة العامة", "المفتشية العامة"),
-                        Set.of("المديرية الجهوية الجزائر", "المديرية الجهوية وهران"),
-                        Set.of("الوكالة الوطنية للرقمنة", "المعهد العالي للإدارة العمومية"),
-                        Set.of("مديرية ولاية الجزائر", "مديرية ولاية وهران")))
-                .addProgrammeStructure(new ProgrammeStructure(
-                        "البرنامج 002 - التنمية المستدامة",
-                        Set.of("المديرية العامة للبيئة"),
-                        Set.of("المديرية الجهوية عنابة", "المديرية الجهوية تلمسان"),
-                        Set.of("المكتب الوطني للغابات"),
-                        Set.of("المحافظة على المناطق الرطبة")))
-                .build();
-
-        FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
-                .targetYear(Year.of(2026))
-                .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
-                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
-                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
-                .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
-                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
-                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
-                .addRepartitionProgrammeCentreResps(List.of(new RepartitionProgrammeCentreResp("التكوين المهني", List.of(10033423L, 12334233L, 2343424L, 342342L)),
-                                new RepartitionProgrammeCentreResp("التعليم المهني", List.of(10033343L, 72334233L, 3343424L, 642342L)),
-                                new RepartitionProgrammeCentreResp("الإدارة العامة", List.of(133343L, 34233L, 43424L, 642342L))))
-                .build();
-
-        AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
-                .laMission(laMission)
-                .leMinistere(leMinistere)
-                .cartographie(cProgrammesPortefeuille)
-                .fichePortefeuille(fichePortefeuille)
-                .build();
-                auSujetDuPortefeuille.write(document, new GenerationContext(document, loadPropertiesAsMap("arab.properties"), LanguageDirection.RTL));
-
+//        var laMission = LaMission.builder()
+//                .intro("""
+//                        تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
+//                        كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
+//                        سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
+//                        وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الانتقال البيئي.
+//                        وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
+//                        """.replaceAll("\\R", " "))
+//                .addMission(new Mission(
+//                        "التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.",
+//                        List.of("إنشاء شباك موحد عبر الإنترنت",
+//                                "أتمتة الإجراءات الداخلية")))
+//                .addMission(new Mission(
+//                        "زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.",
+//                        List.of("نشر الأكشاك التفاعلية",
+//                                "تعزيز الخدمات المتنقلة")))
+//                .addMission(new Mission(
+//                        "الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.",
+//                        List.of("النشر السنوي للتقارير المالية",
+//                                "إنشاء منصة للتبليغ المجهول")))
+//                .build();
+//
+//        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+//        var leMinistere = LeMinistere.builder().image(imageBytes).build();
+//
+//        CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
+//                .addProgrammeStructure(new ProgrammeStructure(
+//                        "البرنامج 001 - تحديث الإدارة",
+//                        Set.of("الأمانة العامة", "المفتشية العامة"),
+//                        Set.of("المديرية الجهوية الجزائر", "المديرية الجهوية وهران"),
+//                        Set.of("الوكالة الوطنية للرقمنة", "المعهد العالي للإدارة العمومية"),
+//                        Set.of("مديرية ولاية الجزائر", "مديرية ولاية وهران")))
+//                .addProgrammeStructure(new ProgrammeStructure(
+//                        "البرنامج 002 - التنمية المستدامة",
+//                        Set.of("المديرية العامة للبيئة"),
+//                        Set.of("المديرية الجهوية عنابة", "المديرية الجهوية تلمسان"),
+//                        Set.of("المكتب الوطني للغابات"),
+//                        Set.of("المحافظة على المناطق الرطبة")))
+//                .build();
+//
+//        FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
+//                .targetYear(Year.of(2026))
+//                .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
+//                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
+//                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
+//                .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
+//                                new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
+//                                new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
+//                .addRepartitionProgrammeCentreResps(List.of(new RepartitionProgrammeCentreResp("التكوين المهني", List.of(10033423L, 12334233L, 2343424L, 342342L)),
+//                                new RepartitionProgrammeCentreResp("التعليم المهني", List.of(10033343L, 72334233L, 3343424L, 642342L)),
+//                                new RepartitionProgrammeCentreResp("الإدارة العامة", List.of(133343L, 34233L, 43424L, 642342L))))
+//                .build();
+//
+//        AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
+//                .laMission(laMission)
+//                .leMinistere(leMinistere)
+//                .cartographie(cProgrammesPortefeuille)
+//                .fichePortefeuille(fichePortefeuille)
+//                .build();
+//                auSujetDuPortefeuille.write(document, new GenerationContext(document, loadPropertiesAsMap("arab.properties"), LanguageDirection.RTL));
+//
 
     }
 

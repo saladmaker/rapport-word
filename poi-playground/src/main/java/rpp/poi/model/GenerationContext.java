@@ -110,7 +110,7 @@ public final class GenerationContext {
             final String tableStyleKey,
             final String contentPrefix,
             List<T> rows,
-            List<ColumnExtractor<? super T, ?>> extractors,
+            List<ColumnExtractor<T, ?>> extractors,
             boolean addTotalRow) {
 
         final String headersPrefix = contentPrefix + "headers.";
