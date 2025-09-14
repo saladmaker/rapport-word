@@ -1,14 +1,8 @@
 package mf.dgb.rpp.testing;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -37,18 +31,24 @@ public class ArabicModel implements DocumentGenerator {
                         وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الانتقال البيئي.
                         وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
                         """.replaceAll("\\R", " "))
-                .addMission(new Mission(
-                        "التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.",
-                        List.of("إنشاء شباك موحد عبر الإنترنت",
-                                "أتمتة الإجراءات الداخلية")))
-                .addMission(new Mission(
-                        "زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.",
-                        List.of("نشر الأكشاك التفاعلية",
-                                "تعزيز الخدمات المتنقلة")))
-                .addMission(new Mission(
-                        "الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.",
-                        List.of("النشر السنوي للتقارير المالية",
-                                "إنشاء منصة للتبليغ المجهول")))
+                .addMission(Mission.builder()
+                        .mission("التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.")
+                        .addSubMission("إنشاء شباك موحد عبر الإنترنت")
+                        .addSubMission("أتمتة الإجراءات الداخلية")
+                        .build()
+                )
+                .addMission(Mission.builder()
+                        .mission("زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.")
+                        .addSubMission("نشر الأكشاك التفاعلية")
+                        .addSubMission("تعزيز الخدمات المتنقلة")
+                        .build()
+                )
+                .addMission(Mission.builder()
+                        .mission("الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.")
+                        .addSubMission("النشر السنوي للتقارير المالية")
+                        .addSubMission("إنشاء منصة للتبليغ المجهول")
+                        .build())
+
                 .build();
 
         var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
@@ -95,28 +95,10 @@ public class ArabicModel implements DocumentGenerator {
                 .cartographie(cProgrammesPortefeuille)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document, new GenerationContext(document, loadPropertiesAsMap("arab.properties"), LanguageDirection.RTL));
+        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL));
 
 
     }
 
-    public static Map<String, String> loadPropertiesAsMap(String resourceName) {
-        Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-             InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            if (is == null) {
-                throw new FileNotFoundException("Resource not found: " + resourceName);
-            }
-            props.load(r);
-            Map<String, String> map = new HashMap<>();
-            for (String name : props.stringPropertyNames()) {
-                map.put(name, props.getProperty(name));
-            }
-
-            return map;
-        } catch (Exception e) {
-            throw new IllegalStateException("can't load resource");
-        }
-    }
 
 }

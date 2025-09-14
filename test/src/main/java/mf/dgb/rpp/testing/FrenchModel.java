@@ -1,14 +1,8 @@
 package mf.dgb.rpp.testing;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -16,15 +10,14 @@ import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
-import mf.dgb.rpp.model.Mission;
 import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeRepartition;
-import mf.dgb.rpp.model.RepartitionTitreCentreResp;
 import mf.dgb.rpp.model.ProgrammeTitre;
-import mf.dgb.rpp.model.ProgrammeAnnee;
+import mf.dgb.rpp.model.ProgrammeTitreCentreResponsibilite;
+import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
 
 public class FrenchModel implements DocumentGenerator {
@@ -42,27 +35,23 @@ public class FrenchModel implements DocumentGenerator {
     public void generate(XWPFDocument document) throws Exception {
         var laMission = LaMission.builder()
                 .intro(INTRO.replaceAll("\\R", " "))
-                .addMission(
-                        new Mission(
+                .addMission(t -> t.mission(
                                 "Modernisation numérique : Déploiement de plateformes digitales pour simplifier "
-                                        + "les démarches administratives.",
-                                List.of(
-                                        "Mise en place d’un guichet unique en ligne",
-                                        "Automatisation des procédures internes",
-                                        "dfsd sdfs sdfsdf")))
-                .addMission(
-                        new Mission(
+                                        + "les démarches administratives.")
+                        .addSubMission("Mise en place d’un guichet unique en ligne")
+                        .addSubMission("Automatisation des procédures internes"))
+
+                .addMission(t -> t.mission(
                                 "Accessibilité accrue : Améliorer l’accès des citoyens aux services publics, y "
-                                        + "compris en zones rurales.",
-                                List.of("Déploiement de bornes interactives",
-                                        "Renforcement des services mobiles")))
-                .addMission(
-                        new Mission(
+                                        + "compris en zones rurales.")
+                        .addSubMission("Déploiement de bornes interactives")
+                        .addSubMission("Renforcement des services mobiles"))
+
+                .addMission(t -> t.mission(
                                 "Transparence et gouvernance : Renforcement des mécanismes de contrôle et lutte "
-                                        + "active contre la corruption.",
-                                List.of(
-                                        "Publication annuelle des rapports financiers",
-                                        "Création d’une plateforme de signalement anonyme")))
+                                        + "active contre la corruption.")
+                        .addSubMission("Publication annuelle des rapports financiers")
+                        .addSubMission("Création d’une plateforme de signalement anonyme"))
                 .build();
 
         var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg")
@@ -168,44 +157,46 @@ public class FrenchModel implements DocumentGenerator {
                                 .build())
                 .addRepartitionTitreCentreResps(
                         List.of(
-                                new RepartitionTitreCentreResp(
+                                new ProgrammeTitreCentreResponsibilite(
                                         "Services Centraux",
                                         List.of(34242342L, 434243L, 32423424L,
                                                 342342L)),
-                                new RepartitionTitreCentreResp(
+                                new ProgrammeTitreCentreResponsibilite(
                                         "Services déconcentrés",
                                         List.of(32242342L, 23423424L,
                                                 3243423423L,
                                                 23425234L)),
-                                new RepartitionTitreCentreResp(
+                                new ProgrammeTitreCentreResponsibilite(
                                         "Organismes sous tutelle",
                                         List.of(32342342L, 234243523L,
                                                 3242353432L,
                                                 324234234L)),
-                                new RepartitionTitreCentreResp(
+                                new ProgrammeTitreCentreResponsibilite(
                                         "Organes territoriaux",
                                         List.of(32342342L, 234243523L,
                                                 3242353432L,
                                                 324234234L))))
-                .addProgrammesAnnees(
-                        List.of(
-                                new ProgrammeAnnee(
-                                        "Formation professionnelle",
-                                        List.of(13232332323L, 234234234L,
-                                                324234234L, 324234234L,
-                                                4234234234L)),
-                                new ProgrammeAnnee(
-                                        "Enseignement professionnel",
-                                        List.of(34234234L, 324234234L,
-                                                3242342342L,
-                                                23423423423L,
-                                                343443234243L)),
-                                new ProgrammeAnnee(
-                                        "Administration general",
-                                        List.of(32313123123L, 3123123132L,
-                                                3423424243L,
-                                                234234243234L,
-                                                3423424234243L))))
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("Formation professionnelle")
+                        .evolution(List.of(13232332323L, 234234234L,
+                                324234234L, 324234234L,
+                                4234234234L))
+                        .build())
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("Enseignement professionnel")
+                        .evolution(List.of(34234234L, 324234234L,
+                                3242342342L,
+                                23423423423L,
+                                343443234243L))
+                        .build())
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("Administration general")
+                        .evolution(List.of(32313123123L, 3123123132L,
+                                3423424243L,
+                                234234243234L,
+                                3423424234243L))
+                        .build())
+
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -215,29 +206,7 @@ public class FrenchModel implements DocumentGenerator {
                 .fichePortefeuille(fichePortefeuille)
                 .build();
 
-        auSujetDuPortefeuille.write(
-                document,
-                new GenerationContext(
-                        document,
-                        loadPropertiesAsMap("french.properties"),
-                        LanguageDirection.LTR));
+        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.LTR));
     }
 
-    public static Map<String, String> loadPropertiesAsMap(String resourceName) {
-        Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-             InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            if (is == null) {
-                throw new FileNotFoundException("Resource not found: " + resourceName);
-            }
-            props.load(r);
-            Map<String, String> map = new HashMap<>();
-            for (String name : props.stringPropertyNames()) {
-                map.put(name, props.getProperty(name));
-            }
-            return map;
-        } catch (Exception e) {
-            throw new IllegalStateException("can't load resource");
-        }
-    }
 }

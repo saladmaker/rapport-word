@@ -39,6 +39,7 @@ interface LaMissionBlueprint extends Writable {
         writeMissions(document, context);
 
     }
+
     default void writeMissions(XWPFDocument document, GenerationContext context) {
         
         //create numbering and associate it with the predefined simple multi level list
@@ -53,14 +54,13 @@ interface LaMissionBlueprint extends Writable {
             mParagraph.setNumILvl(BigInteger.ZERO); //mission point level
             mParagraph.createRun().setText(context.contextualize(m.mission()));
 
-            for (var sm : m.sub()) {
+            for (var sm : m.subMissions()) {
                 XWPFParagraph smParagraph = document.createParagraph();
                 smParagraph.setNumID(numId);
                 smParagraph.setNumILvl(BigInteger.ONE); //mission details -points level
                 smParagraph.createRun().setText(context.contextualize(sm));
             }
         }
-
-
     }
+
 }

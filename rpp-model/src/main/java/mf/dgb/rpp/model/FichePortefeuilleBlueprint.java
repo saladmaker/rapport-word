@@ -73,10 +73,10 @@ interface FichePortefeuilleBlueprint extends Writable {
     List<ProgrammeTitre> repartitionProgrammeTitres();
 
     @Option.Singular
-    List<RepartitionTitreCentreResp> repartitionTitreCentreResps();
+    List<ProgrammeTitreCentreResponsibilite> repartitionTitreCentreResps();
 
     @Option.Singular
-    List<ProgrammeAnnee> programmesAnnees();
+    List<ProgrammeEvolutionDepense> programmesEvolutionDepenses();
 
 
     @Override
@@ -214,13 +214,13 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
 
-        List<ColumnExtractor<RepartitionTitreCentreResp, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(RepartitionTitreCentreResp::name),
+        List<ColumnExtractor<ProgrammeTitreCentreResponsibilite, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeTitreCentreResponsibilite::name),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(0)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(1)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(2)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(3)));
-        List<RepartitionTitreCentreResp> rows = repartitionTitreCentreResps();
+        List<ProgrammeTitreCentreResponsibilite> rows = repartitionTitreCentreResps();
         context.writeTable(
                 document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
                 rows, extractors, true);
@@ -234,14 +234,14 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeAnnee, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeAnnee::name),
-                ColumnExtractor.ofSummable(r -> r.annees().get(0)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(1)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(2)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(3)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(4)));
-        List<ProgrammeAnnee> rows = programmesAnnees();
+        List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeEvolutionDepense::name),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins2),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins1),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::Annee),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus1),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus2));
+        List<ProgrammeEvolutionDepense> rows = programmesEvolutionDepenses();
         context.writeTable(
                 document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
                 rows, extractors, false);
