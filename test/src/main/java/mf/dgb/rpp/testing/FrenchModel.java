@@ -1,0 +1,241 @@
+package mf.dgb.rpp.testing;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.time.Year;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import mf.dgb.rpp.model.AuSujetDuPortefeuille;
+import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.FichePortefeuille;
+import mf.dgb.rpp.model.GenerationContext;
+import mf.dgb.rpp.model.Mission;
+import mf.dgb.rpp.model.LaMission;
+import mf.dgb.rpp.model.LeMinistere;
+import mf.dgb.rpp.model.ProgrammeStructure;
+import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
+import mf.dgb.rpp.model.RepartitionTitreCentreResp;
+import mf.dgb.rpp.model.ProgrammeTitre;
+import mf.dgb.rpp.model.ProgrammeAnnee;
+import mf.dgb.rpp.model.LanguageDirection;
+
+public class FrenchModel implements DocumentGenerator {
+
+        private static final String INTRO = """
+                        Le ministère s’engage, pour l’année prochaine, à renforcer la qualité des services publics au
+                        bénéfice des citoyens. Il prévoit la modernisation des infrastructures numériques afin de faciliter
+                        l’accès aux démarches administratives. Une attention particulière sera accordée à la transparence et
+                        à la lutte contre la corruption. Le développement durable restera au cœur des politiques publiques,
+                        avec des programmes ambitieux pour la transition écologique. Enfin, des partenariats stratégiques
+                        seront établis pour stimuler l’innovation et l’investissement dans les secteurs clés.
+                        """;
+
+        @Override
+        public void generate(XWPFDocument document) throws Exception {
+                var laMission = LaMission.builder()
+                                .intro(INTRO.replaceAll("\\R", " "))
+                                .addMission(
+                                                new Mission(
+                                                                "Modernisation numérique : Déploiement de plateformes digitales pour simplifier "
+                                                                                + "les démarches administratives.",
+                                                                List.of(
+                                                                                "Mise en place d’un guichet unique en ligne",
+                                                                                "Automatisation des procédures internes",
+                                                                                "dfsd sdfs sdfsdf")))
+                                .addMission(
+                                                new Mission(
+                                                                "Accessibilité accrue : Améliorer l’accès des citoyens aux services publics, y "
+                                                                                + "compris en zones rurales.",
+                                                                List.of("Déploiement de bornes interactives",
+                                                                                "Renforcement des services mobiles")))
+                                .addMission(
+                                                new Mission(
+                                                                "Transparence et gouvernance : Renforcement des mécanismes de contrôle et lutte "
+                                                                                + "active contre la corruption.",
+                                                                List.of(
+                                                                                "Publication annuelle des rapports financiers",
+                                                                                "Création d’une plateforme de signalement anonyme")))
+                                .build();
+
+                var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg")
+                                .readAllBytes();
+                var leMinistere = LeMinistere.builder().image(imageBytes).build();
+
+                CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille
+                                .builder()
+                                .addProgrammeStructure(
+                                                ProgrammeStructure.builder()
+                                                                .name("Programme 001 - Modernisation de l'administration")
+                                                                .addServiceCentre("Secrétariat Général")
+                                                                .addServiceCentre("Inspection Générale")
+                                                                .addServiceDeconcentree("Direction Régionale Alger")
+                                                                .addServiceDeconcentree("Direction Régionale Oran")
+                                                                .addOrganismeSousTutelle(
+                                                                                "Agence Nationale du Numérique")
+                                                                .addOrganismeSousTutelle(
+                                                                                "Institut Supérieur d’Administration Publique")
+                                                                .addOrgamismeTerri("Direction Wilaya Alger")
+                                                                .addOrgamismeTerri("Direction Wilaya Oran")
+                                                                .build())
+                                .addProgrammeStructure(
+                                                ProgrammeStructure.builder()
+                                                                .name("Programme 002 - Développement durable")
+                                                                .addServiceCentre(
+                                                                                "Direction Générale de l’Environnement")
+                                                                .addServiceDeconcentree("Direction Régionale Annaba")
+                                                                .addServiceDeconcentree("Direction Régionale Tlemcen")
+                                                                .addOrganismeSousTutelle("Office National des Forêts")
+                                                                .addOrgamismeTerri("Conservatoire des Zones Humides")
+                                                                .build())
+                                .build();
+
+                FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
+                                .targetYear(Year.of(2026))
+                                .addRepartitionProgrammeVersionBs(
+                                                List.of(
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Formation professionnelle",
+                                                                                20_143_691_000L, 19_506_191_000L),
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Enseignement professionnel",
+                                                                                622_000_000L, 540_000_000L),
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Administration générale",
+                                                                                97_250_926_000L, 98_536_426_000L)))
+                                .addRepartitionProgrammes(
+                                                List.of(
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Formation professionnelle",
+                                                                                20_143_691_000L, 19_506_191_000L),
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Enseignement professionnel",
+                                                                                622_000_000L, 540_000_000L),
+                                                                new FichePortefeuille.ProgrammeRepartition(
+                                                                                "Administration générale",
+                                                                                97_250_926_000L, 98_536_426_000L)))
+                                .addRepartitionProgrammeCentreResp(
+                                                ProgrammeCentreResponsibilite.builder()
+                                                                .name("Enseignement professionnel")
+                                                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                                                                642342L))
+                                                                .build())
+                                .addRepartitionProgrammeCentreResp(
+                                                ProgrammeCentreResponsibilite.builder()
+                                                                .name("Enseignement professionnel")
+                                                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                                                                642342L))
+                                                                .build())
+                                .addRepartitionProgrammeCentreResp(
+                                                ProgrammeCentreResponsibilite.builder()
+                                                                .name("Administration générale")
+                                                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                                                                642342L))
+                                                                .build())
+                                .addRepartitionProgrammeTitre(
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .t1(2434234L)
+                                                                .t2(43453453L)
+                                                                .t3(423424332L)
+                                                                .t4(234242432L)
+                                                                .build())
+                                .addRepartitionProgrammeTitre(
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .t1(2434234L)
+                                                                .t2(43453453L)
+                                                                .t3(423424332L)
+                                                                .t4(234242432L)
+                                                                .build())
+                                .addRepartitionProgrammeTitre(
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .t1(2434234L)
+                                                                .t2(43453453L)
+                                                                .t3(423424332L)
+                                                                .t4(234242432L)
+                                                                .build())
+                                .addRepartitionTitreCentreResps(
+                                                List.of(
+                                                                new RepartitionTitreCentreResp(
+                                                                                "Services Centraux",
+                                                                                List.of(34242342L, 434243L, 32423424L,
+                                                                                                342342L)),
+                                                                new RepartitionTitreCentreResp(
+                                                                                "Services déconcentrés",
+                                                                                List.of(32242342L, 23423424L,
+                                                                                                3243423423L,
+                                                                                                23425234L)),
+                                                                new RepartitionTitreCentreResp(
+                                                                                "Organismes sous tutelle",
+                                                                                List.of(32342342L, 234243523L,
+                                                                                                3242353432L,
+                                                                                                324234234L)),
+                                                                new RepartitionTitreCentreResp(
+                                                                                "Organes territoriaux",
+                                                                                List.of(32342342L, 234243523L,
+                                                                                                3242353432L,
+                                                                                                324234234L))))
+                                .addProgrammesAnnees(
+                                                List.of(
+                                                                new ProgrammeAnnee(
+                                                                                "Formation professionnelle",
+                                                                                List.of(13232332323L, 234234234L,
+                                                                                                324234234L, 324234234L,
+                                                                                                4234234234L)),
+                                                                new ProgrammeAnnee(
+                                                                                "Enseignement professionnel",
+                                                                                List.of(34234234L, 324234234L,
+                                                                                                3242342342L,
+                                                                                                23423423423L,
+                                                                                                343443234243L)),
+                                                                new ProgrammeAnnee(
+                                                                                "Administration general",
+                                                                                List.of(32313123123L, 3123123132L,
+                                                                                                3423424243L,
+                                                                                                234234243234L,
+                                                                                                3423424234243L))))
+                                .build();
+
+                AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
+                                .laMission(laMission)
+                                .leMinistere(leMinistere)
+                                .cartographie(cProgrammesPortefeuille)
+                                .fichePortefeuille(fichePortefeuille)
+                                .build();
+
+                auSujetDuPortefeuille.write(
+                                document,
+                                new GenerationContext(
+                                                document,
+                                                loadPropertiesAsMap("french.properties"),
+                                                LanguageDirection.LTR));
+        }
+
+        public static Map<String, String> loadPropertiesAsMap(String resourceName) {
+                Properties props = new Properties();
+                try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
+                                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                        if (is == null) {
+                                throw new FileNotFoundException("Resource not found: " + resourceName);
+                        }
+                        props.load(r);
+                        Map<String, String> map = new HashMap<>();
+                        for (String name : props.stringPropertyNames()) {
+                                map.put(name, props.getProperty(name));
+                        }
+                        return map;
+                } catch (Exception e) {
+                        throw new IllegalStateException("can't load resource");
+                }
+        }
+}

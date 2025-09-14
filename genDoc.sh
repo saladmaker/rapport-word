@@ -1,24 +1,17 @@
 #!/usr/bin/env bash
-set -e
+set -e  # stop script if any command fails
 
-if [[ $# -lt 2 ]]; then
-  echo "Usage: ./genDoc.sh <MainClassName> <themeName> [--clean]"
+# === Validate user input ===
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <arg1> [arg2 arg3 ...]"
+  echo "Example: $0 hello world foo bar"
   exit 1
 fi
 
-MAIN_CLASS=$1
-shift
-ARGS="$@"
+# === STEP 1: Build project ===
+echo "🚀 Building project with Maven..."
+mvn clean package -DskipTests
 
-PROJECT_DIR="poi-playground"
-JAR_PATH="target/poi-playground-1.0-SNAPSHOT.jar"
-
-(
-  cd "$PROJECT_DIR"
-
-  # Rebuild jar
-  mvn -q -e clean package
-
-  # Execute jar with arguments
-  java -jar "$JAR_PATH" "$MAIN_CLASS" $ARGS
-)
+# === STEP 2: Run the test module jar with all provided arguments ===
+echo "🏃 Running test module with args: $@"
+java -jar test/target/test-1.0-SNAPSHOT.jar "$@"
