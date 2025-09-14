@@ -57,7 +57,7 @@
                 <configuration>
                     <jdbc>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
-                        <url>jdbc:mysql://localhost:3306/abms</url>
+                        <url>${env.DB_URL}</url>
                         <user>root</user>
                         <password>toor</password>
                     </jdbc>
@@ -66,9 +66,7 @@
                         <database>
                             <name>org.jooq.meta.mysql.MySQLDatabase</name>
                             <inputSchema>abms</inputSchema>
-                            <includes>dsi_portefeuille|dsi_exercice_budgetaire|
-                                dsi_programme                   
-                            </includes>
+                            <includes>dsi_portefeuille|dsi_exercice_budgetaire|dsi_programme</includes>
                         </database>
 
                         <generate>

@@ -20,7 +20,7 @@ import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
-import mf.dgb.rpp.model.RepartitionTitreCentreResp;
+import mf.dgb.rpp.model.ProgrammeTitreCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeTitre;
 import mf.dgb.rpp.model.ProgrammeAnnee;
 import mf.dgb.rpp.model.LanguageDirection;
@@ -40,27 +40,23 @@ public class FrenchModel implements DocumentGenerator {
         public void generate(XWPFDocument document) throws Exception {
                 var laMission = LaMission.builder()
                                 .intro(INTRO.replaceAll("\\R", " "))
-                                .addMission(
-                                                new Mission(
-                                                                "Modernisation numérique : Déploiement de plateformes digitales pour simplifier "
-                                                                                + "les démarches administratives.",
-                                                                List.of(
-                                                                                "Mise en place d’un guichet unique en ligne",
-                                                                                "Automatisation des procédures internes",
-                                                                                "dfsd sdfs sdfsdf")))
-                                .addMission(
-                                                new Mission(
-                                                                "Accessibilité accrue : Améliorer l’accès des citoyens aux services publics, y "
-                                                                                + "compris en zones rurales.",
-                                                                List.of("Déploiement de bornes interactives",
-                                                                                "Renforcement des services mobiles")))
-                                .addMission(
-                                                new Mission(
-                                                                "Transparence et gouvernance : Renforcement des mécanismes de contrôle et lutte "
-                                                                                + "active contre la corruption.",
-                                                                List.of(
-                                                                                "Publication annuelle des rapports financiers",
-                                                                                "Création d’une plateforme de signalement anonyme")))
+                                .addMission(t -> t.mission(
+                                                "Modernisation numérique : Déploiement de plateformes digitales pour simplifier "
+                                                                + "les démarches administratives.")
+                                                .addSubMission("Mise en place d’un guichet unique en ligne")
+                                                .addSubMission("Automatisation des procédures internes"))
+
+                                .addMission(t -> t.mission(
+                                                "Accessibilité accrue : Améliorer l’accès des citoyens aux services publics, y "
+                                                                + "compris en zones rurales.")
+                                                .addSubMission("Déploiement de bornes interactives")
+                                                .addSubMission("Renforcement des services mobiles"))
+
+                                .addMission(t -> t.mission(
+                                                "Transparence et gouvernance : Renforcement des mécanismes de contrôle et lutte "
+                                                                + "active contre la corruption.")
+                                                .addSubMission("Publication annuelle des rapports financiers")
+                                                .addSubMission("Création d’une plateforme de signalement anonyme"))
                                 .build();
 
                 var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg")
@@ -97,28 +93,27 @@ public class FrenchModel implements DocumentGenerator {
 
                 FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
                                 .targetYear(Year.of(2026))
-                                .addRepartitionProgrammeVersionBs(
-                                                List.of(
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Formation professionnelle",
-                                                                                20_143_691_000L, 19_506_191_000L),
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Enseignement professionnel",
-                                                                                622_000_000L, 540_000_000L),
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Administration générale",
-                                                                                97_250_926_000L, 98_536_426_000L)))
-                                .addRepartitionProgrammes(
-                                                List.of(
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Formation professionnelle",
-                                                                                20_143_691_000L, 19_506_191_000L),
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Enseignement professionnel",
-                                                                                622_000_000L, 540_000_000L),
-                                                                new FichePortefeuille.ProgrammeRepartition(
-                                                                                "Administration générale",
-                                                                                97_250_926_000L, 98_536_426_000L)))
+                                // repartition programme version B
+                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                                "Formation professionnelle",
+                                                20_143_691_000L, 19_506_191_000L))
+                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                                "Enseignement professionnel",
+                                                622_000_000L, 540_000_000L))
+                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                                "Administration générale",
+                                                97_250_926_000L, 98_536_426_000L))
+                                // repartition programme
+                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                                "Formation professionnelle",
+                                                20_143_691_000L, 19_506_191_000L))
+                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                                "Enseignement professionnel",
+                                                622_000_000L, 540_000_000L))
+                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                                "Administration générale",
+                                                97_250_926_000L, 98_536_426_000L))
+                                // repartition programme centre de responsabilite
                                 .addRepartitionProgrammeCentreResp(
                                                 ProgrammeCentreResponsibilite.builder()
                                                                 .name("Enseignement professionnel")
@@ -137,6 +132,7 @@ public class FrenchModel implements DocumentGenerator {
                                                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                                                                 642342L))
                                                                 .build())
+                                // repartition programme titre
                                 .addRepartitionProgrammeTitre(
                                                 ProgrammeTitre.builder()
                                                                 .name("Formation professionnel")
@@ -164,46 +160,41 @@ public class FrenchModel implements DocumentGenerator {
                                                                 .t3(423424332L)
                                                                 .t4(234242432L)
                                                                 .build())
+
+                                // repartition titre centre de responsabilite
                                 .addRepartitionTitreCentreResps(
                                                 List.of(
-                                                                new RepartitionTitreCentreResp(
+                                                                new ProgrammeTitreCentreResponsibilite(
                                                                                 "Services Centraux",
                                                                                 List.of(34242342L, 434243L, 32423424L,
                                                                                                 342342L)),
-                                                                new RepartitionTitreCentreResp(
+                                                                new ProgrammeTitreCentreResponsibilite(
                                                                                 "Services déconcentrés",
                                                                                 List.of(32242342L, 23423424L,
                                                                                                 3243423423L,
                                                                                                 23425234L)),
-                                                                new RepartitionTitreCentreResp(
+                                                                new ProgrammeTitreCentreResponsibilite(
                                                                                 "Organismes sous tutelle",
                                                                                 List.of(32342342L, 234243523L,
                                                                                                 3242353432L,
                                                                                                 324234234L)),
-                                                                new RepartitionTitreCentreResp(
+                                                                new ProgrammeTitreCentreResponsibilite(
                                                                                 "Organes territoriaux",
                                                                                 List.of(32342342L, 234243523L,
                                                                                                 3242353432L,
                                                                                                 324234234L))))
-                                .addProgrammesAnnees(
-                                                List.of(
-                                                                new ProgrammeAnnee(
-                                                                                "Formation professionnelle",
-                                                                                List.of(13232332323L, 234234234L,
-                                                                                                324234234L, 324234234L,
-                                                                                                4234234234L)),
-                                                                new ProgrammeAnnee(
-                                                                                "Enseignement professionnel",
-                                                                                List.of(34234234L, 324234234L,
-                                                                                                3242342342L,
-                                                                                                23423423423L,
-                                                                                                343443234243L)),
-                                                                new ProgrammeAnnee(
-                                                                                "Administration general",
-                                                                                List.of(32313123123L, 3123123132L,
-                                                                                                3423424243L,
-                                                                                                234234243234L,
-                                                                                                3423424234243L))))
+                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                                .name("Formation professionnelle")
+                                                .evolution(List.of(13232332323L, 234234234L, 324234234L, 324234234L,
+                                                                4234234234L)))
+                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                                .name("Enseignement professionnel")
+                                                .evolution(List.of(34234234L, 324234234L, 3242342342L, 23423423423L,
+                                                                343443234243L)))
+                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                                .name("Administration general")
+                                                .evolution(List.of(32313123123L, 3123123132L, 3423424243L,
+                                                                234234243234L, 3423424234243L)))
                                 .build();
 
                 AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -213,29 +204,7 @@ public class FrenchModel implements DocumentGenerator {
                                 .fichePortefeuille(fichePortefeuille)
                                 .build();
 
-                auSujetDuPortefeuille.write(
-                                document,
-                                new GenerationContext(
-                                                document,
-                                                loadPropertiesAsMap("french.properties"),
-                                                LanguageDirection.LTR));
+                auSujetDuPortefeuille.write(document, GenerationContext.of(doc, LanguageDirection.LTR));
         }
 
-        public static Map<String, String> loadPropertiesAsMap(String resourceName) {
-                Properties props = new Properties();
-                try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-                                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-                        if (is == null) {
-                                throw new FileNotFoundException("Resource not found: " + resourceName);
-                        }
-                        props.load(r);
-                        Map<String, String> map = new HashMap<>();
-                        for (String name : props.stringPropertyNames()) {
-                                map.put(name, props.getProperty(name));
-                        }
-                        return map;
-                } catch (Exception e) {
-                        throw new IllegalStateException("can't load resource");
-                }
-        }
 }

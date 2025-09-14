@@ -67,10 +67,17 @@ interface ProgrammeTitreBlueprint extends Extractable<ProgrammeTitre>{
         @Prototype.BuilderMethod
         static void repartition(ProgrammeTitre.BuilderBase<?, ?> builder, List<Long> repartitions) {
             Objects.requireNonNull(repartitions, "repartitions can not be null!");
+            
             if (repartitions.size() > 7) {
                 throw new IllegalArgumentException(
                         "repartition shoul be of size 7 repartition size : " + repartitions.size());
             }
+
+            if(!builder.isMF() && (repartitions.size() > 4)){
+                throw new IllegalArgumentException(
+                        "normal portefeuille should have only 4 titre : " + repartitions.size());
+            }
+
             for (int i = 0; i < repartitions.size(); i++) {
                 switch (i) {
                     case 0 -> {
