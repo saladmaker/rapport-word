@@ -8,6 +8,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
 import mf.dgb.rpp.model.LaMission;
@@ -15,8 +16,8 @@ import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeRepartition;
+import mf.dgb.rpp.model.PortefeuilleCentreResponsibiliteTitre;
 import mf.dgb.rpp.model.ProgrammeTitre;
-import mf.dgb.rpp.model.ProgrammeTitreCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
 
@@ -129,53 +130,44 @@ public class FrenchModel implements DocumentGenerator {
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
-                                .name("Formation professionnel")
-                                .isMF(false)
-                                .t1(2434234L)
-                                .t2(43453453L)
-                                .t3(423424332L)
-                                .t4(234242432L)
-                                .build())
-                .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
-                                .name("Formation professionnel")
-                                .isMF(false)
-                                .t1(2434234L)
-                                .t2(43453453L)
-                                .t3(423424332L)
-                                .t4(234242432L)
-                                .build())
-                .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
-                                .name("Formation professionnel")
-                                .isMF(false)
-                                .t1(2434234L)
-                                .t2(43453453L)
-                                .t3(423424332L)
-                                .t4(234242432L)
-                                .build())
-                .addRepartitionTitreCentreResps(
-                        List.of(
-                                new ProgrammeTitreCentreResponsibilite(
-                                        "Services Centraux",
-                                        List.of(34242342L, 434243L, 32423424L,
-                                                342342L)),
-                                new ProgrammeTitreCentreResponsibilite(
-                                        "Services déconcentrés",
-                                        List.of(32242342L, 23423424L,
-                                                3243423423L,
-                                                23425234L)),
-                                new ProgrammeTitreCentreResponsibilite(
-                                        "Organismes sous tutelle",
-                                        List.of(32342342L, 234243523L,
-                                                3242353432L,
-                                                324234234L)),
-                                new ProgrammeTitreCentreResponsibilite(
-                                        "Organes territoriaux",
-                                        List.of(32342342L, 234243523L,
-                                                3242353432L,
-                                                324234234L))))
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
+                                                                .build())
+                                .addRepartitionProgrammeTitre(
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
+                                                                .build())
+                                .addRepartitionProgrammeTitre(
+                                                ProgrammeTitre.builder()
+                                                                .name("Formation professionnel")
+                                                                .isMF(false)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
+                                                                .build())
+
+                .repartitionTitreCentreResp(PortefeuilleCentreResponsibiliteTitre.builder()
+                                        .service(CentreResponsabiliteTitre
+                                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .serviceDeconcentrees(List.of(123242L,234234L,234243L,234243L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
+                                        .build()
+                                )
                 .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
                         .name("Formation professionnelle")
                         .evolution(List.of(13232332323L, 234234234L,

@@ -20,42 +20,42 @@ interface ProgrammeTitreBlueprint extends Extractable<ProgrammeTitre>{
     boolean isMF();
 
     @Option.DefaultLong(0L)
-    Long t1();
+    Long titre1();
 
     @Option.DefaultLong(0L)
-    Long t2();
+    Long titre2();
 
     @Option.DefaultLong(0L)
-    Long t3();
+    Long titre3();
 
     @Option.DefaultLong(0L)
-    Long t4();
+    Long titre4();
 
     @Option.DefaultLong(0L)
-    Long t5();
+    Long titre5();
 
     @Option.DefaultLong(0L)
-    Long t6();
+    Long titre6();
 
     @Option.DefaultLong(0L)
-    Long t7();
+    Long titre7();
 
     @Override
     default List<ColumnExtractor<ProgrammeTitre, ?>> extractors() {
         
         List<ColumnExtractor<ProgrammeTitre, ?>> fixed = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeTitreBlueprint::name),
-                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t1),
-                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t2),
-                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t3),
-                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t4)
+                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre1),
+                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre2),
+                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre3),
+                ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre4)
         );
         if (isMF()) {
             List<ColumnExtractor<ProgrammeTitre, ?>> availableExtractors = new ArrayList<>();
             availableExtractors.addAll(fixed);
-            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t5));
-            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t6));
-            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::t7));
+            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre5));
+            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre6));
+            availableExtractors.add(ColumnExtractor.ofSummable(ProgrammeTitreBlueprint::titre7));
             return availableExtractors;
         }
         return fixed;
@@ -70,7 +70,7 @@ interface ProgrammeTitreBlueprint extends Extractable<ProgrammeTitre>{
             
             if (repartitions.size() > 7) {
                 throw new IllegalArgumentException(
-                        "repartition shoul be of size 7 repartition size : " + repartitions.size());
+                        "repartition shoul be of size 7 repartition, found size: " + repartitions.size());
             }
 
             if(!builder.isMF() && (repartitions.size() > 4)){
@@ -81,25 +81,25 @@ interface ProgrammeTitreBlueprint extends Extractable<ProgrammeTitre>{
             for (int i = 0; i < repartitions.size(); i++) {
                 switch (i) {
                     case 0 -> {
-                        builder.t1(repartitions.get(i));
+                        builder.titre1(repartitions.get(i));
                     }
                     case 1 -> {
-                        builder.t2(repartitions.get(i));
+                        builder.titre2(repartitions.get(i));
                     }
                     case 2 -> {
-                        builder.t3(repartitions.get(i));
+                        builder.titre3(repartitions.get(i));
                     }
                     case 3 -> {
-                        builder.t4(repartitions.get(i));
+                        builder.titre4(repartitions.get(i));
                     }
                     case 4 -> {
-                        builder.t5(repartitions.get(i));
+                        builder.titre5(repartitions.get(i));
                     }
                     case 5 -> {
-                        builder.t6(repartitions.get(i));
+                        builder.titre6(repartitions.get(i));
                     }
                     case 6 -> {
-                        builder.t7(repartitions.get(i));
+                        builder.titre7(repartitions.get(i));
                     }
                 }
             }
@@ -111,9 +111,9 @@ interface ProgrammeTitreBlueprint extends Extractable<ProgrammeTitre>{
         @Override
         public void decorate(ProgrammeTitre.BuilderBase<?, ?> target) {
             if (target.isMF()) {
-                Objects.requireNonNull(target.t5(), "titre 5 should be set explicitly for MF");
-                Objects.requireNonNull(target.t6(), "titre 6 should be set explicitly for MF");
-                Objects.requireNonNull(target.t7(), "titre 7 should be set explicitly for MF");
+                Objects.requireNonNull(target.titre5(), "titre 5 should be set explicitly for MF");
+                Objects.requireNonNull(target.titre6(), "titre 6 should be set explicitly for MF");
+                Objects.requireNonNull(target.titre7(), "titre 7 should be set explicitly for MF");
             }
         }
 

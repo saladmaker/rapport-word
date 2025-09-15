@@ -36,8 +36,7 @@
                 <version>${poi.version}</version>
             </dependency>
 
-            <!--test
-            dependencies-->
+            <!--test dependencies-->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>

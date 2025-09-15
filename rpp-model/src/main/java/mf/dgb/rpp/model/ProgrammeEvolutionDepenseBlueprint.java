@@ -45,22 +45,22 @@ interface ProgrammeEvolutionDepenseBlueprint {
             switch (size) {
                 case 3 -> {
                     builderBase.Annee(depenses.get(0));
-                    builderBase.AnneeMoins1(depenses.get(1));
-                    builderBase.AnneeMoins2(depenses.get(2));
+                    builderBase.AnneePlus1(depenses.get(1));
+                    builderBase.AnneePlus2(depenses.get(2));
                 }
                 case 4 -> {
-                    builderBase.AnneePlus1(depenses.get(0));
+                    builderBase.AnneeMoins1(depenses.get(0));
                     builderBase.Annee(depenses.get(1));
-                    builderBase.AnneeMoins1(depenses.get(2));
-                    builderBase.AnneeMoins2(depenses.get(3));
+                    builderBase.AnneePlus1(depenses.get(2));
+                    builderBase.AnneePlus2(depenses.get(3));
 
                 }
                 case 5 -> {
-                    builderBase.AnneePlus2(depenses.get(0));
-                    builderBase.AnneePlus1(depenses.get(1));
+                    builderBase.AnneeMoins2(depenses.get(0));
+                    builderBase.AnneeMoins2(depenses.get(1));
                     builderBase.Annee(depenses.get(2));
-                    builderBase.AnneeMoins1(depenses.get(3));
-                    builderBase.AnneeMoins2(depenses.get(4));
+                    builderBase.AnneePlus2(depenses.get(3));
+                    builderBase.AnneePlus2(depenses.get(4));
                 }
             }
 
