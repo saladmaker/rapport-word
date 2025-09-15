@@ -13,6 +13,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
 import mf.dgb.rpp.model.Mission;
@@ -22,8 +23,10 @@ import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
 import mf.dgb.rpp.model.PortefeuilleTitreCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeTitre;
-import mf.dgb.rpp.model.ProgrammeAnnee;
+import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
+import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
+import mf.dgb.rpp.model.ProgrammeRepartition;
 
 public class FrenchModel implements DocumentGenerator {
 
@@ -94,23 +97,23 @@ public class FrenchModel implements DocumentGenerator {
                 FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
                                 .targetYear(Year.of(2026))
                                 // repartition programme version B
-                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
                                                 "Formation professionnelle",
                                                 20_143_691_000L, 19_506_191_000L))
-                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
                                                 "Enseignement professionnel",
                                                 622_000_000L, 540_000_000L))
-                                .addRepartitionProgrammeVersionB(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
                                                 "Administration générale",
                                                 97_250_926_000L, 98_536_426_000L))
                                 // repartition programme
-                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgramme(new ProgrammeRepartition(
                                                 "Formation professionnelle",
                                                 20_143_691_000L, 19_506_191_000L))
-                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgramme(new ProgrammeRepartition(
                                                 "Enseignement professionnel",
                                                 622_000_000L, 540_000_000L))
-                                .addRepartitionProgramme(new FichePortefeuille.ProgrammeRepartition(
+                                .addRepartitionProgramme(new ProgrammeRepartition(
                                                 "Administration générale",
                                                 97_250_926_000L, 98_536_426_000L))
                                 // repartition programme centre de responsabilite
@@ -137,64 +140,60 @@ public class FrenchModel implements DocumentGenerator {
                                                 ProgrammeTitre.builder()
                                                                 .name("Formation professionnel")
                                                                 .isMF(false)
-                                                                .t1(2434234L)
-                                                                .t2(43453453L)
-                                                                .t3(423424332L)
-                                                                .t4(234242432L)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
                                                                 .build())
                                 .addRepartitionProgrammeTitre(
                                                 ProgrammeTitre.builder()
                                                                 .name("Formation professionnel")
                                                                 .isMF(false)
-                                                                .t1(2434234L)
-                                                                .t2(43453453L)
-                                                                .t3(423424332L)
-                                                                .t4(234242432L)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
                                                                 .build())
                                 .addRepartitionProgrammeTitre(
                                                 ProgrammeTitre.builder()
                                                                 .name("Formation professionnel")
                                                                 .isMF(false)
-                                                                .t1(2434234L)
-                                                                .t2(43453453L)
-                                                                .t3(423424332L)
-                                                                .t4(234242432L)
+                                                                .titre1(2434234L)
+                                                                .titre2(43453453L)
+                                                                .titre3(423424332L)
+                                                                .titre4(234242432L)
                                                                 .build())
 
                                 // repartition titre centre de responsabilite
-                                .addRepartitionTitreCentreResps(
-                                                List.of(
-                                                                new PortefeuilleTitreCentreResponsibilite(
-                                                                                "Services Centraux",
-                                                                                List.of(34242342L, 434243L, 32423424L,
-                                                                                                342342L)),
-                                                                new PortefeuilleTitreCentreResponsibilite(
-                                                                                "Services déconcentrés",
-                                                                                List.of(32242342L, 23423424L,
-                                                                                                3243423423L,
-                                                                                                23425234L)),
-                                                                new PortefeuilleTitreCentreResponsibilite(
-                                                                                "Organismes sous tutelle",
-                                                                                List.of(32342342L, 234243523L,
-                                                                                                3242353432L,
-                                                                                                324234234L)),
-                                                                new PortefeuilleTitreCentreResponsibilite(
-                                                                                "Organes territoriaux",
-                                                                                List.of(32342342L, 234243523L,
-                                                                                                3242353432L,
-                                                                                                324234234L))))
-                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                .repartitionTitreCentreResp(PortefeuilleCentreResponsabiliteTitre.builder()
+                                        .service(CentreResponsabiliteTitre
+                                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .serviceDeconcentrees(List.of(123242L,234234L,234243L,234243L)))
+                                        .service(CentreResponsabiliteTitre
+                                                .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
+                                        .build()
+                                )
+                                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
                                                 .name("Formation professionnelle")
                                                 .evolution(List.of(13232332323L, 234234234L, 324234234L, 324234234L,
-                                                                4234234234L)))
-                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                                                4234234234L))
+                                        .build()
+                                )
+                                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
                                                 .name("Enseignement professionnel")
                                                 .evolution(List.of(34234234L, 324234234L, 3242342342L, 23423423423L,
-                                                                343443234243L)))
-                                .addProgrammesAnnee(ProgrammeAnnee.builder()
+                                                                343443234243L))
+                                        .build()
+                                )
+                                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
                                                 .name("Administration general")
                                                 .evolution(List.of(32313123123L, 3123123132L, 3423424243L,
-                                                                234234243234L, 3423424234243L)))
+                                                                234234243234L, 3423424234243L))
+                                        .build()
+                                )
                                 .build();
 
                 AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -204,7 +203,7 @@ public class FrenchModel implements DocumentGenerator {
                                 .fichePortefeuille(fichePortefeuille)
                                 .build();
 
-                auSujetDuPortefeuille.write(document, GenerationContext.of(doc, LanguageDirection.LTR));
+                auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.LTR));
         }
 
 }

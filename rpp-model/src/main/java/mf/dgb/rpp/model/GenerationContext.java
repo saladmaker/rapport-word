@@ -59,7 +59,7 @@ public final class GenerationContext {
         addFooterAndPageNumber(doc, footerText);
     }
 
-    public GenerationContext of(XWPFDocument doc, LanguageDirection languageDirection) {
+    public static GenerationContext of(XWPFDocument doc, LanguageDirection languageDirection) {
         Objects.requireNonNull(doc);
         Objects.requireNonNull(languageDirection);
         Map<String, String> config = new HashMap<>();
