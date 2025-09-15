@@ -21,7 +21,6 @@ import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
-import mf.dgb.rpp.model.PortefeuilleTitreCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeTitre;
 import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
