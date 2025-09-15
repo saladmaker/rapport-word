@@ -45,19 +45,6 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
     String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
-    public enum CentreDeReponsibilte {
-
-        SERVICE_CENTRAUX,
-
-        SERVICE_DECONCENTREE,
-
-        ORGANISMES_SOUS_TUTELLE,
-
-        ORGANISMES_TERRITORIAUX,
-
-        AUTRE_ORGANISMES_SOUS_TUTELLE;
-
-    }
 
     public record ProgrammeRepartition(String name, Long ae, Long cp) {
         
@@ -94,8 +81,7 @@ interface FichePortefeuilleBlueprint extends Writable {
     @Option.Singular
     List<ProgrammeTitre> repartitionProgrammeTitres();
 
-    @Option.Singular
-    List<ProgrammeTitreCentreResponsibilite> repartitionTitreCentreResps();
+    PortefeuilleCentreResponsibiliteTitre repartitionTitreCentreResp();
 
     @Option.Singular
     List<ProgrammeEvolutionDepense> ProgrammesEvolutionDepenses();
@@ -232,13 +218,13 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeTitreCentreResponsibilite, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeTitreCentreResponsibilite::name),
+        List<ColumnExtractor<PortefeuilleTitreCentreResponsibilite, ?>> extractors = List.of(
+                ColumnExtractor.ofUnsummable(PortefeuilleTitreCentreResponsibilite::name),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(0)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(1)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(2)),
                 ColumnExtractor.ofSummable(r -> r.ttrs().get(3)));
-        List<ProgrammeTitreCentreResponsibilite> rows = repartitionTitreCentreResps();
+        List<PortefeuilleTitreCentreResponsibilite> rows = repartitionTitreCentreResps();
         context.writeTable(
                 document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
                 rows, extractors, true);

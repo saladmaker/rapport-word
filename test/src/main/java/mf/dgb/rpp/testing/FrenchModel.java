@@ -20,7 +20,7 @@ import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
-import mf.dgb.rpp.model.ProgrammeTitreCentreResponsibilite;
+import mf.dgb.rpp.model.PortefeuilleTitreCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeTitre;
 import mf.dgb.rpp.model.ProgrammeAnnee;
 import mf.dgb.rpp.model.LanguageDirection;
@@ -164,21 +164,21 @@ public class FrenchModel implements DocumentGenerator {
                                 // repartition titre centre de responsabilite
                                 .addRepartitionTitreCentreResps(
                                                 List.of(
-                                                                new ProgrammeTitreCentreResponsibilite(
+                                                                new PortefeuilleTitreCentreResponsibilite(
                                                                                 "Services Centraux",
                                                                                 List.of(34242342L, 434243L, 32423424L,
                                                                                                 342342L)),
-                                                                new ProgrammeTitreCentreResponsibilite(
+                                                                new PortefeuilleTitreCentreResponsibilite(
                                                                                 "Services déconcentrés",
                                                                                 List.of(32242342L, 23423424L,
                                                                                                 3243423423L,
                                                                                                 23425234L)),
-                                                                new ProgrammeTitreCentreResponsibilite(
+                                                                new PortefeuilleTitreCentreResponsibilite(
                                                                                 "Organismes sous tutelle",
                                                                                 List.of(32342342L, 234243523L,
                                                                                                 3242353432L,
                                                                                                 324234234L)),
-                                                                new ProgrammeTitreCentreResponsibilite(
+                                                                new PortefeuilleTitreCentreResponsibilite(
                                                                                 "Organes territoriaux",
                                                                                 List.of(32342342L, 234243523L,
                                                                                                 3242353432L,

@@ -1,0 +1,13 @@
+package mf.dgb.rpp.model;
+
+public enum CentreResponsabilite {
+    SERVICE_CENTRAUX,
+
+    SERVICE_DECONCENTREE,
+
+    ORGANISMES_SOUS_TUTELLE,
+
+    ORGANISMES_TERRITORIAUX,
+
+    AUTRE_ORGANISMES_SOUS_TUTELLE;
+}
