@@ -56,10 +56,10 @@ interface ProgrammeEvolutionDepenseBlueprint {
 
                 }
                 case 5 -> {
-                    builderBase.AnneeMoins2(depenses.get(0));
+                    builderBase.AnneeMoins1(depenses.get(0));
                     builderBase.AnneeMoins2(depenses.get(1));
                     builderBase.Annee(depenses.get(2));
-                    builderBase.AnneePlus2(depenses.get(3));
+                    builderBase.AnneePlus1(depenses.get(3));
                     builderBase.AnneePlus2(depenses.get(4));
                 }
             }

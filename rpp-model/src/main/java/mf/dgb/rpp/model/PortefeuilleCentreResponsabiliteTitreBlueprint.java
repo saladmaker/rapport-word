@@ -9,8 +9,8 @@ import java.util.Objects;
 import io.helidon.builder.api.Option;
 
 @Prototype.Blueprint
-@Prototype.CustomMethods(PortefeuilleCentreResponsibiliteTitreBlueprint.CustomMethods.class)
-interface PortefeuilleCentreResponsibiliteTitreBlueprint {
+@Prototype.CustomMethods(PortefeuilleCentreResponsabiliteTitreBlueprint.CustomMethods.class)
+interface PortefeuilleCentreResponsabiliteTitreBlueprint {
 
     List<ColumnExtractor<CentreResponsabiliteTitre, ?>> FIXED_EXTRACTORS = List.of(
             ColumnExtractor.ofUnsummable(r -> r.serviceType().toString()),

@@ -16,7 +16,7 @@ import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
 import mf.dgb.rpp.model.ProgrammeRepartition;
-import mf.dgb.rpp.model.PortefeuilleCentreResponsibiliteTitre;
+import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
 import mf.dgb.rpp.model.ProgrammeTitre;
 import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
@@ -157,7 +157,7 @@ public class FrenchModel implements DocumentGenerator {
                                                                 .titre4(234242432L)
                                                                 .build())
 
-                .repartitionTitreCentreResp(PortefeuilleCentreResponsibiliteTitre.builder()
+                .repartitionTitreCentreResp(PortefeuilleCentreResponsabiliteTitre.builder()
                                         .service(CentreResponsabiliteTitre
                                                 .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
                                         .service(CentreResponsabiliteTitre

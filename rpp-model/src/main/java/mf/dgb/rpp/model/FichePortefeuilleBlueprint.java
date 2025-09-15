@@ -192,7 +192,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
 
-        PortefeuilleCentreResponsibiliteTitre cntrRespTitre = repartitionTitreCentreResp();
+        PortefeuilleCentreResponsabiliteTitre cntrRespTitre = repartitionTitreCentreResp();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = cntrRespTitre.extractors();
         var rows = cntrRespTitre.services();
 
