@@ -43,7 +43,6 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
     String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
-
     
     @Option.Required
     Year targetYear();
@@ -60,7 +59,7 @@ interface FichePortefeuilleBlueprint extends Writable {
     @Option.Singular
     List<ProgrammeTitre> repartitionProgrammeTitres();
 
-    PortefeuilleCentreResponsibiliteTitre repartitionTitreCentreResp();
+    PortefeuilleCentreResponsabiliteTitre repartitionTitreCentreResp();
 
     @Option.Singular
     List<ProgrammeEvolutionDepense> programmesEvolutionDepenses();
@@ -157,13 +156,10 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
-                ColumnExtractor.ofSummable(r -> r.serviceCentraux()),
-                ColumnExtractor.ofSummable(r -> r.serviceDeconcentree()),
-                ColumnExtractor.ofSummable(r -> r.organismeSousTutelle()),
-                ColumnExtractor.ofSummable(r -> r.organismeTerritoriaux()));
         List<ProgrammeCentreResponsibilite> rows = repartitionProgrammeCentreResps();
+        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = ProgrammeCentreResponsibiliteBlueprint
+                .extractor(rows);
+
         context.writeTable(
                 document, FCHPORT_6_TABLE_3_STYLE_KEY, FCHPORT_6_TABLE_3_CONTENT,
                 rows, extractors, true);
@@ -180,14 +176,9 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_7_TABLE_4_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeTitre::name),
-                ColumnExtractor.ofSummable(ProgrammeTitre::titre1),
-                ColumnExtractor.ofSummable(ProgrammeTitre::titre2),
-                ColumnExtractor.ofSummable(ProgrammeTitre::titre3),
-                ColumnExtractor.ofSummable(ProgrammeTitre::titre4)
-                );
+        
         List<ProgrammeTitre> rows = repartitionProgrammeTitres();
+        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = ProgrammeTitreBlueprint.extractors(rows);
         context.writeTable(
                 document, FCHPORT_7_TABLE_4_STYLE_KEY, FCHPORT_7_TABLE_4_CONTENT,
                 rows, extractors, true);

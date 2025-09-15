@@ -1,6 +1,6 @@
 package mf.dgb.rpp.model;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import io.helidon.builder.api.Prototype;
@@ -10,6 +10,29 @@ import io.helidon.builder.api.Option;
 @Prototype.Blueprint
 @Prototype.CustomMethods(ProgrammeCentreResponsibiliteBlueprint.CustomMethods.class)
 interface ProgrammeCentreResponsibiliteBlueprint {
+
+    List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> FIXED_EXTRACTORS = List.of(
+            ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::serviceCentraux),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::serviceDeconcentree),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismeSousTutelle),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismeTerritoriaux));
+
+    ColumnExtractor<ProgrammeCentreResponsibilite, ?> AUTRE_OST_EXTRACTOR = ColumnExtractor
+            .ofSummable(ProgrammeCentreResponsibilite::autreOrganismeSousTutelle);
+
+    public static List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractor(
+        List<ProgrammeCentreResponsibilite> data) {
+
+        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = new ArrayList<>();
+        extractors.addAll(FIXED_EXTRACTORS);
+        boolean specialAutreOrganismeSousTutelle = data.stream()
+                .anyMatch(ProgrammeCentreResponsibilite::specialCentreDeResponsabilite);
+        if (specialAutreOrganismeSousTutelle) {
+            extractors.add(AUTRE_OST_EXTRACTOR);
+        }
+        return extractors;
+    }
 
     @Option.Required
     String name();
@@ -42,7 +65,7 @@ interface ProgrammeCentreResponsibiliteBlueprint {
                         "repartition shoul be of size 5 repartition size : " + repartition.size());
             }
 
-            if(!builder.specialCentreDeResponsabilite() && (repartition.size() > 4)){
+            if (!builder.specialCentreDeResponsabilite() && (repartition.size() > 4)) {
                 throw new IllegalArgumentException(
                         "normal portefeuille shoul have only 4 repartition: " + repartition.size());
             }
@@ -61,7 +84,7 @@ interface ProgrammeCentreResponsibiliteBlueprint {
                     case 3 -> {
                         builder.organismeTerritoriaux(repartition.get(i));
                     }
-                    case 4 ->{
+                    case 4 -> {
                         builder.autreOrganismeSousTutelle(repartition.get(i));
                     }
                 }

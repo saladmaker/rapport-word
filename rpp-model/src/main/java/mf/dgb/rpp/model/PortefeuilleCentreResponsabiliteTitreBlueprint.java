@@ -45,8 +45,9 @@ interface PortefeuilleCentreResponsibiliteTitreBlueprint {
     }
 
     final class CustomMethods {
+
         @Prototype.BuilderMethod
-        static void service(PortefeuilleCentreResponsibiliteTitre.BuilderBase<?, ?> builderBase,
+        static void service(PortefeuilleCentreResponsabiliteTitre.BuilderBase<?, ?> builderBase,
                 CentreResponsabiliteTitre service) {
             Objects.requireNonNull(builderBase);
             Objects.requireNonNull(service);
@@ -54,15 +55,15 @@ interface PortefeuilleCentreResponsibiliteTitreBlueprint {
             var type = service.serviceType();
 
             //only mf should have t4, t5, t7 for services centraux
-            if(service.hasSpecialTitres()){
-                if(!(builderBase.isMF()) || (service.serviceType() != CentreResponsabilite.SERVICE_CENTRAUX)){
-                    throw new IllegalStateException("titre 5, titre 6, titre 7 should only be set for service centraux of mf, found: "+ service);
+            if (service.hasSpecialTitres()) {
+                if (!(builderBase.isMF()) || (service.serviceType() != CentreResponsabilite.SERVICE_CENTRAUX)) {
+                    throw new IllegalStateException("titre 5, titre 6, titre 7 should only be set for service centraux of mf, found: " + service);
                 }
             }
 
             //check that we don't have two instance of the same service type
-            if(exists(existingTypes, type)){
-                throw new IllegalArgumentException("service type already exist, found:" + existingTypes + " type:" + service) ;
+            if (exists(existingTypes, type)) {
+                throw new IllegalArgumentException("service type already exist, found:" + existingTypes + " type:" + service);
             }
 
             //overwrite previous
