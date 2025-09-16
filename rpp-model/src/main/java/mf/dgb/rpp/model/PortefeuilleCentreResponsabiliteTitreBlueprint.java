@@ -13,7 +13,7 @@ import io.helidon.builder.api.Option;
 interface PortefeuilleCentreResponsabiliteTitreBlueprint {
 
     List<ColumnExtractor<CentreResponsabiliteTitre, ?>> FIXED_EXTRACTORS = List.of(
-            ColumnExtractor.ofUnsummable(r -> r.serviceType().toString()),
+            ColumnExtractor.ofConstable(CentreResponsabiliteTitre::serviceType),
             ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre1),
             ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre2),
             ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre3),
@@ -25,6 +25,7 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
             ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre6),
             ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre7)
     );
+
 
     @Option.DefaultBoolean(false)
     boolean isMF();
@@ -56,14 +57,20 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
 
             //only mf should have t4, t5, t7 for services centraux
             if (service.hasSpecialTitres()) {
-                if (!(builderBase.isMF()) || (service.serviceType() != CentreResponsabilite.SERVICE_CENTRAUX)) {
-                    throw new IllegalStateException("titre 5, titre 6, titre 7 should only be set for service centraux of mf, found: " + service);
+                if (!(builderBase.isMF()) || (service.serviceType() != CentreResponsabilite.SERVICES_CENTRAUX)) {
+                    throw new IllegalArgumentException("titre 5, titre 6, titre 7 should only be set for service centraux of mf, found: " + service);
+                }
+            }
+            //only portefeuille with 
+            if(CentreResponsabilite.AUTRE_ORGANISMES_SOUS_TUTELLE == service.serviceType()){
+                if(!builderBase.specialCentreDeResponsabilite()){
+                    throw new IllegalArgumentException("only portefeuille with special centre responsabilite could such a service type, found:" + service);
                 }
             }
 
             //check that we don't have two instance of the same service type
             if (exists(existingTypes, type)) {
-                throw new IllegalArgumentException("service type already exist, found:" + existingTypes + " type:" + service);
+                throw new IllegalArgumentException("service type already exist, exist:" + existingTypes + ", type:" + service);
             }
 
             //overwrite previous

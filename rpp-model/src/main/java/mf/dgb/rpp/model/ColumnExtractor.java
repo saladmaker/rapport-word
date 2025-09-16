@@ -2,17 +2,26 @@ package mf.dgb.rpp.model;
 
 import java.util.function.Function;
 
-public sealed interface ColumnExtractor<T, R> extends Function<T, R> permits ColumnExtractor.SummableColumnExtractor, ColumnExtractor.UnsummableColumnExtractor {
+import mf.dgb.rpp.model.ColumnExtractor.ConstableColumnExtractor;
+
+public sealed interface ColumnExtractor<T, R> extends Function<T, R>
+        permits ColumnExtractor.SummableColumnExtractor,
+        ColumnExtractor.UnsummableColumnExtractor,
+        ConstableColumnExtractor {
 
     @SuppressWarnings("hiding")
-    public non-sealed interface SummableColumnExtractor<T, Long> extends ColumnExtractor<T, Long> { 
+    public non-sealed interface SummableColumnExtractor<T, Long> extends ColumnExtractor<T, Long> {
     }
-    
+
     @SuppressWarnings("hiding")
     public non-sealed interface UnsummableColumnExtractor<T, String> extends ColumnExtractor<T, String> {
     }
-    
-    static <S> SummableColumnExtractor<S,Long> ofSummable(Function<S,Long> summable){
+
+    public non-sealed interface ConstableColumnExtractor<T, E extends Enum<E>> extends ColumnExtractor<T, E> {
+
+    }
+
+    static <S> SummableColumnExtractor<S, Long> ofSummable(Function<S, Long> summable) {
         return summable::apply;
     }
 
@@ -20,4 +29,7 @@ public sealed interface ColumnExtractor<T, R> extends Function<T, R> permits Col
         return unsummable::apply;
     }
 
+    static <S, E extends Enum<E>> ConstableColumnExtractor<S, E> ofConstable(Function<S, E> constable) {
+        return constable::apply;
+    }
 }

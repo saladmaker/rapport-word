@@ -194,7 +194,11 @@ public final class GenerationContext {
             T rowData = rows.get(r);
 
             for (int c = 0; c < extractors.size(); c++) {
-                String value = String.valueOf(extractors.get(c).apply(rowData));
+                Object data = extractors.get(c).apply(rowData);
+                if(data instanceof Enum<?> constant){
+                    data = contextualizedContent(constant.name());
+                }
+                String value = String.valueOf(data);
                 row.getCell(c).setText(value);
             }
 

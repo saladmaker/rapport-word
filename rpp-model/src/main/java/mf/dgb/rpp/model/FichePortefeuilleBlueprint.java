@@ -194,11 +194,11 @@ interface FichePortefeuilleBlueprint extends Writable {
 
         PortefeuilleCentreResponsabiliteTitre cntrRespTitre = repartitionTitreCentreResp();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = cntrRespTitre.extractors();
-        var rows = cntrRespTitre.services();
-
-        context.writeTable(
-                document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
-                rows, extractors, true);
+        List<CentreResponsabiliteTitre> rows = cntrRespTitre.services();
+        
+       context.writeTable(
+               document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
+               rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {

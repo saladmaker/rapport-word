@@ -28,6 +28,7 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
         context.apply(PageLayout.PORTRAIT);
+
         // Title
         String heading2Style = context.plainContent(HEADING_2_STYLE_KEY);
         XWPFParagraph title = document.createParagraph();

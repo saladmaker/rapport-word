@@ -3,7 +3,6 @@ package mf.dgb.rpp.testing;
 import java.time.Year;
 import java.util.List;
 
-
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
