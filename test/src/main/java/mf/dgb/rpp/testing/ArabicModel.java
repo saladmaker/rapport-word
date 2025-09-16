@@ -22,6 +22,8 @@ import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.ProgrammeRepartition;
 import mf.dgb.rpp.model.ProgrammeStructure;
 import mf.dgb.rpp.model.ProgrammeTitre;
+import mf.dgb.rpp.model.CentreRespEvoluPostes;
+
 
 public class ArabicModel implements DocumentGenerator {
 
@@ -120,15 +122,15 @@ public class ArabicModel implements DocumentGenerator {
                                 .build())
 
                 // repartition titre centre de responsabilite
-                .repartitionTitreCentreResp(PortefeuilleCentreResponsabiliteTitre.builder()
+                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
                         .service(CentreResponsabiliteTitre
                                 .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
                         .service(CentreResponsabiliteTitre
-                                .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
+                                .organismesSousTutelle(List.of(23234L, 32342L, 234243L, 3242342L)))
                         .service(CentreResponsabiliteTitre
-                                .serviceDeconcentrees(List.of(123242L,234234L,234243L,234243L)))
+                                .serviceDeconcentrees(List.of(123242L, 234234L, 234243L, 234243L)))
                         .service(CentreResponsabiliteTitre
-                                .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
+                                .organismesTerritotiaux(List.of(123242L, 234234L, 234243L, 234243L)))
                         .build()
                 )
                 .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
@@ -149,6 +151,9 @@ public class ArabicModel implements DocumentGenerator {
                                 234234243234L, 3423424234243L))
                         .build()
                 )
+                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L,434L,45L,5L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()

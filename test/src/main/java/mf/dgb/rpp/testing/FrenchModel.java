@@ -7,6 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreRespEvoluPostes;
 import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
@@ -129,44 +130,44 @@ public class FrenchModel implements DocumentGenerator {
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeTitre(
-                                                ProgrammeTitre.builder()
-                                                                .name("Formation professionnel")
-                                                                .isMF(false)
-                                                                .titre1(2434234L)
-                                                                .titre2(43453453L)
-                                                                .titre3(423424332L)
-                                                                .titre4(234242432L)
-                                                                .build())
-                                .addRepartitionProgrammeTitre(
-                                                ProgrammeTitre.builder()
-                                                                .name("Formation professionnel")
-                                                                .isMF(false)
-                                                                .titre1(2434234L)
-                                                                .titre2(43453453L)
-                                                                .titre3(423424332L)
-                                                                .titre4(234242432L)
-                                                                .build())
-                                .addRepartitionProgrammeTitre(
-                                                ProgrammeTitre.builder()
-                                                                .name("Formation professionnel")
-                                                                .isMF(false)
-                                                                .titre1(2434234L)
-                                                                .titre2(43453453L)
-                                                                .titre3(423424332L)
-                                                                .titre4(234242432L)
-                                                                .build())
+                        ProgrammeTitre.builder()
+                                .name("Formation professionnel")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
+                .addRepartitionProgrammeTitre(
+                        ProgrammeTitre.builder()
+                                .name("Formation professionnel")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
+                .addRepartitionProgrammeTitre(
+                        ProgrammeTitre.builder()
+                                .name("Formation professionnel")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
 
-                .repartitionTitreCentreResp(PortefeuilleCentreResponsabiliteTitre.builder()
-                                        .service(CentreResponsabiliteTitre
-                                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
-                                        .service(CentreResponsabiliteTitre
-                                                .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
-                                        .service(CentreResponsabiliteTitre
-                                                .serviceDeconcentrees(List.of(123242L,234234L,234243L,234243L)))
-                                        .service(CentreResponsabiliteTitre
-                                                .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
-                                        .build()
-                                )
+                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                        .service(CentreResponsabiliteTitre
+                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                        .service(CentreResponsabiliteTitre
+                                .organismesSousTutelle(List.of(23234L, 32342L, 234243L, 3242342L)))
+                        .service(CentreResponsabiliteTitre
+                                .serviceDeconcentrees(List.of(123242L, 234234L, 234243L, 234243L)))
+                        .service(CentreResponsabiliteTitre
+                                .organismesTerritotiaux(List.of(123242L, 234234L, 234243L, 234243L)))
+                        .build()
+                )
                 .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
                         .name("Formation professionnelle")
                         .evolution(List.of(13232332323L, 234234234L,
@@ -187,6 +188,10 @@ public class FrenchModel implements DocumentGenerator {
                                 234234243234L,
                                 3423424234243L))
                         .build())
+
+                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L, 434L, 45L, 5L)))
 
                 .build();
 
