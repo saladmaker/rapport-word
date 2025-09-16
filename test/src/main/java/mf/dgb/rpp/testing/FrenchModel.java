@@ -1,14 +1,8 @@
 package mf.dgb.rpp.testing;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
@@ -16,7 +10,6 @@ import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
 import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
-import mf.dgb.rpp.model.Mission;
 import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.ProgrammeStructure;

@@ -189,11 +189,13 @@ interface FichePortefeuilleBlueprint extends Writable {
         XWPFParagraph table_title_para = document.createParagraph();
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
-
+        var t = repartitionTitreCentreResp();
+        List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = t.extractors();
+        List<CentreResponsabiliteTitre> rows = t.services();
         
-//        context.writeTable(
-//                document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
-//                rows, extractors, true);
+       context.writeTable(
+               document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
+               rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {

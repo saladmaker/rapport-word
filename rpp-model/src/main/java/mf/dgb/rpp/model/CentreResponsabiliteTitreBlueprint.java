@@ -51,7 +51,7 @@ interface CentreResponsabiliteTitreBlueprint {
                 boolean hasSpecialTitre = (builderBase.titre5() != 0) ||
                         (builderBase.titre6() != 0) ||
                         (builderBase.titre7() != 0);
-                if (!(CentreResponsabilite.SERVICE_CENTRAUX == serviceType) && hasSpecialTitre) {
+                if (!(CentreResponsabilite.SERVICES_CENTRAUX == serviceType) && hasSpecialTitre) {
                     throw new IllegalArgumentException(
                             "repartition size for non service centraux should be 4, found: service type "
                                     + serviceType);
@@ -82,7 +82,7 @@ interface CentreResponsabiliteTitreBlueprint {
             // only t1, t2, t3, t4
             if (builderBase.serviceType().isPresent()) {
                 var serviceType = builderBase.serviceType().get();
-                if (!(CentreResponsabilite.SERVICE_CENTRAUX == serviceType) && repartitionSize > 4) {
+                if (!(CentreResponsabilite.SERVICES_CENTRAUX == serviceType) && repartitionSize > 4) {
                     throw new IllegalArgumentException(
                             "repartition size for non service centraux should be 4, found: service type " + serviceType
                                     + " size:"
@@ -132,14 +132,14 @@ interface CentreResponsabiliteTitreBlueprint {
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre servicesCentraux(List<Long> repartition) {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.SERVICE_CENTRAUX)
+                    .serviceType(CentreResponsabilite.SERVICES_CENTRAUX)
                     .repartition(repartition).build();
         }
 
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre serviceDeconcentrees(List<Long> repartition) {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.SERVICE_DECONCENTREE)
+                    .serviceType(CentreResponsabilite.SERVICES_DECONCENTRES)
                     .repartition(repartition).build();
         }
 
@@ -153,7 +153,7 @@ interface CentreResponsabiliteTitreBlueprint {
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre organismesTerritotiaux(List<Long> repartition) {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.ORGANISMES_TERRITORIAUX)
+                    .serviceType(CentreResponsabilite.ORGANES_TERRITORIAUX)
                     .repartition(repartition).build();
         }
 
@@ -167,14 +167,14 @@ interface CentreResponsabiliteTitreBlueprint {
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre emptyServicesCentraux() {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.SERVICE_CENTRAUX)
+                    .serviceType(CentreResponsabilite.SERVICES_CENTRAUX)
                     .build();
         }
 
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre emptyServiceDeconcentrees() {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.SERVICE_DECONCENTREE)
+                    .serviceType(CentreResponsabilite.SERVICES_DECONCENTRES)
                     .build();
         }
 
@@ -188,7 +188,7 @@ interface CentreResponsabiliteTitreBlueprint {
         @Prototype.FactoryMethod
         static CentreResponsabiliteTitre emptyOrganismesTerritotiaux() {
             return CentreResponsabiliteTitre.builder()
-                    .serviceType(CentreResponsabilite.ORGANISMES_TERRITORIAUX)
+                    .serviceType(CentreResponsabilite.ORGANES_TERRITORIAUX)
                     .build();
         }
 
