@@ -7,6 +7,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreRespEvoluPostes;
 import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
@@ -157,7 +158,7 @@ public class FrenchModel implements DocumentGenerator {
                                                                 .build())
 
                                 // repartition titre centre de responsabilite
-                                .repartitionTitreCentreResp(PortefeuilleCentreResponsabiliteTitre.builder()
+                                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
                                         .service(CentreResponsabiliteTitre
                                                 .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
                                         .service(CentreResponsabiliteTitre
@@ -186,6 +187,9 @@ public class FrenchModel implements DocumentGenerator {
                                                                 234234243234L, 3423424234243L))
                                         .build()
                                 )
+                                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L,434L,45L,5L)))
                                 .build();
 
                 AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()

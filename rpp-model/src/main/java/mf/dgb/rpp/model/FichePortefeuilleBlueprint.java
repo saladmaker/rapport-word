@@ -43,6 +43,11 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
     String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
+    String FCHPORT_10_TABLE_7_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY; // same style
+    String FCHPORT_10_TABLE_7_TITLE_KEY = "section1.ficheportefeuille.table.7.title";
+    String FCHPORT_10_TABLE_7_CONTENT = "section1.ficheportefeuille.table.7.";
+
+
     
     @Option.Required
     Year targetYear();
@@ -59,10 +64,13 @@ interface FichePortefeuilleBlueprint extends Writable {
     @Option.Singular
     List<ProgrammeTitre> repartitionProgrammeTitres();
 
-    PortefeuilleCentreResponsabiliteTitre repartitionTitreCentreResp();
+    PortefeuilleCentreResponsabiliteTitre repartitionCentreRespTitre();
 
     @Option.Singular
     List<ProgrammeEvolutionDepense> ProgrammesEvolutionDepenses();
+
+    @Option.Singular
+    List<CentreRespEvoluPostes> postesEvolutions();
 
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
@@ -86,9 +94,10 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeDemarche(document, context);
         writeRepartitionProgramme(document, context);
         writeRepartitionProgrammeCTRRES(document, context);
-        writeRepartitionProgrammeTTR(document, context);
-        writeRepartitionTTRCTRRES(document, context);
+        writeRepartitionProgrammeTitre(document, context);
+        writeRepartitionCentreRespTitre(document, context);
         writeProgrammeAnnee(document, context);
+        writeEvolutionPostesAnnee(document, context);
     }
 
     default void writeRepartitionProgrammeB(XWPFDocument document, GenerationContext context) {
@@ -165,7 +174,7 @@ interface FichePortefeuilleBlueprint extends Writable {
 
     }
 
-    default void writeRepartitionProgrammeTTR(XWPFDocument document, GenerationContext context) {
+    default void writeRepartitionProgrammeTitre(XWPFDocument document, GenerationContext context) {
         if (LanguageDirection.LTR == context.getDirection()) {
             context.apply(PageLayout.LANDSCAPE);
         }
@@ -182,14 +191,14 @@ interface FichePortefeuilleBlueprint extends Writable {
                 rows, extractors, true);
     }
 
-    default void writeRepartitionTTRCTRRES(XWPFDocument document, GenerationContext context) {
+    default void writeRepartitionCentreRespTitre(XWPFDocument document, GenerationContext context) {
 
         // table title
         String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
         XWPFParagraph table_title_para = document.createParagraph();
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
-        var t = repartitionTitreCentreResp();
+        var t = repartitionCentreRespTitre();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = t.extractors();
         List<CentreResponsabiliteTitre> rows = t.services();
         
@@ -217,6 +226,18 @@ interface FichePortefeuilleBlueprint extends Writable {
         context.writeTable(
                 document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
                 rows, extractors, false);
+
+    }
+    default void writeEvolutionPostesAnnee(XWPFDocument document, GenerationContext context) {
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_title_para = document.createParagraph();
+        table_title_para.setStyle(tableTitleStyle);
+        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_10_TABLE_7_TITLE_KEY));
+
+        List<ColumnExtractor<CentreRespEvoluPostes, ?>> extractors = CentreRespEvoluPostes.EXTRACTORS;
+        List<CentreRespEvoluPostes> rows = postesEvolutions();
+
+        context.writeTable(document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_10_TABLE_7_CONTENT, rows, extractors, false);
 
     }
 
