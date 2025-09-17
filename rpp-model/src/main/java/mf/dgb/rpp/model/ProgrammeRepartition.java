@@ -1,5 +1,6 @@
 package mf.dgb.rpp.model;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -7,6 +8,10 @@ import java.util.Objects;
  * @author khaled
  */
 public record ProgrammeRepartition(String name, Long ae, Long cp) {
+    static final List<ColumnExtractor<ProgrammeRepartition, ?>> EXTRACTORS = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
+                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
 
     // checking invariant (name, ae, cp)
     public ProgrammeRepartition {

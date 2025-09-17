@@ -106,11 +106,10 @@ interface FichePortefeuilleBlueprint extends Writable {
         XWPFParagraph table_1_title_para = document.createParagraph();
         table_1_title_para.setStyle(tableTitleStyle);
         table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammeVersionBs();
+
         context.writeTable(
                 document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
                 rows, extractors, false);
@@ -145,10 +144,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_5_TABLE_2_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammes();
         context.writeTable(
                 document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
@@ -199,14 +195,14 @@ interface FichePortefeuilleBlueprint extends Writable {
         XWPFParagraph table_title_para = document.createParagraph();
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
-
-        PortefeuilleCentreResponsabiliteTitre cntrRespTitre = repartitionCentreRespTitre();
-        List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = cntrRespTitre.extractors();
-        List<CentreResponsabiliteTitre> rows = cntrRespTitre.services();
-
-        context.writeTable(
-                document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
-                rows, extractors, true);
+        
+        var repartitions = repartitionCentreRespTitre();
+        List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = repartitions.extractors();
+        List<CentreResponsabiliteTitre> rows = repartitions.services();
+        
+       context.writeTable(
+               document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
+               rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {
@@ -217,14 +213,9 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeEvolutionDepense::name),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins2),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins1),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::Annee),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus1),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus2));
+        List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = ProgrammeEvolutionDepense.EXTRACTORS;
         List<ProgrammeEvolutionDepense> rows = programmesEvolutionDepenses();
+
         context.writeTable(
                 document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
                 rows, extractors, false);

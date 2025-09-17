@@ -5,6 +5,7 @@ import java.time.Year;
 import java.util.List;
 import java.util.Set;
 
+import mf.dgb.rpp.model.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
@@ -26,41 +27,39 @@ import mf.dgb.rpp.model.CentreRespEvoluPostes;
 
 
 public class ArabicModel implements DocumentGenerator {
+    static final String INTRO = """
+                    تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
+                    كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
+                    سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
+                    وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الLانتقال البيئي.
+                    وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
+            """.replaceAll("\\R", " ");
+
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
-        var laMission = LaMission.builder()
-                .intro("""
-                        تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
-                        كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
-                        سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
-                        وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الانتقال البيئي.
-                        وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
-                        """.replaceAll("\\R", " "))
+        LaMission laMission = LaMission.builder().intro(INTRO)
                 .addMission(Mission.builder()
                         .mission("التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.")
                         .addSubMission("إنشاء شباك موحد عبر الإنترنت")
                         .addSubMission("أتمتة الإجراءات الداخلية")
-                        .build()
-                )
+                        .build())
                 .addMission(Mission.builder()
                         .mission("زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.")
                         .addSubMission("نشر الأكشاك التفاعلية")
                         .addSubMission("تعزيز الخدمات المتنقلة")
-                        .build()
-                )
+                        .build())
                 .addMission(Mission.builder()
                         .mission("الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.")
                         .addSubMission("النشر السنوي للتقارير المالية")
                         .addSubMission("إنشاء منصة للتبليغ المجهول")
                         .build())
-
                 .build();
 
-        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
-        var leMinistere = LeMinistere.builder().image(imageBytes).build();
+        byte[] imageBytes =  FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        LeMinistere leMinistere = LeMinistere.builder().image(imageBytes).build();
 
-        CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
+        CartographieProgrammesPortefeuille cartographie = CartographieProgrammesPortefeuille.builder()
                 .addProgrammeStructure(ProgrammeStructure.builder()
                         .name("البرنامج 001 - تحديث الإدارة")
                         .addServiceCentres(Set.of("الأمانة العامة", "المفتشية العامة"))
@@ -159,7 +158,7 @@ public class ArabicModel implements DocumentGenerator {
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
                 .leMinistere(leMinistere)
-                .cartographie(cProgrammesPortefeuille)
+                .cartographie(cartographie)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
         auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL));
