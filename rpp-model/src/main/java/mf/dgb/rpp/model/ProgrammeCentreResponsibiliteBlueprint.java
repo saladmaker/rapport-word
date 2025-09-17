@@ -13,16 +13,16 @@ interface ProgrammeCentreResponsibiliteBlueprint {
 
     List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> FIXED_EXTRACTORS = List.of(
             ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::serviceCentraux),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::serviceDeconcentree),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismeSousTutelle),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismeTerritoriaux));
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::servicesCentraux),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::servicesDeconcentres),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismesSousTutelle),
+            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organesTerritoriaux));
 
     ColumnExtractor<ProgrammeCentreResponsibilite, ?> AUTRE_OST_EXTRACTOR = ColumnExtractor
-            .ofSummable(ProgrammeCentreResponsibilite::autreOrganismeSousTutelle);
+            .ofSummable(ProgrammeCentreResponsibilite::autreOrganismesSousTutelle);
 
     public static List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractor(
-        List<ProgrammeCentreResponsibilite> data) {
+            List<ProgrammeCentreResponsibilite> data) {
 
         List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = new ArrayList<>();
         extractors.addAll(FIXED_EXTRACTORS);
@@ -41,21 +41,30 @@ interface ProgrammeCentreResponsibiliteBlueprint {
     boolean specialCentreDeResponsabilite();
 
     @Option.DefaultLong(0L)
-    Long serviceCentraux();
+    Long servicesCentraux();
 
     @Option.DefaultLong(0L)
-    Long serviceDeconcentree();
+    Long servicesDeconcentres();
 
     @Option.DefaultLong(0L)
-    Long organismeSousTutelle();
+    Long organismesSousTutelle();
 
     @Option.DefaultLong(0L)
-    Long autreOrganismeSousTutelle();
+    Long autreOrganismesSousTutelle();
 
     @Option.DefaultLong(0L)
-    Long organismeTerritoriaux();
+    Long organesTerritoriaux();
 
     final class CustomMethods {
+
+        @Prototype.FactoryMethod
+        static ProgrammeCentreResponsibilite create(String name, List<Long> repartition) {
+            return ProgrammeCentreResponsibilite.builder()
+                    .name(name)
+                    .repartition(repartition)
+                    .build();
+        }
+
         @Prototype.BuilderMethod
         static void repartition(ProgrammeCentreResponsibilite.BuilderBase<?, ?> builder, List<Long> repartition) {
             Objects.requireNonNull(repartition, "repartition can not be null!");
@@ -73,19 +82,19 @@ interface ProgrammeCentreResponsibiliteBlueprint {
             for (int i = 0; i < repartition.size(); i++) {
                 switch (i) {
                     case 0 -> {
-                        builder.serviceCentraux(repartition.get(i));
+                        builder.servicesCentraux(repartition.get(i));
                     }
                     case 1 -> {
-                        builder.serviceDeconcentree(repartition.get(i));
+                        builder.servicesDeconcentres(repartition.get(i));
                     }
                     case 2 -> {
-                        builder.organismeSousTutelle(repartition.get(i));
+                        builder.organismesSousTutelle(repartition.get(i));
                     }
                     case 3 -> {
-                        builder.organismeTerritoriaux(repartition.get(i));
+                        builder.organesTerritoriaux(repartition.get(i));
                     }
                     case 4 -> {
-                        builder.autreOrganismeSousTutelle(repartition.get(i));
+                        builder.autreOrganismesSousTutelle(repartition.get(i));
                     }
                 }
             }

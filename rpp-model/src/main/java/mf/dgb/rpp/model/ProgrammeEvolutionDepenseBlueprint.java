@@ -10,6 +10,14 @@ import io.helidon.builder.api.Option;
 @Prototype.CustomMethods(ProgrammeEvolutionDepenseBlueprint.CustomMethods.class)
 interface ProgrammeEvolutionDepenseBlueprint {
 
+    List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> EXTRACTORS = List.of(
+                ColumnExtractor.ofUnsummable(ProgrammeEvolutionDepense::name),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins2),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins1),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::Annee),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus1),
+                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus2));
+
     @Option.Required
     String name();
 
