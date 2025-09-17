@@ -145,7 +145,6 @@ public final class GenerationContext {
             List<ColumnExtractor<T, ?>> extractors,
             boolean addTotalRow) {
         final String tableStyle = tablePrefix + "style";
-        final String titleKey = tablePrefix + "title";
         final String headersPrefix = tablePrefix + "headers.";
         final String totalColumnLabelKey = tablePrefix + "total.column";
         final String totalRowLabelKey = tablePrefix + "total.row";
