@@ -5,7 +5,6 @@ import java.time.Year;
 import java.util.List;
 import java.util.Set;
 
-import mf.dgb.rpp.model.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
