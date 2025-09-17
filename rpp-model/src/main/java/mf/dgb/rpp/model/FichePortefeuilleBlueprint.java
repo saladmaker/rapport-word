@@ -1,6 +1,5 @@
 package mf.dgb.rpp.model;
 
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +32,6 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_PREFIX = "section1.ficheportefeuille.table.6.";
 
     String FCHPORT_10_TABLE_7_PREFIX = "section1.ficheportefeuille.table.7.";
-
-
-    @Option.Required
-    Year targetYear();
 
     @Option.Singular
     List<ProgrammeRepartition> repartitionProgrammeVersionBs();
@@ -86,6 +81,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeProgrammeAnnee(document, context);
         writeEvolutionPostesAnnee(document, context);
     }
+
     private static void writeTableTitle(XWPFDocument document, GenerationContext context, String titleKey) {
         final String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
         final XWPFParagraph table_1_title_para = document.createParagraph();
@@ -175,14 +171,14 @@ interface FichePortefeuilleBlueprint extends Writable {
         // table title
         final String titleKey = FCHPORT_8_TABLE_5_PREFIX + "title";
         writeTableTitle(document, context, titleKey);
-        
+
         var repartitions = repartitionCentreRespTitre();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = repartitions.extractors();
         List<CentreResponsabiliteTitre> rows = repartitions.services();
-        
-       context.writeTable(
-               document, FCHPORT_8_TABLE_5_PREFIX,
-               rows, extractors, true);
+
+        context.writeTable(
+                document, FCHPORT_8_TABLE_5_PREFIX,
+                rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {

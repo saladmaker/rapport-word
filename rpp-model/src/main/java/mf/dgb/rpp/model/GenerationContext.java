@@ -1,16 +1,21 @@
 package mf.dgb.rpp.model;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -59,32 +64,62 @@ public final class GenerationContext {
         addFooterAndPageNumber(doc, footerText);
     }
 
-    public static GenerationContext of(XWPFDocument doc, LanguageDirection languageDirection) {
-        Objects.requireNonNull(doc);
-        Objects.requireNonNull(languageDirection);
-        Map<String, String> config = new HashMap<>();
-        String resource = null;
-        if (LanguageDirection.LTR == languageDirection) {
-            resource = "french.properties";
-        }else{
-            resource = "arab.properties";
-        }
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            Properties props = new Properties();
+    public static GenerationContext of(XWPFDocument doc,
+                                       LanguageDirection languageDirection,
+                                       Map<String, String> mappers) {
+        Objects.requireNonNull(doc, "doc must not be null");
+        Objects.requireNonNull(languageDirection, "languageDirection must not be null");
+        Objects.requireNonNull(mappers, "mappers must not be null");
+
+        String resource = (languageDirection == LanguageDirection.LTR)
+                ? "french.properties"
+                : "arab.properties";
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try (InputStream is = cl.getResourceAsStream(resource)) {
             if (is == null) {
                 throw new FileNotFoundException("Resource not found: " + resource);
             }
-            props.load(r);
-            for (String name : props.stringPropertyNames()) {
-                config.put(name, props.getProperty(name));
-            }
-            System.out.println(config);
-            return new GenerationContext(doc, config, languageDirection);
 
-        } catch (Exception e) {
-            throw new IllegalStateException("can't load resource");
+            Properties props = new Properties();
+            try (InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                props.load(reader);
+            }
+
+            // Apply mappers with ${var} placeholder syntax
+            Map<String, String> config = props.stringPropertyNames().stream()
+                    .collect(Collectors.toMap(
+                            name -> name,
+                            name -> applyMappers(props.getProperty(name), mappers),
+                            (a, b) -> b,
+                            LinkedHashMap::new // preserve order
+                    ));
+
+            return new GenerationContext(doc, Collections.unmodifiableMap(config), languageDirection);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to load resource: " + resource, e);
         }
+    }
+
+    /**
+     * Replaces placeholders of the form ${var} in the input string.
+     * Ignores placeholders with no matching entry in the mappers map.
+     */
+    private static String applyMappers(String value, Map<String, String> mappers) {
+        if (value == null || mappers.isEmpty())
+            return value;
+
+        StringBuffer sb = new StringBuffer();
+        Matcher matcher = Pattern.compile("\\$\\{([^}]+)}").matcher(value);
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String replacement = mappers.getOrDefault(key, matcher.group(0)); // fallback to original ${var}
+            // Escape replacement to avoid issues with backslashes or $ signs
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 
     public Optional<String> optionalText(String key) {
@@ -151,8 +186,6 @@ public final class GenerationContext {
         final String totalRowLabelKey = tablePrefix + "total.row";
         final String cellStyleKey = tablePrefix + "cellStyle";
 
-        
-
         // sum that dependes on language direction
         String lastColumnFormula = "=SUM(LEFT)";
         if (LanguageDirection.RTL == getDirection()) {
@@ -197,7 +230,7 @@ public final class GenerationContext {
 
             for (int c = 0; c < extractors.size(); c++) {
                 Object data = extractors.get(c).apply(rowData);
-                if(data instanceof Enum<?> constant){
+                if (data instanceof Enum<?> constant) {
                     data = contextualizedContent(constant.name());
                 }
                 String value = String.valueOf(data);
@@ -364,10 +397,8 @@ public final class GenerationContext {
                     Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
                     Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
                     Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
-                    Character.DIRECTIONALITY_OTHER_NEUTRALS ->
-                true;
-            default ->
-                false;
+                    Character.DIRECTIONALITY_OTHER_NEUTRALS -> true;
+            default -> false;
         };
     }
 

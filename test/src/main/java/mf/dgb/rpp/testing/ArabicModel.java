@@ -1,8 +1,8 @@
 package mf.dgb.rpp.testing;
 
 
-import java.time.Year;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -55,7 +55,7 @@ public class ArabicModel implements DocumentGenerator {
                         .build())
                 .build();
 
-        byte[] imageBytes =  FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        byte[] imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
         LeMinistere leMinistere = LeMinistere.builder().image(imageBytes).build();
 
         CartographieProgrammesPortefeuille cartographie = CartographieProgrammesPortefeuille.builder()
@@ -76,7 +76,6 @@ public class ArabicModel implements DocumentGenerator {
                 .build();
 
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
-                .targetYear(Year.of(2026))
                 .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
                         new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
                         new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
@@ -149,9 +148,9 @@ public class ArabicModel implements DocumentGenerator {
                                 234234243234L, 3423424234243L))
                         .build()
                 )
-                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
-                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
-                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L,434L,45L,5L)))
+                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L, 434L, 45L, 5L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
@@ -160,7 +159,15 @@ public class ArabicModel implements DocumentGenerator {
                 .cartographie(cartographie)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL));
+        var mappers = Map.of(
+                "portefeuille", "الصحة",
+                "gestionnaire", "الصحة",
+                "n-2", "2024",
+                "n-1", "2025",
+                "n", "2026",
+                "n+1", "2027",
+                "n+2", "2028");
+        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL, mappers));
 
 
     }
