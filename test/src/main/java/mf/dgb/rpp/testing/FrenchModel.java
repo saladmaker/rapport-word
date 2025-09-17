@@ -2,6 +2,7 @@ package mf.dgb.rpp.testing;
 
 import java.time.Year;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -88,7 +89,6 @@ public class FrenchModel implements DocumentGenerator {
                                 .build();
 
                 FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
-                                .targetYear(Year.of(2026))
                                 // repartition programme version B
                                 .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
                                                 "Formation professionnelle",
@@ -198,8 +198,16 @@ public class FrenchModel implements DocumentGenerator {
                                 .cartographie(cProgrammesPortefeuille)
                                 .fichePortefeuille(fichePortefeuille)
                                 .build();
-
-                auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.LTR));
+                var mappers = Map.of(
+                        "portefeuille", "La sante",//may be we should remove it as it doesn't repeat
+                        "gestionnaire", "La sante",//may be we should remove it as it doesn't repeat
+                        "n-2", "2024",
+                        "n-1", "2025",
+                        "n", "2026",
+                        "n+1", "2027",
+                        "n+2", "2028"
+                );
+                auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.LTR, mappers));
         }
 
 }

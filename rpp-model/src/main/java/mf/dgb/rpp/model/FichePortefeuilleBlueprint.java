@@ -34,11 +34,6 @@ interface FichePortefeuilleBlueprint extends Writable {
 
     String FCHPORT_10_TABLE_7_PREFIX = "section1.ficheportefeuille.table.7.";
 
-
-    
-    @Option.Required
-    Year targetYear();
-
     @Option.Singular
     List<ProgrammeRepartition> repartitionProgrammeVersionBs();
 

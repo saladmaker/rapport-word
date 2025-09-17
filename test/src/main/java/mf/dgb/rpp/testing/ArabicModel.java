@@ -1,14 +1,8 @@
 package mf.dgb.rpp.testing;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.time.Year;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import mf.dgb.rpp.model.*;
@@ -65,7 +59,6 @@ public class ArabicModel implements DocumentGenerator {
                         .build())
                 .build();
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
-                .targetYear(Year.of(2026))
                 // repartition programme version B
                 .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
                         "التكوين المهني",
@@ -175,8 +168,15 @@ public class ArabicModel implements DocumentGenerator {
                 .cartographie(cartographie)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-
-        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL));
+        var mappers = Map.of(
+                        "portefeuille", "الصحة",
+                        "gestionnaire", "الصحة",
+                        "n-2", "2024",
+                        "n-1", "2025",
+                        "n", "2026",
+                        "n+1", "2027",
+                        "n+2", "2028");
+        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL, mappers));
 
     }
 

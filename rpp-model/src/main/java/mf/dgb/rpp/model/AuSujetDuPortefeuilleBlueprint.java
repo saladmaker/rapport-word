@@ -12,7 +12,6 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
     
     String AUSJT_1_TITLE_KEY = "section1.ausujetprotefeuille.title.text";
-    
 
     LaMission laMission();
 
