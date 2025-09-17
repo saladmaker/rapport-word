@@ -16,36 +16,23 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_1_TITLE_KEY = "section1.ficheportefeuille.title.text";
     String FCHPORT_2_GEST_KEY = "section1.ficheportefeuille.gestionnaire.text";
 
-    String FCHPORT_3_TABLE_1_STYLE_KEY = "section1.ficheportefeuille.table.styles.1";
-    String FCHPORT_3_TABLE_1_TITLE_KEY = "section1.ficheportefeuille.table.1.title";
-    String FCHPORT_3_TABLE_1_CONTENT = "section1.ficheportefeuille.table.1.";
+    String FCHPORT_3_TABLE_1_PREFIX = "section1.ficheportefeuille.table.1.";
+
 
     String FCHPORT_4_DEMARCHE_TITLE_KEY = "section1.ficheportefeuille.demarche.title.text";
     String FCHPORT_4_DEMARCHE_TEXT_KEYS = "section1.ficheportefeuille.demarche.text.";
 
-    String FCHPORT_5_TABLE_2_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY;// same style
-    String FCHPORT_5_TABLE_2_TITLE_KEY = "section1.ficheportefeuille.table.2.title";
-    String FCHPORT_5_TABLE_2_HEADER_KEY = FCHPORT_3_TABLE_1_CONTENT;// same headers
+    String FCHPORT_5_TABLE_2_PREFIX = "section1.ficheportefeuille.table.2.";// same style
 
-    String FCHPORT_6_TABLE_3_STYLE_KEY = "section1.ficheportefeuille.table.styles.2";
-    String FCHPORT_6_TABLE_3_TITLE_KEY = "section1.ficheportefeuille.table.3.title";
-    String FCHPORT_6_TABLE_3_CONTENT = "section1.ficheportefeuille.table.3.";
+    String FCHPORT_6_TABLE_3_PREFIX = "section1.ficheportefeuille.table.3.";
 
-    String FCHPORT_7_TABLE_4_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY; // same style
-    String FCHPORT_7_TABLE_4_TITLE_KEY = "section1.ficheportefeuille.table.4.title";
-    String FCHPORT_7_TABLE_4_CONTENT = "section1.ficheportefeuille.table.4.";
+    String FCHPORT_7_TABLE_4_PREFIX = "section1.ficheportefeuille.table.4.";
 
-    String FCHPORT_8_TABLE_5_STYLE_KEY = FCHPORT_6_TABLE_3_STYLE_KEY; // same style
-    String FCHPORT_8_TABLE_5_TITLE_KEY = "section1.ficheportefeuille.table.5.title";
-    String FCHPORT_8_TABLE_5_CONTENT = FCHPORT_7_TABLE_4_CONTENT; // same headers, total
+    String FCHPORT_8_TABLE_5_PREFIX = "section1.ficheportefeuille.table.5.";
 
-    String FCHPORT_9_TABLE_6_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY; // same style
-    String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
-    String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
+    String FCHPORT_9_TABLE_6_PREFIX = "section1.ficheportefeuille.table.6.";
 
-    String FCHPORT_10_TABLE_7_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY; // same style
-    String FCHPORT_10_TABLE_7_TITLE_KEY = "section1.ficheportefeuille.table.7.title";
-    String FCHPORT_10_TABLE_7_CONTENT = "section1.ficheportefeuille.table.7.";
+    String FCHPORT_10_TABLE_7_PREFIX = "section1.ficheportefeuille.table.7.";
 
 
     
@@ -99,19 +86,23 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeProgrammeAnnee(document, context);
         writeEvolutionPostesAnnee(document, context);
     }
+    private static void writeTableTitle(XWPFDocument document, GenerationContext context, String titleKey) {
+        final String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        final XWPFParagraph table_1_title_para = document.createParagraph();
+        table_1_title_para.setStyle(tableTitleStyle);
+        table_1_title_para.createRun().setText(context.contextualizedContent(titleKey));
+
+    }
 
     default void writeRepartitionProgrammeB(XWPFDocument document, GenerationContext context) {
+        final String titleKey = FCHPORT_3_TABLE_1_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_1_title_para = document.createParagraph();
-        table_1_title_para.setStyle(tableTitleStyle);
-        table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-        
         List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammeVersionBs();
 
         context.writeTable(
-                document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
+                document, FCHPORT_3_TABLE_1_PREFIX,
                 rows, extractors, false);
 
     }
@@ -137,35 +128,28 @@ interface FichePortefeuilleBlueprint extends Writable {
     }
 
     default void writeRepartitionProgramme(XWPFDocument document, GenerationContext context) {
-
-        // table title
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_5_TABLE_2_TITLE_KEY));
+        final String titleKey = FCHPORT_5_TABLE_2_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
         List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammes();
         context.writeTable(
-                document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
+                document, FCHPORT_3_TABLE_1_PREFIX,
                 rows, extractors, false);
 
     }
 
     default void writeRepartitionProgrammeCTRRES(XWPFDocument document, GenerationContext context) {
-
         // table title
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
+        final String titleKey = FCHPORT_6_TABLE_3_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
         List<ProgrammeCentreResponsibilite> rows = repartitionProgrammeCentreResps();
         List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = ProgrammeCentreResponsibiliteBlueprint
                 .extractor(rows);
 
         context.writeTable(
-                document, FCHPORT_6_TABLE_3_STYLE_KEY, FCHPORT_6_TABLE_3_CONTENT,
+                document, FCHPORT_6_TABLE_3_PREFIX,
                 rows, extractors, true);
 
     }
@@ -175,61 +159,53 @@ interface FichePortefeuilleBlueprint extends Writable {
             context.apply(PageLayout.LANDSCAPE);
         }
         // table title
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_7_TABLE_4_TITLE_KEY));
+        final String titleKey = FCHPORT_7_TABLE_4_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
         List<ProgrammeTitre> rows = repartitionProgrammeTitres();
         List<ColumnExtractor<ProgrammeTitre, ?>> extractors = ProgrammeTitreBlueprint.extractors(rows);
         context.writeTable(
-                document, FCHPORT_7_TABLE_4_STYLE_KEY, FCHPORT_7_TABLE_4_CONTENT,
+                document, FCHPORT_7_TABLE_4_PREFIX,
                 rows, extractors, true);
     }
 
     default void writeRepartitionCentreRespTitre(XWPFDocument document, GenerationContext context) {
 
         // table title
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
+        final String titleKey = FCHPORT_8_TABLE_5_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
         
         var repartitions = repartitionCentreRespTitre();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = repartitions.extractors();
         List<CentreResponsabiliteTitre> rows = repartitions.services();
         
        context.writeTable(
-               document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
+               document, FCHPORT_8_TABLE_5_PREFIX,
                rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {
 
         // table title
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
+        final String titleKey = FCHPORT_9_TABLE_6_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
         List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = ProgrammeEvolutionDepense.EXTRACTORS;
         List<ProgrammeEvolutionDepense> rows = ProgrammesEvolutionDepenses();
 
         context.writeTable(
-                document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
+                document, FCHPORT_9_TABLE_6_PREFIX,
                 rows, extractors, false);
 
     }
     default void writeEvolutionPostesAnnee(XWPFDocument document, GenerationContext context) {
-        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
-        XWPFParagraph table_title_para = document.createParagraph();
-        table_title_para.setStyle(tableTitleStyle);
-        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_10_TABLE_7_TITLE_KEY));
+        final String titleKey = FCHPORT_10_TABLE_7_PREFIX + "title";
+        writeTableTitle(document, context, titleKey);
 
         List<ColumnExtractor<CentreRespEvoluPostes, ?>> extractors = CentreRespEvoluPostes.EXTRACTORS;
         List<CentreRespEvoluPostes> rows = postesEvolutions();
 
-        context.writeTable(document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_10_TABLE_7_CONTENT, rows, extractors, false);
+        context.writeTable(document, FCHPORT_10_TABLE_7_PREFIX, rows, extractors, false);
 
     }
 

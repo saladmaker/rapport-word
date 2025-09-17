@@ -140,15 +140,18 @@ public final class GenerationContext {
 
     public <T> void writeTable(
             XWPFDocument document,
-            final String tableStyleKey,
-            final String contentPrefix,
+            final String tablePrefix,
             List<T> rows,
             List<ColumnExtractor<T, ?>> extractors,
             boolean addTotalRow) {
+        final String tableStyle = tablePrefix + "style";
+        final String titleKey = tablePrefix + "title";
+        final String headersPrefix = tablePrefix + "headers.";
+        final String totalColumnLabelKey = tablePrefix + "total.column";
+        final String totalRowLabelKey = tablePrefix + "total.row";
+        final String cellStyleKey = tablePrefix + "cellStyle";
 
-        final String headersPrefix = contentPrefix + "headers.";
-        final String totalColumnLabelKey = contentPrefix + "total.column";
-        final String totalRowLabelKey = contentPrefix + "total.row";
+        
 
         // sum that dependes on language direction
         String lastColumnFormula = "=SUM(LEFT)";
@@ -161,10 +164,9 @@ public final class GenerationContext {
         XWPFTable table = document.createTable(rows.size() + 1 + 1, nCols);
 
         // apply table level style
-        applyTableStyle(table, tableStyleKey);
+        applyTableStyle(table, tableStyle);
 
         // apply cell style when it's configured
-        final String cellStyleKey = tableStyleKey + ".cell";
         var cellStyleOpt = optionalText(cellStyleKey);
         if (cellStyleOpt.isPresent()) {
             var cellStyle = cellStyleOpt.get();
