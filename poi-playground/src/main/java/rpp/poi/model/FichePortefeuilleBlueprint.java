@@ -51,17 +51,6 @@ interface FichePortefeuilleBlueprint extends Writable {
         ORGANISME_SOUS_TUTELLE,
         ORGANISME_TERRITORIAUX
     }
-    public record ProgrammeRepartition(String name, Long ae, Long cp) {
-        public ProgrammeRepartition{
-            Objects.requireNonNull(name, "name can not be null!");
-            Objects.requireNonNull(ae, "ae can't be null!");
-            Objects.requireNonNull(cp, "cp can't be null!");
-            if(Strings.isBlank(name)) throw new IllegalArgumentException("name should not be blank name: " + name);
-            if(ae < 0 || cp < 0) throw new IllegalArgumentException("ae and cp should not be null! ae: "
-             + ae + " cp: " + cp);
-        }
-    }
-
     
     @Option.Required
     Year targetYear();
@@ -201,10 +190,10 @@ interface FichePortefeuilleBlueprint extends Writable {
 
         List<ColumnExtractor<? super ProgrammeTitre, ?>> extractors = List.of(
                 ColumnExtractor.ofUnsummable(ProgrammeTitre::name),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(0)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(1)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(2)),
-                ColumnExtractor.ofSummable(r -> r.ttr().get(3))
+                ColumnExtractor.ofSummable(ProgrammeTitre::t1),
+                ColumnExtractor.ofSummable(ProgrammeTitre::t2),
+                ColumnExtractor.ofSummable(ProgrammeTitre::t3),
+                ColumnExtractor.ofSummable(ProgrammeTitre::t4)
                 );
         List<ProgrammeTitre> rows = repartitionProgrammeTitres();
         context.writeTable(

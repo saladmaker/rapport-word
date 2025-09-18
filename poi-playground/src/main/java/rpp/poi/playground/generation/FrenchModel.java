@@ -1,7 +1,5 @@
 package rpp.poi.playground.generation;
 
-import static rpp.poi.model.FichePortefeuille.ProgrammeRepartition;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +20,7 @@ import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
 import rpp.poi.model.ProgrammeAnnee;
+import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeCentreResponsibilite;
 import rpp.poi.model.ProgrammeStructure;
 import rpp.poi.model.ProgrammeTitre;
@@ -70,21 +69,23 @@ public class FrenchModel implements DocumentGenerator {
 
         CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
                 .addProgrammeStructure(
-                        new ProgrammeStructure(
-                                "Programme 001 - Modernisation de l'administration",
-                                Set.of("Secrétariat Général", "Inspection Générale"),
-                                Set.of("Direction Régionale Alger", "Direction Régionale Oran"),
-                                Set.of(
-                                        "Agence Nationale du Numérique",
-                                        "Institut Supérieur d’Administration Publique"),
-                                Set.of("Direction Wilaya Alger", "Direction Wilaya Oran")))
+                ProgrammeStructure.builder()
+                        .name("Programme 001 - Modernisation de l'administration")
+                        .serviceCentres(Set.of("Secrétariat Général", "Inspection Générale"))
+                        .serviceDeconcentrees(Set.of("Direction Régionale Alger", "Direction Régionale Oran"))
+                        .organismeSousTutelles(Set.of(
+                                "Agence Nationale du Numérique",
+                                "Institut Supérieur d’Administration Publique"))
+                        .orgamismeTerris(Set.of("Direction Wilaya Alger", "Direction Wilaya Oran"))
+                        .build())
                 .addProgrammeStructure(
-                        new ProgrammeStructure(
-                                "Programme 002 - Développement durable",
-                                Set.of("Direction Générale de l’Environnement"),
-                                Set.of("Direction Régionale Annaba", "Direction Régionale Tlemcen"),
-                                Set.of("Office National des Forêts"),
-                                Set.of("Conservatoire des Zones Humides")))
+                        ProgrammeStructure.builder()
+                                .name("Programme 002 - Développement durable")
+                                .addServiceCentres(Set.of("Direction Générale de l’Environnement"))
+                                .addServiceDeconcentrees(Set.of("Direction Régionale Annaba", "Direction Régionale Tlemcen"))
+                                .addOrganismeSousTutelles(Set.of("Office National des Forêts"))
+                                .addOrgamismeTerris(Set.of("Conservatoire des Zones Humides"))
+                                .build())
                 .build();
 
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()

@@ -6,7 +6,7 @@ import io.helidon.builder.api.Prototype;
 import io.helidon.builder.api.Option;
 
 @Prototype.Blueprint
-public interface ProgrammeStructureBlueprint {
+interface ProgrammeStructureBlueprint {
 
     @Option.Required
     String name();
