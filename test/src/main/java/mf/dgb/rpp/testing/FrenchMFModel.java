@@ -21,7 +21,7 @@ import mf.dgb.rpp.model.LanguageDirection;
 import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
 import mf.dgb.rpp.model.ProgrammeRepartition;
 
-public class FrenchModel implements DocumentGenerator {
+public class FrenchMFModel implements DocumentGenerator {
 
         private static final String INTRO = """
                         Le ministère s’engage, pour l’année prochaine, à renforcer la qualité des services publics au
@@ -131,11 +131,14 @@ public class FrenchModel implements DocumentGenerator {
                                 .addRepartitionProgrammeTitre(
                                                 ProgrammeTitre.builder()
                                                                 .name("Formation professionnel")
-                                                                .isMF(false)
+                                                                .isMF(true)
                                                                 .titre1(2434234L)
                                                                 .titre2(43453453L)
                                                                 .titre3(423424332L)
                                                                 .titre4(234242432L)
+                                                                .titre5(3434234L)
+                                                                .titre6(534534534L)
+                                                                .titre7(345345345L)
                                                                 .build())
                                 .addRepartitionProgrammeTitre(
                                                 ProgrammeTitre.builder()
@@ -158,8 +161,9 @@ public class FrenchModel implements DocumentGenerator {
 
                                 // repartition titre centre de responsabilite
                                 .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                                        .isMF(true)
                                         .service(CentreResponsabiliteTitre
-                                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L,3432342L,34234243L,34234234L)))
                                         .service(CentreResponsabiliteTitre
                                                 .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
                                         .service(CentreResponsabiliteTitre
