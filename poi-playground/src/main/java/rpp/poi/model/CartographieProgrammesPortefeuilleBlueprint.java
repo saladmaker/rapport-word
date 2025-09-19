@@ -54,22 +54,22 @@ interface CartographieProgrammesPortefeuilleBlueprint extends Writable {
             nameCell.setText(programmeStructure.name());
             setVMerge(nameCell, STMerge.RESTART);
 
-            row0.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sc())));
+            row0.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.serviceCentres())));
 
             // --- Row 2 (SDC) ---
             XWPFTableRow row1 = progStrtable.createRow();
             setVMerge(row1.getCell(0), STMerge.CONTINUE);
-            row1.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.sdc())));
+            row1.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.serviceDeconcentrees())));
 
             // --- Row 3 (OST) ---
             XWPFTableRow row2 = progStrtable.createRow();
             setVMerge(row2.getCell(0), STMerge.CONTINUE);
-            row2.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ost())));
+            row2.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.organismeSousTutelles())));
 
             // --- Row 4 (OT) ---
             XWPFTableRow row3 = progStrtable.createRow();
             setVMerge(row3.getCell(0), STMerge.CONTINUE);
-            row3.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.ot())));
+            row3.getCell(1).setText(context.contextualize(String.join(", ", programmeStructure.orgamismeTerris())));
         }
     }
 

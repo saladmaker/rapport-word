@@ -21,9 +21,9 @@ import rpp.poi.model.LaMission;
 import rpp.poi.model.LanguageDirection;
 import rpp.poi.model.LeMinistere;
 import rpp.poi.model.Mission;
+import rpp.poi.model.ProgrammeCentreResponsibilite;
 import rpp.poi.model.ProgrammeRepartition;
 import rpp.poi.model.ProgrammeStructure;
-import rpp.poi.model.RepartitionProgrammeCentreResp;
 import rpp.poi.playground.DocumentGenerator;
 
 public class ArabicModel implements DocumentGenerator {
@@ -56,18 +56,20 @@ public class ArabicModel implements DocumentGenerator {
         var leMinistere = LeMinistere.builder().image(imageBytes).build();
 
         CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
-                .addProgrammeStructure(new ProgrammeStructure(
-                        "البرنامج 001 - تحديث الإدارة",
-                        Set.of("الأمانة العامة", "المفتشية العامة"),
-                        Set.of("المديرية الجهوية الجزائر", "المديرية الجهوية وهران"),
-                        Set.of("الوكالة الوطنية للرقمنة", "المعهد العالي للإدارة العمومية"),
-                        Set.of("مديرية ولاية الجزائر", "مديرية ولاية وهران")))
-                .addProgrammeStructure(new ProgrammeStructure(
-                        "البرنامج 002 - التنمية المستدامة",
-                        Set.of("المديرية العامة للبيئة"),
-                        Set.of("المديرية الجهوية عنابة", "المديرية الجهوية تلمسان"),
-                        Set.of("المكتب الوطني للغابات"),
-                        Set.of("المحافظة على المناطق الرطبة")))
+                .addProgrammeStructure(ProgrammeStructure.builder()
+                        .name("البرنامج 001 - تحديث الإدارة")
+                        .addServiceCentres(Set.of("الأمانة العامة", "المفتشية العامة"))
+                        .addServiceDeconcentrees(Set.of("المديرية الجهوية الجزائر", "المديرية الجهوية وهران"))
+                        .addOrganismeSousTutelles(Set.of("الوكالة الوطنية للرقمنة", "المعهد العالي للإدارة العمومية"))
+                        .addOrgamismeTerris(Set.of("مديرية ولاية الجزائر", "مديرية ولاية وهران"))
+                        .build())
+                .addProgrammeStructure(ProgrammeStructure.builder()
+                        .name("البرنامج 002 - التنمية المستدامة")
+                        .addServiceCentre("المديرية العامة للبيئة")
+                        .addServiceDeconcentrees(Set.of("المديرية الجهوية عنابة", "المديرية الجهوية تلمسان"))
+                        .addOrganismeSousTutelle("المكتب الوطني للغابات")
+                        .addOrgamismeTerri("المحافظة على المناطق الرطبة")
+                        .build())
                 .build();
 
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
@@ -78,9 +80,14 @@ public class ArabicModel implements DocumentGenerator {
                 .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
                                 new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
                                 new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
-                .addRepartitionProgrammeCentreResps(List.of(new RepartitionProgrammeCentreResp("التكوين المهني", List.of(10033423L, 12334233L, 2343424L, 342342L)),
-                                new RepartitionProgrammeCentreResp("التعليم المهني", List.of(10033343L, 72334233L, 3343424L, 642342L)),
-                                new RepartitionProgrammeCentreResp("الإدارة العامة", List.of(133343L, 34233L, 43424L, 642342L))))
+                .addRepartitionProgrammeCentreResp(ProgrammeCentreResponsibilite.builder()
+                        .name("التعليم المهني")
+                        .repartition(List.of(23231L, 324234L, 234324234L, 324242L))
+                        .build())
+                .addRepartitionProgrammeCentreResp(ProgrammeCentreResponsibilite.builder()
+                        .name("الإدارة العامة")
+                        .repartition(List.of(23231L, 324234L, 234324234L, 324242L))
+                        .build())
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()

@@ -28,6 +28,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
@@ -104,7 +105,6 @@ public final class GenerationContext {
         currentLayout = layout;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> void writeTable(
             XWPFDocument document,
             final String tableStyleKey,
@@ -117,20 +117,20 @@ public final class GenerationContext {
         final String totalColumnLabelKey = contentPrefix + "total.column";
         final String totalRowLabelKey = contentPrefix + "total.row";
 
-        //sum that dependes on language direction
+        // sum that dependes on language direction
         String lastColumnFormula = "=SUM(LEFT)";
         if (LanguageDirection.RTL == getDirection()) {
             lastColumnFormula = "=SUM(RIGHT)";
         }
 
-        //calculate and create a proper size table
+        // calculate and create a proper size table
         int nCols = extractors.size() + (addTotalRow ? 1 : 0);
         XWPFTable table = document.createTable(rows.size() + 1 + 1, nCols);
 
-        //apply table level style
+        // apply table level style
         applyTableStyle(table, tableStyleKey);
 
-        //apply cell style when it's configured
+        // apply cell style when it's configured
         final String cellStyleKey = tableStyleKey + ".cell";
         var cellStyleOpt = optionalText(cellStyleKey);
         if (cellStyleOpt.isPresent()) {
@@ -145,6 +145,7 @@ public final class GenerationContext {
 
         // ---- Header ----
         XWPFTableRow headerRow = table.getRow(0);
+        preventRowSplit(headerRow);
         for (int i = 0; i < extractors.size(); i++) {
             headerRow.getCell(i).setText(contextualizedContent(headersPrefix + i));
         }
@@ -156,6 +157,7 @@ public final class GenerationContext {
         // ---- Data rows ----
         for (int r = 0; r < rows.size(); r++) {
             XWPFTableRow row = table.getRow(r + 1);
+            preventRowSplit(row);
             T rowData = rows.get(r);
 
             for (int c = 0; c < extractors.size(); c++) {
@@ -171,6 +173,7 @@ public final class GenerationContext {
         }
 
         XWPFTableRow totalRow = table.getRow(table.getNumberOfRows() - 1);
+        preventRowSplit(totalRow);
         var totalColumnLabel = totalLabel(totalColumnLabelKey);
         totalRow.getCell(0).setText(totalColumnLabel);
 
@@ -199,6 +202,20 @@ public final class GenerationContext {
             return contextualizedContent(DEFAULT_TOTAL_LABEL);
         }
     }
+
+    private void preventRowSplit(XWPFTableRow row) {
+        CTTrPr trPr = row.getCtRow().isSetTrPr() ? row.getCtRow().getTrPr() : row.getCtRow().addNewTrPr();
+        trPr.addNewCantSplit(); // Minimal POI use
+    }
+    private void insertFormula(XWPFTableCell cell, String formula, String placeholder) {
+        cell.removeParagraph(0);
+        XWPFParagraph p = cell.addParagraph();
+        CTSimpleField field = p.getCTP().addNewFldSimple();
+        field.setInstr(formula);
+        CTR ctr = field.addNewR();
+        ctr.addNewT().setStringValue(placeholder);
+    }
+
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
         var styleId = plainContent(styleKey);
@@ -236,6 +253,33 @@ public final class GenerationContext {
         }
     }
 
+    public void addFooterAndPageNumber(XWPFDocument doc, String footerText) {
+        // Get or create section properties
+        CTSectPr sectPr = doc.getDocument().getBody().isSetSectPr()
+                ? doc.getDocument().getBody().getSectPr()
+                : doc.getDocument().getBody().addNewSectPr();
+
+        // Create footer policy
+        XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(doc, sectPr);
+
+        XWPFFooter footer = policy.createFooter(STHdrFtr.DEFAULT);
+
+        // footer paragraph
+        String footerTextStyle = "Footer";
+        XWPFParagraph footerPara = footer.createParagraph();
+        footerPara.setStyle(footerTextStyle);
+        addParagraphWithManualBreaks(footerPara, footerText);
+
+        // page number
+        XWPFParagraph p2 = footer.createParagraph();
+        p2.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun run = p2.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.BEGIN);
+        run = p2.createRun();
+        run.getCTR().addNewInstrText().setStringValue("PAGE");
+        run = p2.createRun();
+        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
+    }
     public BigInteger getScaledUsableWidth(double factor) {
         return currentLayout.scaledWidth(factor);
     }
@@ -258,15 +302,7 @@ public final class GenerationContext {
         }
     }
 
-    private void insertFormula(XWPFTableCell cell, String formula, String placeholder) {
-        cell.removeParagraph(0);
-        XWPFParagraph p = cell.addParagraph();
-        CTSimpleField field = p.getCTP().addNewFldSimple();
-        field.setInstr(formula);
-        CTR ctr = field.addNewR();
-        ctr.addNewT().setStringValue(placeholder);
-    }
-
+    
     public String contextualize(String text) {
         if (requireRTL(text)) {
             return text + "\u061C";
@@ -286,42 +322,14 @@ public final class GenerationContext {
         // Check if it's neutral according to Unicode bidi
         return switch (dir) {
             case // , . / :
-            Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
-            Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
-            Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
-            Character.DIRECTIONALITY_OTHER_NEUTRALS ->
+                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
+                    Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
+                    Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
+                    Character.DIRECTIONALITY_OTHER_NEUTRALS ->
                 true;
             default ->
                 false;
         };
-    }
-
-    public void addFooterAndPageNumber(XWPFDocument doc, String footerText) {
-        // Get or create section properties
-        CTSectPr sectPr = doc.getDocument().getBody().isSetSectPr()
-                ? doc.getDocument().getBody().getSectPr()
-                : doc.getDocument().getBody().addNewSectPr();
-
-        // Create footer policy
-        XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(doc, sectPr);
-
-        XWPFFooter footer = policy.createFooter(STHdrFtr.DEFAULT);
-
-        //footer paragraph
-        String footerTextStyle = "Footer";
-        XWPFParagraph footerPara = footer.createParagraph();
-        footerPara.setStyle(footerTextStyle);
-        addParagraphWithManualBreaks(footerPara, footerText);
-
-        //page number
-        XWPFParagraph p2 = footer.createParagraph();
-        p2.setAlignment(ParagraphAlignment.CENTER);
-        XWPFRun run = p2.createRun();
-        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.BEGIN);
-        run = p2.createRun();
-        run.getCTR().addNewInstrText().setStringValue("PAGE");
-        run = p2.createRun();
-        run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
     }
 
 }
