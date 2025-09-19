@@ -1,9 +1,18 @@
-**/*theme.docx
-poi-playground/*
-!poi-playground/src
-!poi-playground/pom.xml
-poi-benchmark/*
-!poi-benchmark/src
-!poi-benchmark/pom.xml
-!benchmarks/pom.xml
-
+/*
+target/
+output/
+!.gitignore
+!pom.xml
+!rpp-model/
+!rpp-model/pom.xml
+!rpp-model/src/**
+!rpp-aggregator/
+!rpp-aggregator/src/**
+!rpp-aggregator/pom.xml
+!test/
+!test/pom.xml
+!test/src/**
+!themes/
+!themes/**/          # allow subfolders inside themes
+themes/**/theme.docx
+themes/**/~$*
