@@ -1,60 +1,65 @@
 package mf.dgb.rpp.testing;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
+import mf.dgb.rpp.model.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import mf.dgb.rpp.model.AuSujetDuPortefeuille;
 import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
 import mf.dgb.rpp.model.LaMission;
 import mf.dgb.rpp.model.LanguageDirection;
 import mf.dgb.rpp.model.LeMinistere;
 import mf.dgb.rpp.model.Mission;
+import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
 import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
+import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.ProgrammeRepartition;
 import mf.dgb.rpp.model.ProgrammeStructure;
+import mf.dgb.rpp.model.ProgrammeTitre;
+import mf.dgb.rpp.model.CentreRespEvoluPostes;
+
 
 public class ArabicModel implements DocumentGenerator {
+    static final String INTRO = """
+                    تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
+                    كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
+                    سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
+                    وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الLانتقال البيئي.
+                    وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
+            """.replaceAll("\\R", " ");
+
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
-        var laMission = LaMission.builder()
-                .intro("""
-                        تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
-                        كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
-                        سيُولى اهتمام خاص للشفافية ومكافحة الفساد.
-                        وسيظلّ التنمية المستدامة في صميم السياسات العمومية، مع برامج طموحة من أجل الانتقال البيئي.
-                        وأخيراً، سيتم إنشاء شراكات استراتيجية لتحفيز الابتكار والاستثمار في القطاعات الرئيسية.
-                        """.replaceAll("\\R", " "))
-                .addMission(new Mission(
-                        "التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.",
-                        List.of("إنشاء شباك موحد عبر الإنترنت",
-                                "أتمتة الإجراءات الداخلية")))
-                .addMission(new Mission(
-                        "زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.",
-                        List.of("نشر الأكشاك التفاعلية",
-                                "تعزيز الخدمات المتنقلة")))
-                .addMission(new Mission(
-                        "الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.",
-                        List.of("النشر السنوي للتقارير المالية",
-                                "إنشاء منصة للتبليغ المجهول")))
+        LaMission laMission = LaMission.builder().intro(INTRO)
+                .addMission(Mission.builder()
+                        .mission("التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.")
+                        .addSubMission("إنشاء شباك موحد عبر الإنترنت")
+                        .addSubMission("أتمتة الإجراءات الداخلية")
+                        .build())
+                .addMission(Mission.builder()
+                        .mission("زيادة سهولة الوصول: تحسين وصول المواطنين إلى الخدمات العمومية، بما في ذلك في المناطق الريفية.")
+                        .addSubMission("نشر الأكشاك التفاعلية")
+                        .addSubMission("تعزيز الخدمات المتنقلة")
+                        .build())
+                .addMission(Mission.builder()
+                        .mission("الشفافية والحوكمة: تعزيز آليات الرقابة ومكافحة الفساد بشكل فعال.")
+                        .addSubMission("النشر السنوي للتقارير المالية")
+                        .addSubMission("إنشاء منصة للتبليغ المجهول")
+                        .build())
                 .build();
 
-        var imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
-        var leMinistere = LeMinistere.builder().image(imageBytes).build();
+        byte[] imageBytes =  FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        LeMinistere leMinistere = LeMinistere.builder().image(imageBytes).build();
 
-        CartographieProgrammesPortefeuille cProgrammesPortefeuille = CartographieProgrammesPortefeuille.builder()
+        CartographieProgrammesPortefeuille cartographie = CartographieProgrammesPortefeuille.builder()
                 .addProgrammeStructure(ProgrammeStructure.builder()
                         .name("البرنامج 001 - تحديث الإدارة")
                         .addServiceCentres(Set.of("الأمانة العامة", "المفتشية العامة"))
@@ -87,36 +92,79 @@ public class ArabicModel implements DocumentGenerator {
                         .name("الإدارة العامة")
                         .repartition(List.of(23231L, 324234L, 234324234L, 324242L))
                         .build())
+                .addRepartitionProgrammeTitre(
+                        ProgrammeTitre.builder()
+                                .name("التكوين المهني")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
+                .addRepartitionProgrammeTitre(
+                        ProgrammeTitre.builder()
+                                .name("التعليم المهني")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
+                .addRepartitionProgrammeTitre(
+                        ProgrammeTitre.builder()
+                                .name("الادارة العامة")
+                                .isMF(false)
+                                .titre1(2434234L)
+                                .titre2(43453453L)
+                                .titre3(423424332L)
+                                .titre4(234242432L)
+                                .build())
+
+                // repartition titre centre de responsabilite
+                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                        .service(CentreResponsabiliteTitre
+                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                        .service(CentreResponsabiliteTitre
+                                .organismesSousTutelle(List.of(23234L, 32342L, 234243L, 3242342L)))
+                        .service(CentreResponsabiliteTitre
+                                .serviceDeconcentrees(List.of(123242L, 234234L, 234243L, 234243L)))
+                        .service(CentreResponsabiliteTitre
+                                .organismesTerritotiaux(List.of(123242L, 234234L, 234243L, 234243L)))
+                        .build()
+                )
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("التكوين المهني")
+                        .evolution(List.of(13232332323L, 234234234L, 324234234L, 324234234L,
+                                4234234234L))
+                        .build()
+                )
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("التعليم المهني")
+                        .evolution(List.of(34234234L, 324234234L, 3242342342L, 23423423423L,
+                                343443234243L))
+                        .build()
+                )
+                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                        .name("الادارة العامة")
+                        .evolution(List.of(32313123123L, 3123123132L, 3423424243L,
+                                234234243234L, 3423424234243L))
+                        .build()
+                )
+                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L,434L,45L,5L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
                 .laMission(laMission)
                 .leMinistere(leMinistere)
-                .cartographie(cProgrammesPortefeuille)
+                .cartographie(cartographie)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
-        auSujetDuPortefeuille.write(document, new GenerationContext(document, loadPropertiesAsMap("arab.properties"), LanguageDirection.RTL));
+        auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL));
 
 
     }
 
-    public static Map<String, String> loadPropertiesAsMap(String resourceName) {
-        Properties props = new Properties();
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName);
-             InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            if (is == null) {
-                throw new FileNotFoundException("Resource not found: " + resourceName);
-            }
-            props.load(r);
-            Map<String, String> map = new HashMap<>();
-            for (String name : props.stringPropertyNames()) {
-                map.put(name, props.getProperty(name));
-            }
-
-            return map;
-        } catch (Exception e) {
-            throw new IllegalStateException("can't load resource");
-        }
-    }
 
 }

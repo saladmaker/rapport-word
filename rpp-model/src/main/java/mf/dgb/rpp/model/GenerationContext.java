@@ -1,10 +1,16 @@
 package mf.dgb.rpp.model;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -45,12 +51,39 @@ public final class GenerationContext {
     private PageLayout currentLayout = PageLayout.PORTRAIT;
     private final Map<String, String> config;
 
-    public GenerationContext(XWPFDocument doc, Map<String, String> config, LanguageDirection direction) {
+    private GenerationContext(XWPFDocument doc, Map<String, String> config, LanguageDirection direction) {
         this.doc = doc;
         this.config = Map.copyOf(config);
         this.direction = direction;
         var footerText = contextualizedContent(FOOTER_TEXT_KEY);
         addFooterAndPageNumber(doc, footerText);
+    }
+
+    public static GenerationContext of(XWPFDocument doc, LanguageDirection languageDirection) {
+        Objects.requireNonNull(doc);
+        Objects.requireNonNull(languageDirection);
+        Map<String, String> config = new HashMap<>();
+        String resource = null;
+        if (LanguageDirection.LTR == languageDirection) {
+            resource = "french.properties";
+        }else{
+            resource = "arab.properties";
+        }
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+                InputStreamReader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            Properties props = new Properties();
+            if (is == null) {
+                throw new FileNotFoundException("Resource not found: " + resource);
+            }
+            props.load(r);
+            for (String name : props.stringPropertyNames()) {
+                config.put(name, props.getProperty(name));
+            }
+            return new GenerationContext(doc, config, languageDirection);
+
+        } catch (Exception e) {
+            throw new IllegalStateException("can't load resource");
+        }
     }
 
     public Optional<String> optionalText(String key) {
@@ -161,7 +194,11 @@ public final class GenerationContext {
             T rowData = rows.get(r);
 
             for (int c = 0; c < extractors.size(); c++) {
-                String value = String.valueOf(extractors.get(c).apply(rowData));
+                Object data = extractors.get(c).apply(rowData);
+                if(data instanceof Enum<?> constant){
+                    data = contextualizedContent(constant.name());
+                }
+                String value = String.valueOf(data);
                 row.getCell(c).setText(value);
             }
 
@@ -207,6 +244,7 @@ public final class GenerationContext {
         CTTrPr trPr = row.getCtRow().isSetTrPr() ? row.getCtRow().getTrPr() : row.getCtRow().addNewTrPr();
         trPr.addNewCantSplit(); // Minimal POI use
     }
+
     private void insertFormula(XWPFTableCell cell, String formula, String placeholder) {
         cell.removeParagraph(0);
         XWPFParagraph p = cell.addParagraph();
@@ -215,7 +253,6 @@ public final class GenerationContext {
         CTR ctr = field.addNewR();
         ctr.addNewT().setStringValue(placeholder);
     }
-
 
     public void applyTableStyle(XWPFTable table, String styleKey) {
         var styleId = plainContent(styleKey);
@@ -280,6 +317,7 @@ public final class GenerationContext {
         run = p2.createRun();
         run.getCTR().addNewFldChar().setFldCharType(STFldCharType.END);
     }
+
     public BigInteger getScaledUsableWidth(double factor) {
         return currentLayout.scaledWidth(factor);
     }
@@ -302,7 +340,6 @@ public final class GenerationContext {
         }
     }
 
-    
     public String contextualize(String text) {
         if (requireRTL(text)) {
             return text + "\u061C";

@@ -43,20 +43,11 @@ interface FichePortefeuilleBlueprint extends Writable {
     String FCHPORT_9_TABLE_6_TITLE_KEY = "section1.ficheportefeuille.table.6.title";
     String FCHPORT_9_TABLE_6_CONTENT = "section1.ficheportefeuille.table.6.";
 
-    public enum CentreDeReponsibilte {
+    String FCHPORT_10_TABLE_7_STYLE_KEY = FCHPORT_3_TABLE_1_STYLE_KEY; // same style
+    String FCHPORT_10_TABLE_7_TITLE_KEY = "section1.ficheportefeuille.table.7.title";
+    String FCHPORT_10_TABLE_7_CONTENT = "section1.ficheportefeuille.table.7.";
 
-        SERVICE_CENTRAUX,
 
-        SERVICE_DECONCENTREE,
-
-        ORGANISMES_SOUS_TUTELLE,
-
-        ORGANISMES_TERRITORIAUX,
-
-        AUTRE_ORGANISMES_SOUS_TUTELLE;
-
-    }
-    
     @Option.Required
     Year targetYear();
 
@@ -72,12 +63,14 @@ interface FichePortefeuilleBlueprint extends Writable {
     @Option.Singular
     List<ProgrammeTitre> repartitionProgrammeTitres();
 
-    @Option.Singular
-    List<RepartitionTitreCentreResp> repartitionTitreCentreResps();
+    PortefeuilleCentreResponsabiliteTitre repartitionCentreRespTitre();
 
     @Option.Singular
-    List<ProgrammeAnnee> programmesAnnees();
+    List<ProgrammeEvolutionDepense> programmesEvolutionDepenses();
 
+
+    @Option.Singular
+    List<CentreRespEvoluPostes> postesEvolutions();
 
     @Override
     default void write(XWPFDocument document, GenerationContext context) {
@@ -101,9 +94,10 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeDemarche(document, context);
         writeRepartitionProgramme(document, context);
         writeRepartitionProgrammeCTRRES(document, context);
-        writeRepartitionProgrammeTTR(document, context);
-        writeRepartitionTTRCTRRES(document, context);
+        writeRepartitionProgrammeTitre(document, context);
+        writeRepartitionCentreRespTitre(document, context);
         writeProgrammeAnnee(document, context);
+        writeEvolutionPostesAnnee(document, context);
     }
 
     default void writeRepartitionProgrammeB(XWPFDocument document, GenerationContext context) {
@@ -112,11 +106,10 @@ interface FichePortefeuilleBlueprint extends Writable {
         XWPFParagraph table_1_title_para = document.createParagraph();
         table_1_title_para.setStyle(tableTitleStyle);
         table_1_title_para.createRun().setText(context.contextualizedContent(FCHPORT_3_TABLE_1_TITLE_KEY));
-        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammeVersionBs();
+
         context.writeTable(
                 document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
                 rows, extractors, false);
@@ -151,10 +144,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_5_TABLE_2_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeRepartition::name),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::ae),
-                ColumnExtractor.ofSummable(ProgrammeRepartition::cp));
+        List<ColumnExtractor<ProgrammeRepartition, ?>> extractors = ProgrammeRepartition.EXTRACTORS;
         List<ProgrammeRepartition> rows = repartitionProgrammes();
         context.writeTable(
                 document, FCHPORT_3_TABLE_1_STYLE_KEY, FCHPORT_3_TABLE_1_CONTENT,
@@ -170,20 +160,17 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_6_TABLE_3_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
-                ColumnExtractor.ofSummable(r -> r.serviceCentraux()),
-                ColumnExtractor.ofSummable(r -> r.serviceDeconcentree()),
-                ColumnExtractor.ofSummable(r -> r.organismeSousTutelle()),
-                ColumnExtractor.ofSummable(r -> r.organismeTerritoriaux()));
         List<ProgrammeCentreResponsibilite> rows = repartitionProgrammeCentreResps();
+        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = ProgrammeCentreResponsibiliteBlueprint
+                .extractor(rows);
+
         context.writeTable(
                 document, FCHPORT_6_TABLE_3_STYLE_KEY, FCHPORT_6_TABLE_3_CONTENT,
                 rows, extractors, true);
 
     }
 
-    default void writeRepartitionProgrammeTTR(XWPFDocument document, GenerationContext context) {
+    default void writeRepartitionProgrammeTitre(XWPFDocument document, GenerationContext context) {
         if (LanguageDirection.LTR == context.getDirection()) {
             context.apply(PageLayout.LANDSCAPE);
         }
@@ -193,37 +180,29 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_7_TABLE_4_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeTitre::name),
-                ColumnExtractor.ofSummable(ProgrammeTitre::t1),
-                ColumnExtractor.ofSummable(ProgrammeTitre::t2),
-                ColumnExtractor.ofSummable(ProgrammeTitre::t3),
-                ColumnExtractor.ofSummable(ProgrammeTitre::t4)
-                );
+
         List<ProgrammeTitre> rows = repartitionProgrammeTitres();
+        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = ProgrammeTitreBlueprint.extractors(rows);
         context.writeTable(
                 document, FCHPORT_7_TABLE_4_STYLE_KEY, FCHPORT_7_TABLE_4_CONTENT,
                 rows, extractors, true);
     }
 
-    default void writeRepartitionTTRCTRRES(XWPFDocument document, GenerationContext context) {
+    default void writeRepartitionCentreRespTitre(XWPFDocument document, GenerationContext context) {
 
         // table title
         String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
         XWPFParagraph table_title_para = document.createParagraph();
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_8_TABLE_5_TITLE_KEY));
-
-        List<ColumnExtractor<RepartitionTitreCentreResp, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(RepartitionTitreCentreResp::name),
-                ColumnExtractor.ofSummable(r -> r.ttrs().get(0)),
-                ColumnExtractor.ofSummable(r -> r.ttrs().get(1)),
-                ColumnExtractor.ofSummable(r -> r.ttrs().get(2)),
-                ColumnExtractor.ofSummable(r -> r.ttrs().get(3)));
-        List<RepartitionTitreCentreResp> rows = repartitionTitreCentreResps();
-        context.writeTable(
-                document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
-                rows, extractors, true);
+        
+        var repartitions = repartitionCentreRespTitre();
+        List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = repartitions.extractors();
+        List<CentreResponsabiliteTitre> rows = repartitions.services();
+        
+       context.writeTable(
+               document, FCHPORT_8_TABLE_5_STYLE_KEY, FCHPORT_8_TABLE_5_CONTENT,
+               rows, extractors, true);
     }
 
     default void writeProgrammeAnnee(XWPFDocument document, GenerationContext context) {
@@ -234,17 +213,25 @@ interface FichePortefeuilleBlueprint extends Writable {
         table_title_para.setStyle(tableTitleStyle);
         table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_9_TABLE_6_TITLE_KEY));
 
-        List<ColumnExtractor<ProgrammeAnnee, ?>> extractors = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeAnnee::name),
-                ColumnExtractor.ofSummable(r -> r.annees().get(0)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(1)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(2)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(3)),
-                ColumnExtractor.ofSummable(r -> r.annees().get(4)));
-        List<ProgrammeAnnee> rows = programmesAnnees();
+        List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = ProgrammeEvolutionDepense.EXTRACTORS;
+        List<ProgrammeEvolutionDepense> rows = programmesEvolutionDepenses();
+
         context.writeTable(
                 document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_9_TABLE_6_CONTENT,
                 rows, extractors, false);
+
+    }
+
+    default void writeEvolutionPostesAnnee(XWPFDocument document, GenerationContext context) {
+        String tableTitleStyle = context.plainContent(STICKY_TITLE_STYLE_KEY);
+        XWPFParagraph table_title_para = document.createParagraph();
+        table_title_para.setStyle(tableTitleStyle);
+        table_title_para.createRun().setText(context.contextualizedContent(FCHPORT_10_TABLE_7_TITLE_KEY));
+
+        List<ColumnExtractor<CentreRespEvoluPostes, ?>> extractors = CentreRespEvoluPostes.EXTRACTORS;
+        List<CentreRespEvoluPostes> rows = postesEvolutions();
+
+        context.writeTable(document, FCHPORT_9_TABLE_6_STYLE_KEY, FCHPORT_10_TABLE_7_CONTENT, rows, extractors, false);
 
     }
 
