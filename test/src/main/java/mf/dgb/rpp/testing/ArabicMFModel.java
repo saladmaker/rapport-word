@@ -1,31 +1,14 @@
 package mf.dgb.rpp.testing;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mf.dgb.rpp.model.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import mf.dgb.rpp.model.AuSujetDuPortefeuille;
-import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
-import mf.dgb.rpp.model.CentreResponsabiliteTitre;
-import mf.dgb.rpp.model.FichePortefeuille;
-import mf.dgb.rpp.model.GenerationContext;
-import mf.dgb.rpp.model.LaMission;
-import mf.dgb.rpp.model.LanguageDirection;
-import mf.dgb.rpp.model.LeMinistere;
-import mf.dgb.rpp.model.Mission;
-import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
-import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
-import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
-import mf.dgb.rpp.model.ProgrammeRepartition;
-import mf.dgb.rpp.model.ProgrammeStructure;
-import mf.dgb.rpp.model.ProgrammeTitre;
-import mf.dgb.rpp.model.CentreRespEvoluPostes;
 
-
-public class ArabicModel implements DocumentGenerator {
+public class ArabicMFModel implements DocumentGenerator {
     static final String INTRO = """
                     تلتزم الوزارة، للسنة القادمة، بتعزيز جودة الخدمات العمومية لفائدة المواطنين.
                     كما تخطط لتحديث البنية التحتية الرقمية من أجل تسهيل الوصول إلى الإجراءات الإدارية.
@@ -37,7 +20,7 @@ public class ArabicModel implements DocumentGenerator {
 
     @Override
     public void generate(XWPFDocument document) throws Exception {
-        LaMission laMission = LaMission.builder().intro(INTRO)
+        LaMission mission = LaMission.builder().intro(INTRO)
                 .addMission(Mission.builder()
                         .mission("التحول الرقمي: نشر منصات رقمية لتبسيط الإجراءات الإدارية.")
                         .addSubMission("إنشاء شباك موحد عبر الإنترنت")
@@ -55,7 +38,7 @@ public class ArabicModel implements DocumentGenerator {
                         .build())
                 .build();
 
-        byte[] imageBytes = FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
+        byte[] imageBytes =  FrenchModel.class.getClassLoader().getResourceAsStream("ORGANIGRAME.jpg").readAllBytes();
         LeMinistere leMinistere = LeMinistere.builder().image(imageBytes).build();
 
         CartographieProgrammesPortefeuille cartographie = CartographieProgrammesPortefeuille.builder()
@@ -74,30 +57,58 @@ public class ArabicModel implements DocumentGenerator {
                         .addOrgamismeTerri("المحافظة على المناطق الرطبة")
                         .build())
                 .build();
-
         FichePortefeuille fichePortefeuille = FichePortefeuille.builder()
-                .addRepartitionProgrammeVersionBs(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
-                        new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
-                        new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
-                .addRepartitionProgrammes(List.of(new ProgrammeRepartition("التكوين المهني", 20_143_691_000L, 19_506_191_000L),
-                        new ProgrammeRepartition("التعليم المهني", 622_000_000L, 540_000_000L),
-                        new ProgrammeRepartition("الإدارة العامة", 97_250_926_000L, 98_536_426_000L)))
-                .addRepartitionProgrammeCentreResp(ProgrammeCentreResponsibilite.builder()
-                        .name("التعليم المهني")
-                        .repartition(List.of(23231L, 324234L, 234324234L, 324242L))
-                        .build())
-                .addRepartitionProgrammeCentreResp(ProgrammeCentreResponsibilite.builder()
-                        .name("الإدارة العامة")
-                        .repartition(List.of(23231L, 324234L, 234324234L, 324242L))
-                        .build())
+                // repartition programme version B
+                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
+                        "التكوين المهني",
+                        20_143_691_000L, 19_506_191_000L))
+                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
+                        "التعليم المهني",
+                        622_000_000L, 540_000_000L))
+                .addRepartitionProgrammeVersionB(new ProgrammeRepartition(
+                        "الادارة العامة",
+                        97_250_926_000L, 98_536_426_000L))
+                // repartition programme
+                .addRepartitionProgramme(new ProgrammeRepartition(
+                        "التكوين المهني",
+                        20_143_691_000L, 19_506_191_000L))
+                .addRepartitionProgramme(new ProgrammeRepartition(
+                        "التعليم المهني",
+                        622_000_000L, 540_000_000L))
+                .addRepartitionProgramme(new ProgrammeRepartition(
+                        "الادارة العامة",
+                        97_250_926_000L, 98_536_426_000L))
+                // repartition programme centre de responsabilite
+                .addRepartitionProgrammeCentreResp(
+                        ProgrammeCentreResponsibilite.builder()
+                                .name("التكوين المهني")
+                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                        642342L))
+                                .build())
+                .addRepartitionProgrammeCentreResp(
+                        ProgrammeCentreResponsibilite.builder()
+                                .name("التعليم المهني")
+                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                        642342L))
+                                .build())
+                .addRepartitionProgrammeCentreResp(
+                        ProgrammeCentreResponsibilite.builder()
+                                .name("الادارة العامة")
+                                .repartition(List.of(10033343L, 72334233L, 3343424L,
+                                        642342L))
+                                .build())
+                // repartition programme titre
                 .addRepartitionProgrammeTitre(
                         ProgrammeTitre.builder()
                                 .name("التكوين المهني")
-                                .isMF(false)
+                                .isMF(true)
                                 .titre1(2434234L)
                                 .titre2(43453453L)
                                 .titre3(423424332L)
                                 .titre4(234242432L)
+                                .titre5(324234L)
+                                .titre6(34234234L)
+                                .titre7(234234243L)
                                 .build())
                 .addRepartitionProgrammeTitre(
                         ProgrammeTitre.builder()
@@ -120,14 +131,15 @@ public class ArabicModel implements DocumentGenerator {
 
                 // repartition titre centre de responsabilite
                 .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                        .isMF(true)
                         .service(CentreResponsabiliteTitre
-                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
+                                .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L, 3434234L, 34234234L, 423423L)))
                         .service(CentreResponsabiliteTitre
-                                .organismesSousTutelle(List.of(23234L, 32342L, 234243L, 3242342L)))
+                                .organismesSousTutelle(List.of(23234L, 32342L,234243L,3242342L)))
                         .service(CentreResponsabiliteTitre
-                                .serviceDeconcentrees(List.of(123242L, 234234L, 234243L, 234243L)))
+                                .serviceDeconcentrees(List.of(123242L,234234L,234243L,234243L)))
                         .service(CentreResponsabiliteTitre
-                                .organismesTerritotiaux(List.of(123242L, 234234L, 234243L, 234243L)))
+                                .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
                         .build()
                 )
                 .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
@@ -148,29 +160,27 @@ public class ArabicModel implements DocumentGenerator {
                                 234234243234L, 3423424234243L))
                         .build()
                 )
-                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
-                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L, 4324243L, 324243L, 2342432L)))
-                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L, 434L, 45L, 5L)))
+                .addPostesEvolution(CentreRespEvoluPostes.servicesCentraux(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organismesSousTutelle(List.of(22323L, 32424L,4324243L,324243L,2342432L)))
+                .addPostesEvolution(CentreRespEvoluPostes.organesTerritoriaux(List.of(22323L, 32424L,434L,45L,5L)))
                 .build();
 
         AuSujetDuPortefeuille auSujetDuPortefeuille = AuSujetDuPortefeuille.builder()
-                .laMission(laMission)
+                .laMission(mission)
                 .leMinistere(leMinistere)
                 .cartographie(cartographie)
                 .fichePortefeuille(fichePortefeuille)
                 .build();
         var mappers = Map.of(
-                "portefeuille", "الصحة",
-                "gestionnaire", "الصحة",
-                "n-2", "2024",
-                "n-1", "2025",
-                "n", "2026",
-                "n+1", "2027",
-                "n+2", "2028");
+                        "portefeuille", "الصحة",
+                        "gestionnaire", "الصحة",
+                        "n-2", "2024",
+                        "n-1", "2025",
+                        "n", "2026",
+                        "n+1", "2027",
+                        "n+2", "2028");
         auSujetDuPortefeuille.write(document, GenerationContext.of(document, LanguageDirection.RTL, mappers));
 
-
     }
-
 
 }
