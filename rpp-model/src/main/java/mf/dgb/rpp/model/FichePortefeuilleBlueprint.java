@@ -40,15 +40,15 @@ interface FichePortefeuilleBlueprint extends Writable {
     List<ProgrammeRepartition> repartitionProgrammes();
 
     @Option.Singular
-    List<ProgrammeCentreResponsibilite> repartitionProgrammeCentreResps();
+    List<RepartitionCentreResponsibilite> repartitionProgrammeCentreResps();
 
     @Option.Singular
-    List<ProgrammeTitre> repartitionProgrammeTitres();
+    List<RepartitionTitre> repartitionProgrammeTitres();
 
-    PortefeuilleCentreResponsabiliteTitre repartitionCentreRespTitre();
+    RepartitionCentreResponsabiliteTitre repartitionCentreRespTitre();
 
     @Option.Singular
-    List<ProgrammeEvolutionDepense> programmesEvolutionDepenses();
+    List<EvolutionDepense> programmesEvolutionDepenses();
 
 
     @Option.Singular
@@ -140,8 +140,8 @@ interface FichePortefeuilleBlueprint extends Writable {
         final String titleKey = FCHPORT_6_TABLE_3_PREFIX + "title";
         writeTableTitle(document, context, titleKey);
 
-        List<ProgrammeCentreResponsibilite> rows = repartitionProgrammeCentreResps();
-        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = ProgrammeCentreResponsibiliteBlueprint
+        List<RepartitionCentreResponsibilite> rows = repartitionProgrammeCentreResps();
+        List<ColumnExtractor<RepartitionCentreResponsibilite, ?>> extractors = RepartitionCentreResponsibiliteBlueprint
                 .extractor(rows);
 
         context.writeTable(
@@ -159,8 +159,8 @@ interface FichePortefeuilleBlueprint extends Writable {
         writeTableTitle(document, context, titleKey);
 
 
-        List<ProgrammeTitre> rows = repartitionProgrammeTitres();
-        List<ColumnExtractor<ProgrammeTitre, ?>> extractors = ProgrammeTitreBlueprint.extractors(rows);
+        List<RepartitionTitre> rows = repartitionProgrammeTitres();
+        List<ColumnExtractor<RepartitionTitre, ?>> extractors = RepartitionTitreBlueprint.extractors(rows);
         context.writeTable(
                 document, FCHPORT_7_TABLE_4_PREFIX,
                 rows, extractors, true);
@@ -172,7 +172,7 @@ interface FichePortefeuilleBlueprint extends Writable {
         final String titleKey = FCHPORT_8_TABLE_5_PREFIX + "title";
         writeTableTitle(document, context, titleKey);
 
-        var repartitions = repartitionCentreRespTitre();
+        RepartitionCentreResponsabiliteTitre repartitions = repartitionCentreRespTitre();
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = repartitions.extractors();
         List<CentreResponsabiliteTitre> rows = repartitions.services();
 
@@ -187,8 +187,8 @@ interface FichePortefeuilleBlueprint extends Writable {
         final String titleKey = FCHPORT_9_TABLE_6_PREFIX + "title";
         writeTableTitle(document, context, titleKey);
 
-        List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> extractors = ProgrammeEvolutionDepense.EXTRACTORS;
-        List<ProgrammeEvolutionDepense> rows = programmesEvolutionDepenses();
+        List<ColumnExtractor<EvolutionDepense, ?>> extractors = EvolutionDepense.EXTRACTORS;
+        List<EvolutionDepense> rows = programmesEvolutionDepenses();
 
         context.writeTable(
                 document, FCHPORT_9_TABLE_6_PREFIX,

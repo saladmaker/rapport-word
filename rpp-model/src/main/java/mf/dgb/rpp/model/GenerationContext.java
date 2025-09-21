@@ -186,7 +186,7 @@ public final class GenerationContext {
         final String totalRowLabelKey = tablePrefix + "total.row";
         final String cellStyleKey = tablePrefix + "cellStyle";
 
-        // sum that dependes on language direction
+        // sum that depends on language direction
         String lastColumnFormula = "=SUM(LEFT)";
         if (LanguageDirection.RTL == getDirection()) {
             lastColumnFormula = "=SUM(RIGHT)";
@@ -206,7 +206,7 @@ public final class GenerationContext {
             for (int i = 0; i < table.getRows().size(); i++) {
                 var row = table.getRow(i);
                 for (int j = 0; j < row.getTableICells().size(); j++) {
-                    row.getCell(j).getParagraphs().get(0).setStyle(cellStyle);
+                    row.getCell(j).getParagraphs().getFirst().setStyle(cellStyle);
                 }
             }
         }

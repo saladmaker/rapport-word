@@ -4,8 +4,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mf.dgb.rpp.model.*;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import mf.dgb.rpp.model.AuSujetDuPortefeuille;
+import mf.dgb.rpp.model.CartographieProgrammesPortefeuille;
+import mf.dgb.rpp.model.CentreRespEvoluPostes;
+import mf.dgb.rpp.model.CentreResponsabiliteTitre;
+import mf.dgb.rpp.model.FichePortefeuille;
+import mf.dgb.rpp.model.GenerationContext;
+import mf.dgb.rpp.model.LaMission;
+import mf.dgb.rpp.model.LanguageDirection;
+import mf.dgb.rpp.model.LeMinistere;
+import mf.dgb.rpp.model.Mission;
+import mf.dgb.rpp.model.EvolutionDepense;
+import mf.dgb.rpp.model.ProgrammeRepartition;
+import mf.dgb.rpp.model.ProgrammeStructure;
+import mf.dgb.rpp.model.RepartitionCentreResponsabiliteTitre;
+import mf.dgb.rpp.model.RepartitionCentreResponsibilite;
+import mf.dgb.rpp.model.RepartitionTitre;
 
 
 public class ArabicMFModel implements DocumentGenerator {
@@ -80,26 +96,26 @@ public class ArabicMFModel implements DocumentGenerator {
                         97_250_926_000L, 98_536_426_000L))
                 // repartition programme centre de responsabilite
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("التكوين المهني")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("التعليم المهني")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("الادارة العامة")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 // repartition programme titre
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("التكوين المهني")
                                 .isMF(true)
                                 .titre1(2434234L)
@@ -111,7 +127,7 @@ public class ArabicMFModel implements DocumentGenerator {
                                 .titre7(234234243L)
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("التعليم المهني")
                                 .isMF(false)
                                 .titre1(2434234L)
@@ -120,7 +136,7 @@ public class ArabicMFModel implements DocumentGenerator {
                                 .titre4(234242432L)
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("الادارة العامة")
                                 .isMF(false)
                                 .titre1(2434234L)
@@ -130,7 +146,7 @@ public class ArabicMFModel implements DocumentGenerator {
                                 .build())
 
                 // repartition titre centre de responsabilite
-                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                .repartitionCentreRespTitre(RepartitionCentreResponsabiliteTitre.builder()
                         .isMF(true)
                         .service(CentreResponsabiliteTitre
                                 .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L, 3434234L, 34234234L, 423423L)))
@@ -142,19 +158,19 @@ public class ArabicMFModel implements DocumentGenerator {
                                 .organismesTerritotiaux(List.of(123242L,234234L,234243L,234243L)))
                         .build()
                 )
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("التكوين المهني")
                         .evolution(List.of(13232332323L, 234234234L, 324234234L, 324234234L,
                                 4234234234L))
                         .build()
                 )
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("التعليم المهني")
                         .evolution(List.of(34234234L, 324234234L, 3242342342L, 23423423423L,
                                 343443234243L))
                         .build()
                 )
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("الادارة العامة")
                         .evolution(List.of(32313123123L, 3123123132L, 3423424243L,
                                 234234243234L, 3423424234243L))

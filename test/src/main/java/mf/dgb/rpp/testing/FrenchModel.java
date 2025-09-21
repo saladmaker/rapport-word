@@ -12,14 +12,14 @@ import mf.dgb.rpp.model.CentreResponsabiliteTitre;
 import mf.dgb.rpp.model.FichePortefeuille;
 import mf.dgb.rpp.model.GenerationContext;
 import mf.dgb.rpp.model.LaMission;
-import mf.dgb.rpp.model.LeMinistere;
-import mf.dgb.rpp.model.ProgrammeStructure;
-import mf.dgb.rpp.model.ProgrammeCentreResponsibilite;
-import mf.dgb.rpp.model.ProgrammeRepartition;
-import mf.dgb.rpp.model.PortefeuilleCentreResponsabiliteTitre;
-import mf.dgb.rpp.model.ProgrammeTitre;
-import mf.dgb.rpp.model.ProgrammeEvolutionDepense;
 import mf.dgb.rpp.model.LanguageDirection;
+import mf.dgb.rpp.model.LeMinistere;
+import mf.dgb.rpp.model.EvolutionDepense;
+import mf.dgb.rpp.model.ProgrammeRepartition;
+import mf.dgb.rpp.model.ProgrammeStructure;
+import mf.dgb.rpp.model.RepartitionCentreResponsabiliteTitre;
+import mf.dgb.rpp.model.RepartitionCentreResponsibilite;
+import mf.dgb.rpp.model.RepartitionTitre;
 
 public class FrenchModel implements DocumentGenerator {
 
@@ -111,25 +111,25 @@ public class FrenchModel implements DocumentGenerator {
                                         "Administration générale",
                                         97_250_926_000L, 98_536_426_000L)))
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("Enseignement professionnel")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("Enseignement professionnel")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeCentreResp(
-                        ProgrammeCentreResponsibilite.builder()
+                        RepartitionCentreResponsibilite.builder()
                                 .name("Administration générale")
                                 .repartition(List.of(10033343L, 72334233L, 3343424L,
                                         642342L))
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("Formation professionnel")
                                 .isMF(false)
                                 .titre1(2434234L)
@@ -138,7 +138,7 @@ public class FrenchModel implements DocumentGenerator {
                                 .titre4(234242432L)
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("Formation professionnel")
                                 .isMF(false)
                                 .titre1(2434234L)
@@ -147,7 +147,7 @@ public class FrenchModel implements DocumentGenerator {
                                 .titre4(234242432L)
                                 .build())
                 .addRepartitionProgrammeTitre(
-                        ProgrammeTitre.builder()
+                        RepartitionTitre.builder()
                                 .name("Formation professionnel")
                                 .isMF(false)
                                 .titre1(2434234L)
@@ -156,7 +156,7 @@ public class FrenchModel implements DocumentGenerator {
                                 .titre4(234242432L)
                                 .build())
 
-                .repartitionCentreRespTitre(PortefeuilleCentreResponsabiliteTitre.builder()
+                .repartitionCentreRespTitre(RepartitionCentreResponsabiliteTitre.builder()
                         .service(CentreResponsabiliteTitre
                                 .servicesCentraux(List.of(121234L, 34234324L, 324234L, 432424L)))
                         .service(CentreResponsabiliteTitre
@@ -167,20 +167,20 @@ public class FrenchModel implements DocumentGenerator {
                                 .organismesTerritotiaux(List.of(123242L, 234234L, 234243L, 234243L)))
                         .build()
                 )
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("Formation professionnelle")
                         .evolution(List.of(13232332323L, 234234234L,
                                 324234234L, 324234234L,
                                 4234234234L))
                         .build())
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("Enseignement professionnel")
                         .evolution(List.of(34234234L, 324234234L,
                                 3242342342L,
                                 23423423423L,
                                 343443234243L))
                         .build())
-                .addProgrammesEvolutionDepense(ProgrammeEvolutionDepense.builder()
+                .addProgrammesEvolutionDepense(EvolutionDepense.builder()
                         .name("Administration general")
                         .evolution(List.of(32313123123L, 3123123132L,
                                 3423424243L,

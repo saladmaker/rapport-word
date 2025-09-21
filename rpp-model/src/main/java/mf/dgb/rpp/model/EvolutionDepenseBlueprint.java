@@ -7,16 +7,16 @@ import io.helidon.builder.api.Prototype;
 import io.helidon.builder.api.Option;
 
 @Prototype.Blueprint
-@Prototype.CustomMethods(ProgrammeEvolutionDepenseBlueprint.CustomMethods.class)
-interface ProgrammeEvolutionDepenseBlueprint {
+@Prototype.CustomMethods(EvolutionDepenseBlueprint.CustomMethods.class)
+interface EvolutionDepenseBlueprint {
 
-    List<ColumnExtractor<ProgrammeEvolutionDepense, ?>> EXTRACTORS = List.of(
-                ColumnExtractor.ofUnsummable(ProgrammeEvolutionDepense::name),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins2),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneeMoins1),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::Annee),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus1),
-                ColumnExtractor.ofSummable(ProgrammeEvolutionDepense::AnneePlus2));
+    List<ColumnExtractor<EvolutionDepense, ?>> EXTRACTORS = List.of(
+                ColumnExtractor.ofUnsummable(EvolutionDepense::name),
+                ColumnExtractor.ofSummable(EvolutionDepense::AnneeMoins2),
+                ColumnExtractor.ofSummable(EvolutionDepense::AnneeMoins1),
+                ColumnExtractor.ofSummable(EvolutionDepense::Annee),
+                ColumnExtractor.ofSummable(EvolutionDepense::AnneePlus1),
+                ColumnExtractor.ofSummable(EvolutionDepense::AnneePlus2));
 
     @Option.Required
     String name();
@@ -38,14 +38,14 @@ interface ProgrammeEvolutionDepenseBlueprint {
 
     final class CustomMethods {
         @Prototype.BuilderMethod
-        static void evolution(ProgrammeEvolutionDepense.BuilderBase<?, ?> builderBase, List<Long> depenses) {
+        static void evolution(EvolutionDepense.BuilderBase<?, ?> builderBase, List<Long> depenses) {
 
             Objects.requireNonNull(builderBase);
             Objects.requireNonNull(depenses);
 
             var size = depenses.size();
 
-            if (size < 3 || size > 5) {
+            if ((size < 3) || (size > 5)) {
                 throw new IllegalArgumentException("evolution des depenses should be of size 3 to 5, but got:" + depenses.size());
             }
             

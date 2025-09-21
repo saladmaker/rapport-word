@@ -24,8 +24,8 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     default void write(XWPFDocument document, GenerationContext context) {
         //set portraint mode even if it's the default
         context.apply(PageLayout.PORTRAIT);
-        
-        
+
+
         String heading1Style = context.plainContent(HEADING_1_STYLE_KEY);
         XWPFParagraph auSujectTitle = document.createParagraph();
         auSujectTitle.setStyle(heading1Style);

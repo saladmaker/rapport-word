@@ -8,26 +8,26 @@ import io.helidon.builder.api.Prototype;
 import io.helidon.builder.api.Option;
 
 @Prototype.Blueprint
-@Prototype.CustomMethods(ProgrammeCentreResponsibiliteBlueprint.CustomMethods.class)
-interface ProgrammeCentreResponsibiliteBlueprint {
+@Prototype.CustomMethods(RepartitionCentreResponsibiliteBlueprint.CustomMethods.class)
+interface RepartitionCentreResponsibiliteBlueprint {
 
-    List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> FIXED_EXTRACTORS = List.of(
-            ColumnExtractor.ofUnsummable(ProgrammeCentreResponsibilite::name),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::servicesCentraux),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::servicesDeconcentres),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organismesSousTutelle),
-            ColumnExtractor.ofSummable(ProgrammeCentreResponsibilite::organesTerritoriaux));
+    List<ColumnExtractor<RepartitionCentreResponsibilite, ?>> FIXED_EXTRACTORS = List.of(
+            ColumnExtractor.ofUnsummable(RepartitionCentreResponsibilite::name),
+            ColumnExtractor.ofSummable(RepartitionCentreResponsibilite::servicesCentraux),
+            ColumnExtractor.ofSummable(RepartitionCentreResponsibilite::servicesDeconcentres),
+            ColumnExtractor.ofSummable(RepartitionCentreResponsibilite::organismesSousTutelle),
+            ColumnExtractor.ofSummable(RepartitionCentreResponsibilite::organesTerritoriaux));
 
-    ColumnExtractor<ProgrammeCentreResponsibilite, ?> AUTRE_OST_EXTRACTOR = ColumnExtractor
-            .ofSummable(ProgrammeCentreResponsibilite::autreOrganismesSousTutelle);
+    ColumnExtractor<RepartitionCentreResponsibilite, ?> AUTRE_OST_EXTRACTOR = ColumnExtractor
+            .ofSummable(RepartitionCentreResponsibilite::autreOrganismesSousTutelle);
 
-    public static List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractor(
-            List<ProgrammeCentreResponsibilite> data) {
+    public static List<ColumnExtractor<RepartitionCentreResponsibilite, ?>> extractor(
+            List<RepartitionCentreResponsibilite> data) {
 
-        List<ColumnExtractor<ProgrammeCentreResponsibilite, ?>> extractors = new ArrayList<>();
+        List<ColumnExtractor<RepartitionCentreResponsibilite, ?>> extractors = new ArrayList<>();
         extractors.addAll(FIXED_EXTRACTORS);
         boolean specialAutreOrganismeSousTutelle = data.stream()
-                .anyMatch(ProgrammeCentreResponsibilite::specialCentreDeResponsabilite);
+                .anyMatch(RepartitionCentreResponsibilite::specialCentreDeResponsabilite);
         if (specialAutreOrganismeSousTutelle) {
             extractors.add(AUTRE_OST_EXTRACTOR);
         }
@@ -58,15 +58,15 @@ interface ProgrammeCentreResponsibiliteBlueprint {
     final class CustomMethods {
 
         @Prototype.FactoryMethod
-        static ProgrammeCentreResponsibilite create(String name, List<Long> repartition) {
-            return ProgrammeCentreResponsibilite.builder()
+        static RepartitionCentreResponsibilite create(String name, List<Long> repartition) {
+            return RepartitionCentreResponsibilite.builder()
                     .name(name)
                     .repartition(repartition)
                     .build();
         }
 
         @Prototype.BuilderMethod
-        static void repartition(ProgrammeCentreResponsibilite.BuilderBase<?, ?> builder, List<Long> repartition) {
+        static void repartition(RepartitionCentreResponsibilite.BuilderBase<?, ?> builder, List<Long> repartition) {
             Objects.requireNonNull(repartition, "repartition can not be null!");
 
             if (repartition.size() > 5) {

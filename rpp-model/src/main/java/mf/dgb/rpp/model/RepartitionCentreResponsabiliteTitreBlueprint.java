@@ -9,22 +9,12 @@ import java.util.Objects;
 import io.helidon.builder.api.Option;
 
 @Prototype.Blueprint
-@Prototype.CustomMethods(PortefeuilleCentreResponsabiliteTitreBlueprint.CustomMethods.class)
-interface PortefeuilleCentreResponsabiliteTitreBlueprint {
+@Prototype.CustomMethods(RepartitionCentreResponsabiliteTitreBlueprint.CustomMethods.class)
+interface RepartitionCentreResponsabiliteTitreBlueprint {
 
-    List<ColumnExtractor<CentreResponsabiliteTitre, ?>> FIXED_EXTRACTORS = List.of(
-            ColumnExtractor.ofConstable(CentreResponsabiliteTitre::serviceType),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre1),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre2),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre3),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre4)
-    );
+    List<ColumnExtractor<CentreResponsabiliteTitre, ?>> FIXED_EXTRACTORS = List.of(ColumnExtractor.ofConstable(CentreResponsabiliteTitre::serviceType), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre1), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre2), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre3), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre4));
 
-    List<ColumnExtractor<CentreResponsabiliteTitre, ?>> MF_EXTRACTORS = List.of(
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre5),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre6),
-            ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre7)
-    );
+    List<ColumnExtractor<CentreResponsabiliteTitre, ?>> MF_EXTRACTORS = List.of(ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre5), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre6), ColumnExtractor.ofSummable(CentreResponsabiliteTitre::titre7));
 
 
     @Option.DefaultBoolean(false)
@@ -36,10 +26,10 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
     @Option.Access("")
     List<CentreResponsabiliteTitre> services();
 
-    default List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors(){
+    default List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors() {
         List<ColumnExtractor<CentreResponsabiliteTitre, ?>> extractors = new ArrayList<>();
         extractors.addAll(FIXED_EXTRACTORS);
-        if(isMF()){
+        if (isMF()) {
             extractors.addAll(MF_EXTRACTORS);
         }
         return extractors;
@@ -48,8 +38,7 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
     final class CustomMethods {
 
         @Prototype.BuilderMethod
-        static void service(PortefeuilleCentreResponsabiliteTitre.BuilderBase<?, ?> builderBase,
-                CentreResponsabiliteTitre service) {
+        static void service(RepartitionCentreResponsabiliteTitre.BuilderBase<?, ?> builderBase, CentreResponsabiliteTitre service) {
             Objects.requireNonNull(builderBase);
             Objects.requireNonNull(service);
             var existingTypes = builderBase.services();
@@ -62,9 +51,9 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
                 }
             }
             //only portefeuille with 
-            if(CentreResponsabilite.AUTRE_ORGANISMES_SOUS_TUTELLE == service.serviceType()){
-                if(!builderBase.specialCentreDeResponsabilite()){
-                    throw new IllegalArgumentException("only portefeuille with special centre responsabilite could such a service type, found:" + service);
+            if (CentreResponsabilite.AUTRE_ORGANISMES_SOUS_TUTELLE == service.serviceType()) {
+                if (!builderBase.specialCentreDeResponsabilite()) {
+                    throw new IllegalArgumentException("only portefeuille with special centre responsabilite could have such a service type, found:" + service);
                 }
             }
 
@@ -82,9 +71,7 @@ interface PortefeuilleCentreResponsabiliteTitreBlueprint {
         }
 
         private static boolean exists(List<CentreResponsabiliteTitre> types, CentreResponsabilite type) {
-            return types.stream()
-                    .map(CentreResponsabiliteTitre::serviceType)
-                    .anyMatch(r -> r.equals(type));
+            return types.stream().map(CentreResponsabiliteTitre::serviceType).anyMatch(r -> r.equals(type));
         }
     }
 }
