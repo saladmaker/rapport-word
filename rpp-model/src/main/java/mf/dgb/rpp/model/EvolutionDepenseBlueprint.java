@@ -12,29 +12,29 @@ interface EvolutionDepenseBlueprint {
 
     List<ColumnExtractor<EvolutionDepense, ?>> EXTRACTORS = List.of(
                 ColumnExtractor.ofUnsummable(EvolutionDepense::name),
-                ColumnExtractor.ofSummable(EvolutionDepense::AnneeMoins2),
-                ColumnExtractor.ofSummable(EvolutionDepense::AnneeMoins1),
-                ColumnExtractor.ofSummable(EvolutionDepense::Annee),
-                ColumnExtractor.ofSummable(EvolutionDepense::AnneePlus1),
-                ColumnExtractor.ofSummable(EvolutionDepense::AnneePlus2));
+                ColumnExtractor.ofSummable(EvolutionDepense::anneeMoins2),
+                ColumnExtractor.ofSummable(EvolutionDepense::anneeMoins1),
+                ColumnExtractor.ofSummable(EvolutionDepense::annee),
+                ColumnExtractor.ofSummable(EvolutionDepense::anneePlus1),
+                ColumnExtractor.ofSummable(EvolutionDepense::anneePlus2));
 
     @Option.Required
     String name();
 
     @Option.DefaultLong(0L)
-    Long AnneeMoins2();
+    Long anneeMoins2();
 
     @Option.DefaultLong(0L)
-    Long AnneeMoins1();
+    Long anneeMoins1();
 
     @Option.DefaultLong(0L)
-    Long Annee();
+    Long annee();
 
     @Option.DefaultLong(0L)
-    Long AnneePlus1();
+    Long anneePlus1();
 
     @Option.DefaultLong(0L)
-    Long AnneePlus2();
+    Long anneePlus2();
 
     final class CustomMethods {
         @Prototype.BuilderMethod
@@ -52,23 +52,23 @@ interface EvolutionDepenseBlueprint {
             // set depense from y+2 to y-2
             switch (size) {
                 case 3 -> {
-                    builderBase.Annee(depenses.get(0));
-                    builderBase.AnneePlus1(depenses.get(1));
-                    builderBase.AnneePlus2(depenses.get(2));
+                    builderBase.annee(depenses.get(0));
+                    builderBase.anneePlus1(depenses.get(1));
+                    builderBase.anneePlus2(depenses.get(2));
                 }
                 case 4 -> {
-                    builderBase.AnneeMoins1(depenses.get(0));
-                    builderBase.Annee(depenses.get(1));
-                    builderBase.AnneePlus1(depenses.get(2));
-                    builderBase.AnneePlus2(depenses.get(3));
+                    builderBase.anneeMoins1(depenses.get(0));
+                    builderBase.annee(depenses.get(1));
+                    builderBase.anneePlus1(depenses.get(2));
+                    builderBase.anneePlus2(depenses.get(3));
 
                 }
                 case 5 -> {
-                    builderBase.AnneeMoins1(depenses.get(0));
-                    builderBase.AnneeMoins2(depenses.get(1));
-                    builderBase.Annee(depenses.get(2));
-                    builderBase.AnneePlus1(depenses.get(3));
-                    builderBase.AnneePlus2(depenses.get(4));
+                    builderBase.anneeMoins1(depenses.get(0));
+                    builderBase.anneeMoins2(depenses.get(1));
+                    builderBase.annee(depenses.get(2));
+                    builderBase.anneePlus1(depenses.get(3));
+                    builderBase.anneePlus2(depenses.get(4));
                 }
             }
 

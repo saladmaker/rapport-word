@@ -1,5 +1,6 @@
 package mf.dgb.rpp.model;
 
+import io.helidon.builder.api.Option;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -12,12 +13,16 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
     
     String AUSJT_1_TITLE_KEY = "section1.ausujetprotefeuille.title.text";
 
+    @Option.Required
     LaMission laMission();
 
+    @Option.Required
     LeMinistere leMinistere();
 
+    @Option.Required
     CartographieProgrammesPortefeuille cartographie();
 
+    @Option.Required
     FichePortefeuille fichePortefeuille();
 
     @Override
@@ -27,10 +32,10 @@ interface AuSujetDuPortefeuilleBlueprint extends Writable {
 
 
         String heading1Style = context.plainContent(HEADING_1_STYLE_KEY);
-        XWPFParagraph auSujectTitle = document.createParagraph();
-        auSujectTitle.setStyle(heading1Style);
+        XWPFParagraph auSujetTitle = document.createParagraph();
+        auSujetTitle.setStyle(heading1Style);
         String auSujetText = context.contextualizedContent(AUSJT_1_TITLE_KEY);
-        auSujectTitle.createRun().setText(auSujetText);
+        auSujetTitle.createRun().setText(auSujetText);
 
 
         laMission().write(document,context);

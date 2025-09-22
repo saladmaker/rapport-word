@@ -23,4 +23,17 @@ interface FicheProgrammeBlueprint {
     @Option.Access("")
     List<Projet> projets();
 
+    @Option.Access("")
+    List<NouveauProjet> nouveauGpes();
+
+    @Option.Access("")
+    List<NouveauProjet> nouveauProjets();
+
+    PostOuvertsMassSalariales postMassSalariales();
+
+    @Option.Singular
+    List<EvolutionDepense> depensesOrganismesSousTutelles();
+
+    List<EvolutionDepense> depensesTypeOrganismesSousTutelles();
+
 }

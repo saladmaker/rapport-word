@@ -11,5 +11,4 @@ interface PlanificationProgrammeBlueprint {
 
     @Option.Required
     String name();
-
 }
