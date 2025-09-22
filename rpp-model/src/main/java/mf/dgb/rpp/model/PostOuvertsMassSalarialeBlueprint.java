@@ -16,8 +16,11 @@ interface PostOuvertsMassSalarialeBlueprint {
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::postesAnneeMoins1),
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::postesAnnee),
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::nombre),
-            ColumnExtractor.ofUnsummable(p -> p.variationPostes().toString()),
-            ColumnExtractor.ofSummable()
+            ColumnExtractor.ofAveragable(PostOuvertsMassSalariale::variationPostes),
+            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnneeMoins2),
+            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnneeMoins1),
+            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnnee),
+            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::variationSalarial)
     );
 
     @Option.Required

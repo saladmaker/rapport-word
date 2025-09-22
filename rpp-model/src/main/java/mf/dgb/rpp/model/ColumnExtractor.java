@@ -2,11 +2,11 @@ package mf.dgb.rpp.model;
 
 import java.util.function.Function;
 
-
 public sealed interface ColumnExtractor<T, R> extends Function<T, R>
         permits ColumnExtractor.SummableColumnExtractor,
         ColumnExtractor.UnsummableColumnExtractor,
-        ColumnExtractor.ConstableColumnExtractor {
+        ColumnExtractor.ConstableColumnExtractor,
+        ColumnExtractor.AvergableColumnExtractor{
 
     @SuppressWarnings("hiding")
     public non-sealed interface SummableColumnExtractor<T, Long> extends ColumnExtractor<T, Long> {
@@ -19,11 +19,17 @@ public sealed interface ColumnExtractor<T, R> extends Function<T, R>
     public non-sealed interface ConstableColumnExtractor<T, E extends Enum<E>> extends ColumnExtractor<T, E> {
 
     }
+    public non-sealed interface AvergableColumnExtractor<T, Double> extends ColumnExtractor<T, Double>{
+
+    }
 
     static <S> SummableColumnExtractor<S, Long> ofSummable(Function<S, Long> summable) {
         return summable::apply;
     }
 
+    static <S> AvergableColumnExtractor<S, Double> ofAveragable(Function<S, Double> avergable){
+        return avergable::apply;
+    }
     static <S> UnsummableColumnExtractor<S, String> ofUnsummable(Function<S, String> unsummable) {
         return unsummable::apply;
     }

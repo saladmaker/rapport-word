@@ -251,10 +251,11 @@ public final class GenerationContext {
 
         for (int c = 1; c < extractors.size(); c++) {
             XWPFTableCell totalCell = totalRow.getCell(c);
-            if (extractors.get(c) instanceof ColumnExtractor.SummableColumnExtractor) {
-                insertFormula(totalCell, "=SUM(ABOVE)", "0");
-            } else {
-                totalCell.setText("-");
+            ColumnExtractor<T,?> extractor = extractors.get(c);
+            switch (extractor){
+                case ColumnExtractor.SummableColumnExtractor<T,?> _ -> insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                case ColumnExtractor.AvergableColumnExtractor<T,?> _ -> insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
+                default -> totalCell.setText("-");
             }
         }
 
