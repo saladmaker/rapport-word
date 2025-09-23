@@ -1,28 +1,28 @@
-package mf.dgb.rpp.model;
+package mf.dgb.rpp.testing;
 
-import io.helidon.builder.api.Prototype;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import mf.dgb.rpp.model.GenerationContext;
+import mf.dgb.rpp.model.LanguageDirection;
+import mf.dgb.rpp.model.PageLayout;
+import mf.dgb.rpp.model.Writable;
+import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-@Prototype.Blueprint
-interface PostOuvertsMassSalarialesBlueprint extends Writable{
-
+public class PMModel implements DocumentGenerator, Writable {
     String TABLE_STYLE_KEY = "section2.table";
 
-    List<PostOuvertsMassSalariale> services();
+    @Override
+    public void generate(XWPFDocument document) throws Exception {
+        var context = GenerationContext.of(document, LanguageDirection.LTR, Map.of());
+        write(document, context);
+    }
 
     @Override
-    default void write(XWPFDocument document, GenerationContext context){
+    public void write(XWPFDocument document, GenerationContext context) {
         var size = services().size();
         if(0 == size){
             return;
@@ -49,28 +49,8 @@ interface PostOuvertsMassSalarialesBlueprint extends Writable{
         setCellTextCentered(table.getRow(2).getCell(4), "Variation");
         setCellTextCentered(table.getRow(2).getCell(6), "Montant");
         setCellTextCentered(table.getRow(2).getCell(9), "Variation");
+        setCellTextCentered(table.getRow(0).getCell(0), "Services");
 
-
-    }
-
-    final class CustomMethods{
-        @Prototype.BuilderMethod
-        static void service(PostOuvertsMassSalariales.BuilderBase<?,?> builderBase, PostOuvertsMassSalariale poms){
-            Objects.requireNonNull(poms, "poms can't be null!");
-
-            List<PostOuvertsMassSalariale> services = new ArrayList<>(builderBase.services());
-
-            for(var p: services){
-                if(p.serviceType() == poms.serviceType()){
-                    throw  new IllegalArgumentException("service type " + p.serviceType() + " already exist!");
-                }
-            }
-
-            services.add(poms);
-
-            //replaces old collection
-            builderBase.services(services);
-        }
     }
     private static void mergeRegion(XWPFTable table, int fromRow, int toRow, int fromCol, int toCol) {
         for (int r = fromRow; r <= toRow; r++) {
@@ -105,5 +85,7 @@ interface PostOuvertsMassSalarialesBlueprint extends Writable{
         CTTc cttc = cell.getCTTc();
         return cttc.isSetTcPr() ? cttc.getTcPr() : cttc.addNewTcPr();
     }
-
+    List<Integer> services(){
+        return List.of(1,2,3);
+    }
 }

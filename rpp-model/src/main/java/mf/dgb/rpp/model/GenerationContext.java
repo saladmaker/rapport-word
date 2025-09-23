@@ -35,6 +35,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -325,6 +327,32 @@ public final class GenerationContext {
             tblPr.addNewBidiVisual().setVal(STOnOff1.OFF);
         }
     }
+    public void applyTableStyle(XWPFTable table, String styleKey, double[] proportions) {
+
+        // Call the base styling
+        applyTableStyle(table, styleKey);
+
+        // Apply proportions
+        BigInteger totalWidth = getScaledUsableWidth(0.99);
+
+        // Ensure tblGrid exists
+        CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
+        if (tblGrid == null) {
+            tblGrid = table.getCTTbl().addNewTblGrid();
+        } else {
+            tblGrid.setNil(); // clear old grid definition
+        }
+
+        // Add column widths
+        for (double proportion : proportions) {
+            BigInteger colWidth = BigInteger.valueOf(
+                    Math.round(totalWidth.doubleValue() * proportion)
+            );
+            CTTblGridCol gridCol = tblGrid.addNewGridCol();
+            gridCol.setW(colWidth);
+        }
+    }
+
 
     public void addFooterAndPageNumber(XWPFDocument doc, String footerText) {
         // Get or create section properties
