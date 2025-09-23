@@ -1,6 +1,5 @@
 package mf.dgb.rpp.model;
 
-
 import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
@@ -20,8 +19,7 @@ interface PostOuvertsMassSalarialeBlueprint {
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnneeMoins2),
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnneeMoins1),
             ColumnExtractor.ofSummable(PostOuvertsMassSalariale::salairAnnee),
-            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::variationSalarial)
-    );
+            ColumnExtractor.ofSummable(PostOuvertsMassSalariale::variationSalarial));
 
     @Option.Required
     CentreResponsabilite serviceType();
@@ -49,18 +47,21 @@ interface PostOuvertsMassSalarialeBlueprint {
     }
 
     default Double variationPostes() {
-        return nombre().doubleValue() * 100 / postesAnnee();
+        if (postesAnnee() == 0){
+            return 0.0; // avoid division by zero
+        }
+        double raw = nombre().doubleValue() * 100 / postesAnnee();
+        return Math.round(raw * 100.0) / 100.0; // keeps only two decimals
     }
 
-    default Long variationSalarial(){
+    default Long variationSalarial() {
         return salairAnnee() - salairAnneeMoins1();
     }
-
 
     final class CustomMethods {
         @Prototype.BuilderMethod
         static void evolutionPostes(PostOuvertsMassSalariale.BuilderBase<?, ?> builderBase, List<Long> postes) {
-            //invariants check
+            // invariants check
             Objects.requireNonNull(postes);
             int size = postes.size();
             if ((0 == size) || size > 3) {
@@ -86,7 +87,7 @@ interface PostOuvertsMassSalarialeBlueprint {
 
         @Prototype.BuilderMethod
         static void evolutionSalarial(PostOuvertsMassSalariale.BuilderBase<?, ?> builderBase, List<Long> salaires) {
-            //invariants check
+            // invariants check
             Objects.requireNonNull(salaires);
             int size = salaires.size();
             if ((0 == size) || size > 3) {
@@ -111,7 +112,8 @@ interface PostOuvertsMassSalarialeBlueprint {
         }
 
         @Prototype.FactoryMethod
-        static PostOuvertsMassSalariale create(CentreResponsabilite centreResponsabilite, List<Long> postes, List<Long> salaires) {
+        static PostOuvertsMassSalariale create(CentreResponsabilite centreResponsabilite, List<Long> postes,
+                List<Long> salaires) {
 
             return PostOuvertsMassSalariale.builder()
                     .serviceType(centreResponsabilite)

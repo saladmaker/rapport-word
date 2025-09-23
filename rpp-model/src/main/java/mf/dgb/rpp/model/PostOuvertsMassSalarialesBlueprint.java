@@ -1,6 +1,8 @@
 package mf.dgb.rpp.model;
 
 import io.helidon.builder.api.Prototype;
+import io.helidon.builder.api.Prototype.CustomMethods;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Prototype.Blueprint
+@Prototype.CustomMethods(PostOuvertsMassSalarialesBlueprint.CustomMethods.class)
 interface PostOuvertsMassSalarialesBlueprint extends Writable{
 
     String TABLE_STYLE_KEY = "section2.table";
@@ -33,7 +36,7 @@ interface PostOuvertsMassSalarialesBlueprint extends Writable{
         //apply style and proportions
         final double[] proportions = {0.15,0.10,0.10,0.10,0.08,0.08,0.13,0.13,0.13,0.10};
         context.applyTableStyle(table, TABLE_STYLE_KEY, proportions);
-        mergeRegion(table, 0, 4, 0, 0); // Services (rows 0..4, col 0)
+        mergeRegion(table, 0, 3, 0, 0); // Services (rows 0..4, col 0)
         mergeRegion(table, 0, 1, 1, 5); // Postes ouverts (rows 0..1, cols 1..5)
         mergeRegion(table, 0, 1, 6, 9); // Masse salariale (rows 0..1, cols 6..9)
 
@@ -41,7 +44,6 @@ interface PostOuvertsMassSalarialesBlueprint extends Writable{
         mergeRegion(table, 2, 3, 4, 5); // Variation (under Postes) (rows 2..3, cols 4..5)
         mergeRegion(table, 2, 3, 6, 8); // Montant (rows 2..3, cols 6..8)
         mergeRegion(table, 2, 3, 9, 9); // Variation (under Masse) (rows 2..3, col 9)
-
         setCellTextCentered(table.getRow(0).getCell(1), "Postes ouverts");
         setCellTextCentered(table.getRow(0).getCell(6), "Masse salariale");
 
@@ -49,7 +51,10 @@ interface PostOuvertsMassSalarialesBlueprint extends Writable{
         setCellTextCentered(table.getRow(2).getCell(4), "Variation");
         setCellTextCentered(table.getRow(2).getCell(6), "Montant");
         setCellTextCentered(table.getRow(2).getCell(9), "Variation");
-
+        //set start row for filling function
+        //configure headers values
+        //create extractors
+        context.fillTableContentWithStartingRow(table, services(), PostOuvertsMassSalariale.EXTRACTORS, TABLE_STYLE_KEY+".", 4);
 
     }
 

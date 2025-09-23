@@ -67,8 +67,8 @@ public final class GenerationContext {
     }
 
     public static GenerationContext of(XWPFDocument doc,
-                                       LanguageDirection languageDirection,
-                                       Map<String, String> mappers) {
+            LanguageDirection languageDirection,
+            Map<String, String> mappers) {
         Objects.requireNonNull(doc, "doc must not be null");
         Objects.requireNonNull(languageDirection, "languageDirection must not be null");
         Objects.requireNonNull(mappers, "mappers must not be null");
@@ -253,10 +253,11 @@ public final class GenerationContext {
 
         for (int c = 1; c < extractors.size(); c++) {
             XWPFTableCell totalCell = totalRow.getCell(c);
-            ColumnExtractor<T,?> extractor = extractors.get(c);
-            switch (extractor){
-                case ColumnExtractor.SummableColumnExtractor<T,?> _ -> insertFormula(totalCell, "=SUM(ABOVE)", "0");
-                case ColumnExtractor.AvergableColumnExtractor<T,?> _ -> insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
+            ColumnExtractor<T, ?> extractor = extractors.get(c);
+            switch (extractor) {
+                case ColumnExtractor.SummableColumnExtractor<T, ?> _ -> insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                case ColumnExtractor.AvergableColumnExtractor<T, ?> _ ->
+                    insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
                 default -> totalCell.setText("-");
             }
         }
@@ -266,6 +267,67 @@ public final class GenerationContext {
             insertFormula(grandTotal, lastColumnFormula, "0");
         }
 
+    }
+
+    public <T> void fillTableContentWithStartingRow(
+            XWPFTable table,
+            List<T> rows,
+            List<ColumnExtractor<T, ?>> extractors,
+            String tablePrefix,
+            int startRow) {
+
+        String headersPrefix = tablePrefix + "headers.";
+        String totalColumnLabelKey = tablePrefix + "total.column";
+
+        // ---- Header ----
+        XWPFTableRow headerRow = table.getRow(startRow);
+        preventRowSplit(headerRow);
+
+        for (int i = 0; i < extractors.size(); i++) {
+            headerRow.getCell(i).setText(contextualizedContent(headersPrefix + i));
+        }
+
+        // ---- Data rows ----
+        for (int r = 0; r < rows.size(); r++) {
+            XWPFTableRow row = table.getRow(startRow + r + 1);
+            preventRowSplit(row);
+            T rowData = rows.get(r);
+
+            for (int c = 0; c < extractors.size(); c++) {
+                Object data = extractors.get(c).apply(rowData);
+                if (data instanceof Enum<?>) {
+                    data = contextualizedContent(((Enum<?>) data).name());
+                }
+                row.getCell(c).setText(String.valueOf(data));
+            }
+        }
+
+        // ---- Total Row (append to table) ----
+        XWPFTableRow totalRow = table.createRow(); // Append new row at the end
+        preventRowSplit(totalRow);
+
+        // Ensure enough cells in totalRow
+        while (totalRow.getTableCells().size() < extractors.size()) {
+            totalRow.addNewTableCell();
+        }
+
+        // Set label in the first cell
+        var totalColumnLabel = totalLabel(totalColumnLabelKey);
+        totalRow.getCell(0).setText(totalColumnLabel);
+
+        // Fill in total formulas / placeholders
+        for (int c = 1; c < extractors.size(); c++) {
+            XWPFTableCell totalCell = totalRow.getCell(c);
+            ColumnExtractor<T, ?> extractor = extractors.get(c);
+            switch (extractor) {
+                case ColumnExtractor.SummableColumnExtractor<T, ?> _ ->
+                    insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                case ColumnExtractor.AvergableColumnExtractor<T, ?> _ ->
+                    insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
+                default ->
+                    totalCell.setText("-");
+            }
+        }
     }
 
     private String totalLabel(final String totalRowLabelKey) {
@@ -327,6 +389,7 @@ public final class GenerationContext {
             tblPr.addNewBidiVisual().setVal(STOnOff1.OFF);
         }
     }
+
     public void applyTableStyle(XWPFTable table, String styleKey, double[] proportions) {
 
         // Call the base styling
@@ -346,13 +409,11 @@ public final class GenerationContext {
         // Add column widths
         for (double proportion : proportions) {
             BigInteger colWidth = BigInteger.valueOf(
-                    Math.round(totalWidth.doubleValue() * proportion)
-            );
+                    Math.round(totalWidth.doubleValue() * proportion));
             CTTblGridCol gridCol = tblGrid.addNewGridCol();
             gridCol.setW(colWidth);
         }
     }
-
 
     public void addFooterAndPageNumber(XWPFDocument doc, String footerText) {
         // Get or create section properties
@@ -426,7 +487,8 @@ public final class GenerationContext {
                     Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR, // + -
                     Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR, // . ,
                     Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR, // quotes, (), …
-                    Character.DIRECTIONALITY_OTHER_NEUTRALS -> true;
+                    Character.DIRECTIONALITY_OTHER_NEUTRALS ->
+                true;
             default -> false;
         };
     }
