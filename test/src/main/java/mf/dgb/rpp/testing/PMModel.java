@@ -29,11 +29,11 @@ public class PMModel implements DocumentGenerator, Writable {
         }
         context.apply(PageLayout.LANDSCAPE);
         //create table size
-        var table = document.createTable(size + 5, 10);
+        var table = document.createTable(size + 4, 10);
         //apply style and proportions
         final double[] proportions = {0.15,0.10,0.10,0.10,0.08,0.08,0.13,0.13,0.13,0.10};
         context.applyTableStyle(table, TABLE_STYLE_KEY, proportions);
-        mergeRegion(table, 0, 4, 0, 0); // Services (rows 0..4, col 0)
+        mergeRegion(table, 0, 3, 0, 0); // Services (rows 0..4, col 0)
         mergeRegion(table, 0, 1, 1, 5); // Postes ouverts (rows 0..1, cols 1..5)
         mergeRegion(table, 0, 1, 6, 9); // Masse salariale (rows 0..1, cols 6..9)
 
@@ -49,7 +49,6 @@ public class PMModel implements DocumentGenerator, Writable {
         setCellTextCentered(table.getRow(2).getCell(4), "Variation");
         setCellTextCentered(table.getRow(2).getCell(6), "Montant");
         setCellTextCentered(table.getRow(2).getCell(9), "Variation");
-        setCellTextCentered(table.getRow(0).getCell(0), "Services");
 
     }
     private static void mergeRegion(XWPFTable table, int fromRow, int toRow, int fromCol, int toCol) {
