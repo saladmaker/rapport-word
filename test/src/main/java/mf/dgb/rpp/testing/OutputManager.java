@@ -33,26 +33,28 @@ public class OutputManager {
             String path = file.toAbsolutePath().toString();
 
             if (isWSL()) {
-                // Convert WSL path to Windows path: /home/... -> \\wsl$\<distro>\home\...
-                String distro = System.getenv("WSL_DISTRO_NAME");
-                if (distro == null)
-                    distro = "Ubuntu";
-                String winPath = "\\\\wsl$\\" + distro + path.replace("/", "\\");
-                new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", winPath)
+                // Better WSL path detection and conversion
+                String distro = getWSLDistro();
+                String wslPath = convertToWindowsPath(path, distro);
+
+                System.out.println("Opening WSL path: " + wslPath); // Debug
+
+                new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", "\"" + wslPath + "\"")
                         .inheritIO()
                         .start();
+
             } else if (os.contains("win")) {
-                // Windows: Use cmd.exe
-                new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", path)
+                // Windows native
+                new ProcessBuilder("cmd.exe", "/c", "start", "\"\"", "\"" + path + "\"")
                         .inheritIO()
                         .start();
             } else if (os.contains("mac")) {
-                // macOS: Use open
+                // macOS
                 new ProcessBuilder("open", path)
                         .inheritIO()
                         .start();
             } else {
-                // Linux with GUI: Use xdg-open
+                // Linux
                 new ProcessBuilder("xdg-open", path)
                         .inheritIO()
                         .start();
@@ -64,8 +66,47 @@ public class OutputManager {
     }
 
     private static boolean isWSL() {
-        String version = System.getenv("WSL_INTEROP");
-        return version != null || System.getenv("WSL_DISTRO_NAME") != null;
+        return System.getenv("WSL_DISTRO_NAME") != null ||
+                System.getenv("WSL_INTEROP") != null ||
+                Files.exists(Path.of("/proc/version")) &&
+                        readFile("/proc/version").toLowerCase().contains("microsoft");
+    }
+
+    private static String getWSLDistro() {
+        String distro = System.getenv("WSL_DISTRO_NAME");
+        if (distro == null) {
+            // Fallback: try to detect from common distros
+            if (Files.exists(Path.of("/etc/os-release"))) {
+                String osRelease = readFile("/etc/os-release");
+                if (osRelease.contains("Ubuntu"))
+                    distro = "Ubuntu";
+                else if (osRelease.contains("Debian"))
+                    distro = "Debian";
+                else
+                    distro = "Ubuntu"; // Default fallback
+            } else {
+                distro = "Ubuntu"; // Final fallback
+            }
+        }
+        return distro.trim();
+    }
+
+    private static String convertToWindowsPath(String wslPath, String distro) {
+        // Handle WSL paths starting from root
+        if (wslPath.startsWith("/")) {
+            return "\\\\wsl$\\" + distro + wslPath.replace("/", "\\");
+        }
+
+        // Handle paths that might already be in WSL format
+        return "\\\\wsl$\\" + distro + "\\" + wslPath.replace("/", "\\");
+    }
+
+    private static String readFile(String path) {
+        try {
+            return Files.readString(Path.of(path));
+        } catch (IOException e) {
+            return "";
+        }
     }
 
 }

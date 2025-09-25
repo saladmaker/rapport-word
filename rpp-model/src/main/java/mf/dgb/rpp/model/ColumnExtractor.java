@@ -9,28 +9,28 @@ public sealed interface ColumnExtractor<T, R> extends Function<T, R>
         ColumnExtractor.AvergableColumnExtractor{
 
     @SuppressWarnings("hiding")
-    public non-sealed interface SummableColumnExtractor<T, Long> extends ColumnExtractor<T, Long> {
+    public non-sealed interface SummableColumnExtractor<T> extends ColumnExtractor<T, Long> {
     }
 
     @SuppressWarnings("hiding")
-    public non-sealed interface UnsummableColumnExtractor<T, String> extends ColumnExtractor<T, String> {
+    public non-sealed interface UnsummableColumnExtractor<T> extends ColumnExtractor<T, String> {
     }
 
     public non-sealed interface ConstableColumnExtractor<T, E extends Enum<E>> extends ColumnExtractor<T, E> {
 
     }
-    public non-sealed interface AvergableColumnExtractor<T, Double> extends ColumnExtractor<T, Double>{
+    public non-sealed interface AvergableColumnExtractor<T> extends ColumnExtractor<T, Double>{
 
     }
 
-    static <S> SummableColumnExtractor<S, Long> ofSummable(Function<S, Long> summable) {
+    static <S> SummableColumnExtractor<S> ofSummable(Function<S, Long> summable) {
         return summable::apply;
     }
 
-    static <S> AvergableColumnExtractor<S, Double> ofAveragable(Function<S, Double> avergable){
+    static <S> AvergableColumnExtractor<S> ofAveragable(Function<S, Double> avergable){
         return avergable::apply;
     }
-    static <S> UnsummableColumnExtractor<S, String> ofUnsummable(Function<S, String> unsummable) {
+    static <S> UnsummableColumnExtractor<S> ofUnsummable(Function<S, String> unsummable) {
         return unsummable::apply;
     }
 

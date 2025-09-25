@@ -6,13 +6,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -52,6 +55,8 @@ public final class GenerationContext {
 
     static final String FOOTER_TEXT_KEY = "footer.text";
     static final String DEFAULT_TOTAL_LABEL = "default.total";
+    static final Locale FRENCH_ALGERIAN = Locale.of("fr", "DZ");
+    Function<? super Long, String> FORMAT_NUMBER = GenerationContext::formatNumber;
 
     private final XWPFDocument doc;
     private final LanguageDirection direction;
@@ -255,8 +260,8 @@ public final class GenerationContext {
             XWPFTableCell totalCell = totalRow.getCell(c);
             ColumnExtractor<T, ?> extractor = extractors.get(c);
             switch (extractor) {
-                case ColumnExtractor.SummableColumnExtractor<T, ?> _ -> insertFormula(totalCell, "=SUM(ABOVE)", "0");
-                case ColumnExtractor.AvergableColumnExtractor<T, ?> _ ->
+                case ColumnExtractor.SummableColumnExtractor<?> _ -> insertFormula(totalCell, "=SUM(ABOVE)", "0");
+                case ColumnExtractor.AvergableColumnExtractor<?> _ ->
                     insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
                 default -> totalCell.setText("-");
             }
@@ -294,11 +299,31 @@ public final class GenerationContext {
             T rowData = rows.get(r);
 
             for (int c = 0; c < extractors.size(); c++) {
-                Object data = extractors.get(c).apply(rowData);
-                if (data instanceof Enum<?>) {
-                    data = contextualizedContent(((Enum<?>) data).name());
-                }
-                row.getCell(c).setText(String.valueOf(data));
+                String data = null;
+                ColumnExtractor<T,?> extractor = extractors.get(c);
+                data = switch (extractor){
+                    case ColumnExtractor.SummableColumnExtractor summable -> {
+                        ColumnExtractor.SummableColumnExtractor<T> se = (ColumnExtractor.SummableColumnExtractor<T>)summable;
+                        yield se.andThen(GenerationContext::formatNumber).apply(rowData);
+                    }
+                    case ColumnExtractor.AvergableColumnExtractor avergable ->{
+                        ColumnExtractor.AvergableColumnExtractor<T> ae = (ColumnExtractor.AvergableColumnExtractor<T>)avergable;
+                        yield ae.andThen(GenerationContext::percentile).apply(rowData);
+                    }
+                    case ColumnExtractor.ConstableColumnExtractor constable ->{
+                        ColumnExtractor.ConstableColumnExtractor<T, ? extends Enum<?>> ce =
+                                (ColumnExtractor.ConstableColumnExtractor<T, ? extends Enum<?>>) constable;
+
+                        yield ce.andThen(Enum::name)
+                                .andThen(this::contextualizedContent)
+                                .apply(rowData);
+                    }
+                    case ColumnExtractor.UnsummableColumnExtractor unsummable -> {
+                        ColumnExtractor.UnsummableColumnExtractor<T> use = (ColumnExtractor.UnsummableColumnExtractor<T>)unsummable;
+                        yield use.apply(rowData);
+                    }
+                };
+                row.getCell(c).setText(data);
             }
         }
 
@@ -320,9 +345,9 @@ public final class GenerationContext {
             XWPFTableCell totalCell = totalRow.getCell(c);
             ColumnExtractor<T, ?> extractor = extractors.get(c);
             switch (extractor) {
-                case ColumnExtractor.SummableColumnExtractor<T, ?> _ ->
+                case ColumnExtractor.SummableColumnExtractor<?> _ ->
                     insertFormula(totalCell, "=SUM(ABOVE)", "0");
-                case ColumnExtractor.AvergableColumnExtractor<T, ?> _ ->
+                case ColumnExtractor.AvergableColumnExtractor<?> _ ->
                     insertFormula(totalCell, "=AVERAGE(ABOVE)", "0");
                 default ->
                     totalCell.setText("-");
@@ -493,4 +518,11 @@ public final class GenerationContext {
         };
     }
 
+    private static String formatNumber(Long value){
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(FRENCH_ALGERIAN);
+        return numberFormat.format(value);
+    }
+    private static String percentile(Double value){
+        return value + "%";
+    }
 }

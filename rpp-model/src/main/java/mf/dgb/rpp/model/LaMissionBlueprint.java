@@ -15,7 +15,6 @@ interface LaMissionBlueprint extends Writable {
 
     String MISSION_1_TITLE_KEY = "section1.lamission.title.text";
 
-
     @Option.Required
     String intro();
 
